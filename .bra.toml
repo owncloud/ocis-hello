@@ -14,7 +14,9 @@ init_cmds = [
     "./bin/ocis-hello",
     "--log-level",
     "debug",
-    "server"
+    "server",
+    "--asset-path",
+    "assets/"
   ]
 ]
 
@@ -24,6 +26,8 @@ cmds = [
     "./bin/ocis-hello",
     "--log-level",
     "debug",
-    "server"
+    "server",
+    "--asset-path",
+    "assets/"
   ]
 ]

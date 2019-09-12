@@ -2,3 +2,8 @@ coverage.out
 
 /bin
 /dist
+
+/node_modules
+/assets
+
+/pkg/assets/embed.go
