@@ -8,6 +8,15 @@ platform:
   arch: amd64
 
 steps:
+- name: frontend
+  pull: always
+  image: webhippie/nodejs:latest
+  commands:
+  - yarn install
+  - yarn lint
+  - yarn test
+  - yarn build
+
 - name: generate
   pull: always
   image: webhippie/golang:1.12
@@ -89,6 +98,13 @@ platform:
   arch: amd64
 
 steps:
+- name: frontend
+  pull: always
+  image: webhippie/nodejs:latest
+  commands:
+  - yarn install
+  - yarn build
+
 - name: generate
   pull: always
   image: webhippie/golang:1.12
@@ -160,6 +176,13 @@ platform:
   arch: arm64
 
 steps:
+- name: frontend
+  pull: always
+  image: webhippie/nodejs:latest
+  commands:
+  - yarn install
+  - yarn build
+
 - name: generate
   pull: always
   image: webhippie/golang:1.12
@@ -231,6 +254,13 @@ platform:
   arch: arm
 
 steps:
+- name: frontend
+  pull: always
+  image: webhippie/nodejs:latest
+  commands:
+  - yarn install
+  - yarn build
+
 - name: generate
   pull: always
   image: webhippie/golang:1.12
@@ -302,6 +332,13 @@ platform:
   arch: amd64
 
 steps:
+- name: frontend
+  pull: always
+  image: webhippie/nodejs:latest
+  commands:
+  - yarn install
+  - yarn build
+
 - name: generate
   pull: always
   image: webhippie/golang:1.12
@@ -407,6 +444,13 @@ platform:
   arch: amd64
 
 steps:
+- name: frontend
+  pull: always
+  image: webhippie/nodejs:latest
+  commands:
+  - yarn install
+  - yarn build
+
 - name: generate
   pull: always
   image: webhippie/golang:1.12
@@ -512,6 +556,13 @@ platform:
   arch: amd64
 
 steps:
+- name: frontend
+  pull: always
+  image: webhippie/nodejs:latest
+  commands:
+  - yarn install
+  - yarn build
+
 - name: generate
   pull: always
   image: webhippie/golang:1.12
