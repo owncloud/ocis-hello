@@ -1,9 +1,11 @@
 ---
+debug:
+  addr: 0.0.0.0:8390
+  token:
+  pprof: false
+
 server:
   addr: 0.0.0.0:8380
-
-metrics:
-  addr: 0.0.0.0:8390
 
 asset:
   path:
