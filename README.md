@@ -15,11 +15,14 @@ You can download prebuilt binaries from the GitHub releases or from our [downloa
 
 ## Development
 
-Make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.11.
+Make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.11. For the frontend it's also required to have [NodeJS](https://nodejs.org/en/download/package-manager/) and [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed.
 
 ```console
 git clone https://github.com/owncloud/ocis-hello.git
 cd ocis-hello
+
+yarn install
+yarn build
 
 make generate build
 
