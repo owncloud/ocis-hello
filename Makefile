@@ -117,3 +117,7 @@ release-check:
 
 .PHONY: release-finish
 release-finish: release-copy release-check
+
+.PHONY: docs
+docs:
+	cd docs; hugo --debug
