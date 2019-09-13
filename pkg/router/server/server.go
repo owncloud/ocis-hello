@@ -1,7 +1,8 @@
 package server
 
 import (
-	"io"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -56,7 +57,44 @@ func Router(opts ...Option) *chi.Mux {
 			w.Header().Set("Content-Type", "text/plain")
 			w.WriteHeader(http.StatusNotFound)
 
-			io.WriteString(w, http.StatusText(http.StatusNotFound))
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		})
+
+		root.Route("/api", func(base chi.Router) {
+			base.Post("/hello", func(w http.ResponseWriter, r *http.Request) {
+				request := struct {
+					Name string `json:"name"`
+				}{}
+
+				if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+					log.Error().
+						Err(err).
+						Msg("Failed to parse request")
+
+					http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
+					return
+				}
+
+				payload := struct {
+					Message string `json:"message"`
+				}{}
+
+				payload.Message = fmt.Sprintf("Hello %s", request.Name)
+				response, err := json.Marshal(payload)
+
+				if err != nil {
+					log.Error().
+						Err(err).
+						Msg("Failed to build response")
+
+					http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
+					return
+				}
+
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				w.Write(response)
+			})
 		})
 
 		root.Mount(
