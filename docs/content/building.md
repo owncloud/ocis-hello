@@ -12,7 +12,7 @@ git clone https://github.com/owncloud/ocis-hello.git
 cd ocis-hello
 {{< / highlight >}}
 
-All required tool besides Go itself and make are bundled or getting automatically installed within the `GOPATH`. All commands to build this project are part of our `Makefile` and respectively out `package.json`.
+All required tool besides Go itself and make are bundled or getting automatically installed within the `GOPATH`. All commands to build this project are part of our `Makefile` and respectively our `package.json`.
 
 {{< highlight txt >}}
 # install dependecies

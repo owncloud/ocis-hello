@@ -127,7 +127,7 @@ ocis-hello health --help
 
 ## Metrics
 
-This service provides some [Prometheus](https://prometheus.io/) metrics throu the debug endpoint, you can optionally secure the metrics endpoint by some random token, which got to be configured throu one of the options mentioned above. Be default the metrics endpoint is bound to `http://0.0.0.0:8390/metrics`.
+This service provides some [Prometheus](https://prometheus.io/) metrics through the debug endpoint, you can optionally secure the metrics endpoint by some random token, which got to be configured through one of the flag `--debug-token` or the environment variable `HELLO_DEBUG_TOKEN` mentioned above. By default the metrics endpoint is bound to `http://0.0.0.0:8390/metrics`.
 
 go_gc_duration_seconds
 : A summary of the GC invocation durations
