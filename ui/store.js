@@ -1,45 +1,62 @@
 const namespaced = true
 
 const state = {
-  name: 'World',
+  config: null,
   message: ''
 }
 
 const getters = {
-  name: state => state.name,
+  config: state => state.config,
   message: state => state.message
 }
 
 const actions = {
-  submitHello (context, value) {
-    fetch(`http://localhost:8380/api/hello`, {
+  // Action triggered from within apps store
+  loadConfig ({ commit }, config) {
+    commit('LOAD_CONFIG', config)
+  },
+
+  submitName ({ commit, dispatch, getters }, value) {
+    fetch(getters.config.fetchUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'name': this.state.Hello.name
+        'name': value
       })
     })
       .then(response => {
         if (response.ok) {
           response.json()
             .then(json => {
-              context.commit('MESSAGE', json.message)
+              commit('SET_MESSAGE', json.message)
             })
         } else {
-          console.error('response', response)
+          dispatch('showMessage', {
+            title: 'Response failed',
+            desc: response.statusText,
+            status: 'danger'
+          }, { root: true })
         }
       })
       .catch((error) => {
-        console.error('catch', error)
+        dispatch('showMessage', {
+          title: 'Saving your name failed',
+          desc: error.message,
+          status: 'danger'
+        }, { root: true })
       })
   }
 }
 
 const mutations = {
-  MESSAGE (state, payload) {
+  SET_MESSAGE (state, payload) {
     state.message = payload
+  },
+
+  LOAD_CONFIG (state, config) {
+    state.config = config
   }
 }
 
