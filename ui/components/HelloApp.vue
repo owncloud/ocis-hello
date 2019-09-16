@@ -1,20 +1,18 @@
 <template>
-  <div>
+  <div class="uk-flex uk-flex-column uk-flex-middle uk-margin-xlarge-top">
     <h1>
-      Hello
+      Hello, tell us your name
     </h1>
 
-    <form v-on:submit.prevent="submitHello" action="#" method="post">
-      <input v-model="name" placeholder="What is your name?">
+    <form v-on:submit.prevent="submitHello(name)" action="#" method="post">
+      <oc-text-input v-model="name" placeholder="Your name" />
 
-      <button type="submit">
+      <oc-button variation="primary" class="uk-width-1-1 uk-margin-top">
         Submit
-      </button>
+      </oc-button>
     </form>
 
-    <p v-if="message">
-      {{ message }}
-    </p>
+    <p class="uk-text-lead" v-if="message" v-text="message" />
   </div>
 </template>
 
@@ -23,11 +21,16 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'HelloApp',
+  data: function () {
+    return {
+      name: 'World'
+    }
+  },
   methods: {
     ...mapActions('Hello', ['submitHello'])
   },
   computed: {
-    ...mapGetters('Hello', ['name', 'message'])
+    ...mapGetters('Hello', ['message'])
   }
 }
 </script>

@@ -1,7 +1,8 @@
+import { request } from 'https'
+
 const namespaced = true
 
 const state = {
-  name: 'World',
   message: ''
 }
 
@@ -11,28 +12,36 @@ const getters = {
 }
 
 const actions = {
-  submitHello (context, value) {
+  submitHello ({ commit, dispatch }, value) {
     fetch(`http://localhost:8380/api/hello`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'name': this.state.Hello.name
+        'name': value
       })
     })
       .then(response => {
         if (response.ok) {
           response.json()
             .then(json => {
-              context.commit('MESSAGE', json.message)
+              commit('MESSAGE', json.message)
             })
         } else {
-          console.error('response', response)
+          dispatch('showMessage', {
+            title: 'Response failed',
+            desc: request.statusText,
+            status: 'danger'
+          }, { root: true })
         }
       })
       .catch((error) => {
-        console.error('catch', error)
+        dispatch('showMessage', {
+          title: 'Saving your name failed',
+          desc: error.message,
+          status: 'danger'
+        }, { root: true })
       })
   }
 }
