@@ -7,7 +7,10 @@ const appInfo = {
   id: 'hello',
   icon: 'folder',
   isFileEditor: false,
-  extensions: []
+  extensions: [],
+  config: {
+    fetchUrl: 'http://localhost:8380/api/hello'
+  }
 }
 
 const store = require('./store.js')
