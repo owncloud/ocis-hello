@@ -6,6 +6,7 @@ debug:
 
 server:
   addr: 0.0.0.0:8380
+  root: /
 
 asset:
   path:
