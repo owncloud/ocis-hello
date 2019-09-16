@@ -1,0 +1,14 @@
+---
+title: "License"
+date: 2018-05-02T00:00:00+00:00
+anchor: "license"
+weight: 40
+---
+
+= License
+:anchor: license
+:date: 2018-05-02 02:00:00 +0200
+:weight: 40
+
+This project is licensed under the {license}[Apache 2.0] license.
+For the license of the used libraries you have to check the respective sources.

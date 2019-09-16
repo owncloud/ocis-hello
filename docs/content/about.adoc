@@ -1,0 +1,11 @@
+---
+title: "About"
+date: 2018-05-02T00:00:00+00:00
+anchor: "about"
+weight: 10
+---
+:phoenix-url: https://github.com/owncloud/phoenix
+
+= About
+
+This service provides a simple hello world example API to show the integration of custom plugins within {phoenix-url}[Phoenix].

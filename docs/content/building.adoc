@@ -1,0 +1,50 @@
+---
+title: "Building"
+date: 2018-05-02T00:00:00+00:00
+anchor: "building"
+weight: 30
+---
+
+= Building
+:golang-url: https://golang.org/doc/install
+:nodejs-url: https://nodejs.org/en/download/package-manager/
+:yarn-url: https://yarnpkg.com/lang/en/docs/install/
+:gnu-make-url: https://www.gnu.org/software/make/manual/make.html
+
+The project is built with {golang-url}[Go] and {nodejs-url}[NodeJS], and uses {yarn-url}[Yarn] and {gnu-make-url}[GNU Make] to automate the build process.
+So, please ensure that these four packages are installed before attempting to build the project.
+
+The installation of Go and NodeJS is out of the scope of this document.
+Please follow the official documentation for Go, NodeJS, Yarn, and GNU Make.
+
+After the installation of the required tools you need to get the source.
+You can do this by running the following commands:
+
+[source,console]
+----
+git clone https://github.com/owncloud/ocis-hello.git
+cd ocis-hello
+----
+
+== Frontend
+
+The commands below install the required build dependencies and build the frontend bundle.
+
+[source,console]
+----
+yarn install
+yarn build
+----
+
+== Backend
+
+The commands below embed the frontend bundle into the backend binary.
+
+[source,console]
+----
+make generate
+make build
+----
+
+If there were no build errors, the binary `ocis-hello` is available in the `bin/` folder.
+Give it a try with `./bin/ocis-hello -h`, to see all available options.
