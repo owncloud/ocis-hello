@@ -7,7 +7,7 @@ weight: 20
 
 ## Installation
 
-So far we are offering two different variants for the installation. You can choose between [Docker](https://www.docker.com/) or pre-built binaries which are stored on our download mirrors and GitHub releases. Maybe we will also provide system packages for the major distributions later if we see the need for it.
+So far we are offering two different variants for the installation. You can choose between [Docker](docker) or pre-built binaries which are stored on our download mirrors and GitHub releases. Maybe we will also provide system packages for the major distributions later if we see the need for it.
 
 ### Docker
 
@@ -103,7 +103,7 @@ If you prefer to configure the service with commandline flags you can see the av
 
 ### Configuration file
 
-So far we support the file formats `JSON` and `YAML`, if you want to get a full example configuration just take a look at [our repository](https://github.com/owncloud/ocis-hello/tree/master/config), there you can always see the latest configuration format. These example configurations include all available options and the default values. The configuration file will be automatically loaded if it's placed at `/etc/ocis/hello.yml`, `${HOME}/.ocis/hello.yml` or `$(pwd)/config/hello.yml`.
+So far we support the file formats `JSON` and `YAML`, if you want to get a full example configuration just take a look at [our repository](repo), there you can always see the latest configuration format. These example configurations include all available options and the default values. The configuration file will be automatically loaded if it's placed at `/etc/ocis/hello.yml`, `${HOME}/.ocis/hello.yml` or `$(pwd)/config/hello.yml`.
 
 ## Usage
 
@@ -127,7 +127,7 @@ ocis-hello health --help
 
 ## Metrics
 
-This service provides some [Prometheus](https://prometheus.io/) metrics through the debug endpoint, you can optionally secure the metrics endpoint by some random token, which got to be configured through one of the flag `--debug-token` or the environment variable `HELLO_DEBUG_TOKEN` mentioned above. By default the metrics endpoint is bound to `http://0.0.0.0:8390/metrics`.
+This service provides some [Prometheus](prom) metrics through the debug endpoint, you can optionally secure the metrics endpoint by some random token, which got to be configured through one of the flag `--debug-token` or the environment variable `HELLO_DEBUG_TOKEN` mentioned above. By default the metrics endpoint is bound to `http://0.0.0.0:8390/metrics`.
 
 go_gc_duration_seconds
 : A summary of the GC invocation durations
@@ -224,3 +224,7 @@ promhttp_metric_handler_requests_in_flight
 
 promhttp_metric_handler_requests_total
 : Total number of scrapes by HTTP status code
+
+[docker]: https://www.docker.com/
+[repo]: https://github.com/owncloud/ocis-hello/tree/master/config
+[prom]: https://prometheus.io/

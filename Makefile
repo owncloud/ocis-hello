@@ -120,4 +120,4 @@ release-finish: release-copy release-check
 
 .PHONY: docs
 docs:
-	cd docs; hugo --debug
+	cd docs; hugo
