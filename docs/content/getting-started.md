@@ -7,7 +7,7 @@ weight: 20
 
 ## Installation
 
-So far we are offering two different variants for the installation. You can choose between [Docker](docker) or pre-built binaries which are stored on our download mirrors and GitHub releases. Maybe we will also provide system packages for the major distributions later if we see the need for it.
+We offer two different installation options. You can choose between [Docker](docker) images, and pre-built binaries which are stored on our download mirrors and GitHub releases. In the future, we may also provide system packages for the major distributions, if we see the need for it.
 
 ### Docker
 
@@ -19,19 +19,23 @@ TBD
 
 ## Configuration
 
-We provide overall three different variants of configuration. The variant based on environment variables and commandline flags are split up into global values and command-specific values.
+We provide three different configuration options:
 
-### Envrionment variables
+- [Environment variables](#environment-variables)
+- [Command line flags](#command-line-flags)
+- [Configuration files](#configuration-files)
 
-If you prefer to configure the service with environment variables you can see the available variables below.
+**Note:** environment variables and command line flags are split up into global and command-specific values.
 
 #### Global
 
 HELLO_LOG_LEVEL
 : Set logging level, defaults to `info`
+### <a name="environment-variables"></a>Environment Variables
 
 HELLO_LOG_COLOR
 : Enable colored logging, defaults to `true`
+#### Global
 
 HELLO_LOG_PRETTY
 : Enable pretty logging, defaults to `true`
@@ -63,7 +67,7 @@ HELLO_DEBUG_ADDR
 
 ### Commandline flags
 
-If you prefer to configure the service with commandline flags you can see the available variables below.
+### <a name="command-line-flags"></a>Command Line flags
 
 #### Global
 
@@ -83,43 +87,69 @@ If you prefer to configure the service with commandline flags you can see the av
 
 --debug-token
 : Token to grant metrics access, empty default value
+#### Health
 
 --debug-pprof
 : Enable pprof debugging, defaults to `false`
 
 --http-addr
 : Address to bind http server, defaults to `0.0.0.0:8380`
+### <a name="configuration-files"></a>Configuration Files
 
 --http-root
 : Root path for http endpoint, defaults to `/`
+Configuration files can be written in either `JSON` or `YAML` format. Configuration files are automatically loaded if they're placed in the following directories:
 
 --asset-path
 : Path to custom assets, empty default value
+- `/etc/ocis/hello.yml`
+- `${HOME}/.ocis/hello.yml`; or
+- `$(pwd)/config/hello.yml`
 
-#### Health
+Full example configurations are available [in our repository](repo), which include all available options and default values.
 
 --debug-addr
 : Address to debug endpoint, defaults to `0.0.0.0:8390`
-
-### Configuration file
-
-So far we support the file formats `JSON` and `YAML`, if you want to get a full example configuration just take a look at [our repository](repo), there you can always see the latest configuration format. These example configurations include all available options and the default values. The configuration file will be automatically loaded if it's placed at `/etc/ocis/hello.yml`, `${HOME}/.ocis/hello.yml` or `$(pwd)/config/hello.yml`.
-
 ## Usage
 
-The program provides a few sub-commands on execution. The available configuration methods have already been mentioned above. Generally you can always see a formated help output if you execute the binary via `ocis-hello --help`.
+The program supports a number of sub-commands; these are:
 
-### Server
+- [server](#command-server)
+- [health](#command-health)
 
-The server command is used to start the http and debug server on two addresses within a single process. The http server is serving the general webservice while the debug server is used for health check, readiness check and to server the metrics mentioned below. For further help please execute:
+**Note:** You can run `ocis-hello `--help`` for the available flags (as in the example below), and "ocis-hello [command] `--help`" for more information about a sub-command.
+
+{{< highlight txt >}}
+Usage:
+  ocis-hello [command]
+
+Available Commands:
+  health      Check health status
+  help        Help about any command
+  server      Start integrated server
+
+Flags:
+  -h, `--help`               help for ocis-hello
+      `--log-color`          Enable colored logging
+      `--log-level` string   Set logging level
+      `--log-pretty`         Enable pretty logging
+      `--version`            version for ocis-hello
+{{< / highlight >}}
+
+
+### <a name="command-server"></a>Server
+
+This command is used to start the HTTP and debug server on two addresses within a single process. The HTTP server serves the web service while the debug server provides a health check, readiness check, and the metrics mentioned below. For further help please execute:
 
 {{< highlight txt >}}
 ocis-hello server --help
 {{< / highlight >}}
 
-### Health
+### <a name="command-health"></a>Health
 
-The health command is used to execute a health check, if the exit code equals zero the service should be up and running, if the exist code is greater than zero the service is not in a healthy state. Generally this command is used within our Docker containers, it could also be used within Kubernetes.
+The health command provides a health check. If the exit code equals zero the service should be up and running. If the exist code is greater than zero the service is not in a healthy state.
+
+Generally, this command is used within our Docker containers. It can also be used within Kubernetes.
 
 {{< highlight txt >}}
 ocis-hello health --help

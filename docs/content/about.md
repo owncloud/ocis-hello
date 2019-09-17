@@ -5,4 +5,6 @@ anchor: "about"
 weight: 10
 ---
 
-This service provides a simple hello world example API to show the integration of custom plugins within [Phoenix](https://github.com/owncloud/phoenix).
+This service provides a simple hello world example API to show the integration of custom plugins within [Phoenix].
+
+[Phoenix]: https://github.com/owncloud/phoenix

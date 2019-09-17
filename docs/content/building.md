@@ -5,33 +5,48 @@ anchor: "building"
 weight: 30
 ---
 
-As this project is built with Go and NodeJS, so you need to install that first. The installation of Go and NodeJS is out of the scope of this document, please follow the official documentation for [Go](golang), [NodeJS](nodejs) and [Yarn](yarn). After the installation of the required tools you need to get the sources:
+## Project Dependencies
+
+The project has the following dependencies:
+
+- [GNU Make](gnu-make)
+- [Go](golang),
+- [NodeJS](nodejs),
+- [Yarn](yarn),
+
+## Get The Source
+
+After installing all of the project’s dependencies, you need to get the source, and switch to the cloned source directory. The example below shows how.
 
 {{< highlight txt >}}
 git clone https://github.com/owncloud/ocis-hello.git
 cd ocis-hello
 {{< / highlight >}}
 
-All required tool besides Go itself and make are bundled or getting automatically installed within the `GOPATH`. All commands to build this project are part of our `Makefile` and respectively our `package.json`.
+**Note:** All required Go packages are installed inside [the GOPATH directory][gopath].
 
 ## Frontend
+
+The commands below install the required build dependencies and build the frontend bundle. This frontend bundle will be embedded into the generated backend binary in the next step.
 
 {{< highlight txt >}}
 yarn install
 yarn build
 {{< / highlight >}}
 
-The above commands will install the required build dependencies and build the whole frontend bundle. This bundle will we embeded into the binary later on.
-
 ## Backend
+
+The commands below embed the generated frontend bundle into the generated backend binary.
 
 {{< highlight txt >}}
 make generate
 make build
 {{< / highlight >}}
 
-The above commands will embed the frontend bundle into the binary. Finally you should have the binary within the `bin/` folder now, give it a try with `./bin/ocis-hello -h` to see all available options.
+If the commands above complete without error, the backend binary will be available in the `bin/` folder. You can test it by running `./bin/ocis-hello -h`.
 
+[gnu-make]: https://www.gnu.org/software/make/
 [golang]: https://golang.org/doc/install
+[gopath]: https://github.com/golang/go/wiki/GOPATH
 [nodejs]: https://nodejs.org/en/download/package-manager/
 [yarn]: https://yarnpkg.com/lang/en/docs/install/
