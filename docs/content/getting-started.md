@@ -27,79 +27,63 @@ If you prefer to configure the service with environment variables you can see th
 
 #### Global
 
-HELLO_LOG_LEVEL
-: Set logging level, defaults to `info`
 
-HELLO_LOG_COLOR
-: Enable colored logging, defaults to `true`
-
-HELLO_LOG_PRETTY
-: Enable pretty logging, defaults to `true`
+| Setting     | Description |
+| ----------- | ----------- |
+| `HELLO_LOG_LEVEL` | Set logging level, defaults to `info` |
+| `HELLO_LOG_COLOR` | Enable colored logging, defaults to `true` |
+| `HELLO_LOG_PRETTY` | Enable pretty logging, defaults to `true` |
 
 #### Server
 
-HELLO_DEBUG_ADDR
-: Address to bind debug server, defaults to `0.0.0.0:8390`
-
-HELLO_DEBUG_TOKEN
-: Token to grant metrics access, empty default value
-
-HELLO_DEBUG_PPROF
-: Enable pprof debugging, defaults to `false`
-
-HELLO_HTTP_ADDR
-: Address to bind http server, defaults to `0.0.0.0:8380`
-
-HELLO_HTTP_ROOT
-: Root path for http endpoint, defaults to `/`
-
-HELLO_ASSET_PATH
-: Path to custom assets, empty default value
+| Setting     | Description |
+| ----------- | ----------- |
+| `HELLO_DEBUG_ADDR` | Address to bind debug server, defaults to `0.0.0.0:8390` |
+| `HELLO_DEBUG_TOKEN` | Token to grant metrics access, empty default value |
+| `HELLO_DEBUG_PPROF` | Enable pprof debugging, defaults to `false` |
+| `HELLO_HTTP_ADDR` | Address to bind http server, defaults to `0.0.0.0:8380` |
+| `HELLO_HTTP_ROOT` | Root path for http endpoint, defaults to `/` |
+| `HELLO_ASSET_PATH` | Path to custom assets, empty default value |
 
 #### Health
 
-HELLO_DEBUG_ADDR
-: Address to debug endpoint, defaults to `0.0.0.0:8390`
 
 ### Commandline flags
+| Setting     | Description |
+| ----------- | ----------- |
+| `HELLO_DEBUG_ADDR` | Address to debug endpoint, defaults to `0.0.0.0:8390` |
 
 If you prefer to configure the service with commandline flags you can see the available variables below.
 
 #### Global
 
---log-level
-: Set logging level, defaults to `info`
-
---log-color
-: Enable colored logging, defaults to `true`
-
---log-pretty
-: Enable pretty logging, defaults to `true`
+| Setting     | Description |
+| ----------- | ----------- |
+| `--log-level` | Set logging level, defaults to `info` |
+| `--log-color` | Enable colored logging, defaults to `true` |
+| `--log-pretty` | Enable pretty logging, defaults to `true` |
 
 #### Server
 
---debug-addr
-: Address to bind debug server, defaults to `0.0.0.0:8390`
+| Setting     | Description |
+| ----------- | ----------- |
+| `--debug-addr` | Address to bind debug server, defaults to `0.0.0.0:8390` |
+| `--debug-token` | Token to grant metrics access, empty default value |
+| `--debug-pprof` | Enable pprof debugging, defaults to `false` |
+| `--http-addr` | Address to bind http server, defaults to `0.0.0.0:8380` |
+| `--http-root` | Root path for http endpoint, defaults to `/` |
+| `--asset-path` | Path to custom assets, empty default value |
 
---debug-token
-: Token to grant metrics access, empty default value
 
---debug-pprof
-: Enable pprof debugging, defaults to `false`
+| Setting     | Description |
+| ----------- | ----------- |
+| `--debug-addr` | Address to debug endpoint, defaults to `0.0.0.0:8390` |
 
---http-addr
-: Address to bind http server, defaults to `0.0.0.0:8380`
 
---http-root
-: Root path for http endpoint, defaults to `/`
 
---asset-path
-: Path to custom assets, empty default value
 
 #### Health
 
---debug-addr
-: Address to debug endpoint, defaults to `0.0.0.0:8390`
 
 ### Configuration file
 
@@ -129,101 +113,41 @@ ocis-hello health --help
 
 This service provides some [Prometheus](prom) metrics through the debug endpoint, you can optionally secure the metrics endpoint by some random token, which got to be configured through one of the flag `--debug-token` or the environment variable `HELLO_DEBUG_TOKEN` mentioned above. By default the metrics endpoint is bound to `http://0.0.0.0:8390/metrics`.
 
-go_gc_duration_seconds
-: A summary of the GC invocation durations
 
-go_gc_duration_seconds_sum
-: A summary of the GC invocation durations
-
-go_gc_duration_seconds_count
-: A summary of the GC invocation durations
-
-go_goroutines
-: Number of goroutines that currently exist
-
-go_info
-: Information about the Go environment
-
-go_memstats_alloc_bytes
-: Number of bytes allocated and still in use
-
-go_memstats_alloc_bytes_total
-: Total number of bytes allocated, even if freed
-
-go_memstats_buck_hash_sys_bytes
-: Number of bytes used by the profiling bucket hash table
-
-go_memstats_frees_total
-: Total number of frees
-
-go_memstats_gc_cpu_fraction
-: The fraction of this program's available CPU time used by the GC since the program started
-
-go_memstats_gc_sys_bytes
-: Number of bytes used for garbage collection system metadata
-
-go_memstats_heap_alloc_bytes
-: Number of heap bytes allocated and still in use
-
-go_memstats_heap_idle_bytes
-: Number of heap bytes waiting to be used
-
-go_memstats_heap_inuse_bytes
-: Number of heap bytes that are in use
-
-go_memstats_heap_objects
-: Number of allocated objects
-
-go_memstats_heap_released_bytes
-: Number of heap bytes released to OS
-
-go_memstats_heap_sys_bytes
-: Number of heap bytes obtained from system
-
-go_memstats_last_gc_time_seconds
-: Number of seconds since 1970 of last garbage collection
-
-go_memstats_lookups_total
-: Total number of pointer lookups
-
-go_memstats_mallocs_total
-: Total number of mallocs
-
-go_memstats_mcache_inuse_bytes
-: Number of bytes in use by mcache structures
-
-go_memstats_mcache_sys_bytes
-: Number of bytes used for mcache structures obtained from system
-
-go_memstats_mspan_inuse_bytes
-: Number of bytes in use by mspan structures
-
-go_memstats_mspan_sys_bytes
-: Number of bytes used for mspan structures obtained from system
-
-go_memstats_next_gc_bytes
-: Number of heap bytes when next garbage collection will take place
-
-go_memstats_other_sys_bytes
-: Number of bytes used for other system allocations
-
-go_memstats_stack_inuse_bytes
-: Number of bytes in use by the stack allocator
-
-go_memstats_stack_sys_bytes
-: Number of bytes obtained from system for stack allocator
-
-go_memstats_sys_bytes
-: Number of bytes obtained from system
-
-go_threads
-: Number of OS threads created
-
-promhttp_metric_handler_requests_in_flight
-: Current number of scrapes being served
-
-promhttp_metric_handler_requests_total
-: Total number of scrapes by HTTP status code
+| Setting      | Description |
+| ----------- | ----------- |
+| `go_gc_duration_seconds` | A summary of the GC invocation durations |
+| `go_gc_duration_seconds_sum` | A summary of the GC invocation durations |
+| `go_gc_duration_seconds_count` | The number of GC invocation durations |
+| `go_goroutines` | The number of goroutines that currently exist |
+| `go_info` | Information about the Go environment |
+| `go_memstats_alloc_bytes` | The number of bytes allocated and still in use |
+| `go_memstats_alloc_bytes_total` | The total number of bytes allocated, even if freed |
+| `go_memstats_buck_hash_sys_bytes` | The number of bytes used by the profiling bucket hash table |
+| `go_memstats_frees_total` | The total number of frees |
+| `go_memstats_gc_cpu_fraction` | The fraction of this program's available CPU time used by the GC since the program started |
+| `go_memstats_gc_sys_bytes` | The number of bytes used for garbage collection system metadata |
+| `go_memstats_heap_alloc_bytes` | The number of heap bytes allocated and still in use |
+| `go_memstats_heap_idle_bytes` | The number of heap bytes waiting to be used |
+| `go_memstats_heap_inuse_bytes` | The number of heap bytes that are in use |
+| `go_memstats_heap_objects` | The number of allocated objects |
+| `go_memstats_heap_released_bytes` | The number of heap bytes released to OS |
+| `go_memstats_heap_sys_bytes` | The number of heap bytes obtained from system |
+| `go_memstats_last_gc_time_seconds` | The number of seconds since 1970 of the last garbage collection |
+| `go_memstats_lookups_total` | The total number of pointer lookups |
+| `go_memstats_mallocs_total` | The total number of mallocs |
+| `go_memstats_mcache_inuse_bytes` | The number of bytes in use by mcache structures |
+| `go_memstats_mcache_sys_bytes` | The number of bytes used for mcache structures obtained from system |
+| `go_memstats_mspan_inuse_bytes` | The number of bytes in use by mspan structures |
+| `go_memstats_mspan_sys_bytes` | The number of bytes used for mspan structures obtained from system |
+| `go_memstats_next_gc_bytes` | The number of heap bytes when next garbage collection will take place |
+| `go_memstats_other_sys_bytes` | The number of bytes used for other system allocations |
+| `go_memstats_stack_inuse_bytes` | The number of bytes in use by the stack allocator |
+| `go_memstats_stack_sys_bytes` | The number of bytes obtained from system for stack allocator |
+| `go_memstats_sys_bytes` | The number of bytes obtained from system |
+| `go_threads` | The number of OS threads created |
+| `promhttp_metric_handler_requests_in_flight` | The current number of scrapes being served |
+| `promhttp_metric_handler_requests_total` | The total number of scrapes by HTTP status code |
 
 [docker]: https://www.docker.com/
 [repo]: https://github.com/owncloud/ocis-hello/tree/master/config
