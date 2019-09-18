@@ -40,9 +40,6 @@ Fork -> Patch -> Push -> Pull Request
 
 ## License
 
-Apache-2.0
-
-
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fowncloud%2Focis-hello.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fowncloud%2Focis-hello?ref=badge_large)
 
 ## Copyright
