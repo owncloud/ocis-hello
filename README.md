@@ -5,6 +5,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f1eaaa399294d959ef7b3b10deed41d)](https://www.codacy.com/manual/owncloud/ocis-hello?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=owncloud/ocis-hello&amp;utm_campaign=Badge_Grade)
 [![Go Doc](https://godoc.org/github.com/owncloud/ocis-hello?status.svg)](http://godoc.org/github.com/owncloud/ocis-hello)
 [![Go Report](http://goreportcard.com/badge/github.com/owncloud/ocis-hello)](http://goreportcard.com/report/github.com/owncloud/ocis-hello)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fowncloud%2Focis-hello.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fowncloud%2Focis-hello?ref=badge_shield)
 [![](https://images.microbadger.com/badges/image/owncloud/ocis-hello.svg)](http://microbadger.com/images/owncloud/ocis-hello "Get your own image badge on microbadger.com")
 
 **This project is under heavy development, it's not in a working state yet!**
@@ -39,7 +40,7 @@ Fork -> Patch -> Push -> Pull Request
 
 ## License
 
-Apache-2.0
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fowncloud%2Focis-hello.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fowncloud%2Focis-hello?ref=badge_large)
 
 ## Copyright
 
