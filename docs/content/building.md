@@ -5,7 +5,7 @@ anchor: "building"
 weight: 30
 ---
 
-As this project is built with Go and NodeJS, so you need to install that first. The installation of Go and NodeJS is out of the scope of this document, please follow the official documentation for [Go](golang), [NodeJS](nodejs) and [Yarn](yarn). After the installation of the required tools you need to get the sources:
+As this project is built with Go and NodeJS, so you need to install that first. The installation of Go and NodeJS is out of the scope of this document, please follow the official documentation for [Go](golang), [NodeJS](nodejs) and [Yarn](yarn), to build this project you have to install Go >= v1.12. After the installation of the required tools you need to get the sources:
 
 {{< highlight txt >}}
 git clone https://github.com/owncloud/ocis-hello.git
