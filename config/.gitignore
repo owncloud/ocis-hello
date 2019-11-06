@@ -1,2 +1,3 @@
-hello.yml
-hello.json
+*
+!example.json
+!example.yml
