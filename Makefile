@@ -121,3 +121,15 @@ release-finish: release-copy release-check
 .PHONY: docs
 docs:
 	cd docs; hugo
+
+pkg/api/v0alpha1/hello.pb.go: pkg/api/v0alpha1/hello.proto
+	protoc -I=third_party/ -I=pkg/api/ --go_out=plugins=grpc:pkg/api v0alpha1/hello.proto
+
+pkg/api/v0alpha1/hello.pb.gw.go: pkg/api/v0alpha1/hello.proto
+	protoc -I=third_party/ -I=pkg/api/ --grpc-gateway_out=logtostderr=true:pkg/api v0alpha1/hello.proto
+
+pkg/api/v0alpha1/hello.swagger.json: pkg/api/v0alpha1/hello.proto
+	protoc -I=third_party/ -I=pkg/api/ --swagger_out=logtostderr=true:pkg/api v0alpha1/hello.proto
+
+.PHONY: protobuf
+protobuf: pkg/api/v0alpha1/hello.pb.go pkg/api/v0alpha1/hello.pb.gw.go pkg/api/v0alpha1/hello.swagger.json

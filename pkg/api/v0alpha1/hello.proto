@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package ocis.hello.v0alpha1;
+option go_package = "v0alpha1";
+
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+	info: {
+		title: "Hello";
+		version: "1.0";
+		contact: {
+			name: "ownCloud GmbH";
+			url: "https://github.com/owncloud/ocis-hello";
+			email: "support@owncloud.com";
+		};
+		license: {
+			name: "Apache-2.0";
+			url: "https://github.com/owncloud/ocis-hello/blob/master/LICENSE";
+		};
+	};
+	schemes: HTTP;
+	schemes: HTTPS;
+	consumes: "application/json";
+	produces: "application/json";
+	external_docs: {
+		description: "Developer Manual";
+		url: "https://owncloud.github.io/ocis-hello/";
+	};
+};
+
+service HelloService {
+	rpc Greet(GreetRequest) returns (GreetResponse) {
+		option (google.api.http) = {
+			post: "/api/v0alpha1/greet"
+			body: "*"
+		};
+	}
+}
+
+message GreetRequest {
+	string name = 1;
+}
+
+message GreetResponse {
+	string message = 1;
+	string err = 2;
+}
