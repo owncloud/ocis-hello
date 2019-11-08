@@ -1,18 +1,26 @@
 module github.com/owncloud/ocis-hello
 
-go 1.12
+go 1.13
 
 require (
-	github.com/UnnoTed/fileb0x v1.1.3 // indirect
+	contrib.go.opencensus.io/exporter/jaeger v0.2.0
+	contrib.go.opencensus.io/exporter/ocagent v0.6.0
+	contrib.go.opencensus.io/exporter/zipkin v0.1.1
+	github.com/UnnoTed/fileb0x v1.1.4 // indirect
 	github.com/go-chi/chi v4.0.2+incompatible
-	github.com/haya14busa/goverage v0.0.0-20180129164344-eec3514a20b5 // indirect
-	github.com/mitchellh/gox v1.0.1 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/go-chi/render v1.0.1
+	github.com/golang/protobuf v1.3.2
+	github.com/grpc-ecosystem/grpc-gateway v1.12.1
+	github.com/micro/cli v0.2.0
+	github.com/micro/go-micro v1.17.1
 	github.com/oklog/run v1.0.0
-	github.com/prometheus/client_golang v1.1.0
-	github.com/rs/zerolog v1.15.0
-	github.com/spf13/cobra v0.0.5
-	github.com/spf13/viper v1.4.0
-	golang.org/x/net v0.0.0-20190909003024-a7b16738d86b
+	github.com/openzipkin/zipkin-go v0.2.2
+	github.com/owncloud/ocis-pkg v1.0.0
+	github.com/prometheus/client_golang v1.2.1
+	github.com/rs/zerolog v1.17.2
+	github.com/spf13/viper v1.5.0
+	go.opencensus.io v0.22.2
+	golang.org/x/net v0.0.0-20191204025024-5ee1b9f4859a
+	golang.org/x/sys v0.0.0-20191204072324-ce4227a45e2e // indirect
+	google.golang.org/genproto v0.0.0-20191203220235-3fa9dbf08042
 )

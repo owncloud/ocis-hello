@@ -33,6 +33,17 @@ def testing(ctx):
     },
     'steps': [
       {
+        'name': 'frontend',
+        'image': 'webhippie/nodejs:latest',
+        'pull': 'always',
+        'commands': [
+          'yarn install --frozen-lockfile',
+          'yarn lint',
+          'yarn test',
+          'yarn build',
+        ],
+      },
+      {
         'name': 'generate',
         'image': 'webhippie/golang:1.13',
         'pull': 'always',
@@ -152,6 +163,15 @@ def docker(ctx, arch):
       'arch': arch,
     },
     'steps': [
+      {
+        'name': 'frontend',
+        'image': 'webhippie/nodejs:latest',
+        'pull': 'always',
+        'commands': [
+          'yarn install --frozen-lockfile',
+          'yarn build',
+        ],
+      },
       {
         'name': 'generate',
         'image': 'webhippie/golang:1.13',
@@ -290,6 +310,15 @@ def binary(ctx, name):
       'arch': 'amd64',
     },
     'steps': [
+      {
+        'name': 'frontend',
+        'image': 'webhippie/nodejs:latest',
+        'pull': 'always',
+        'commands': [
+          'yarn install --frozen-lockfile',
+          'yarn build',
+        ],
+      },
       {
         'name': 'generate',
         'image': 'webhippie/golang:1.13',
@@ -449,10 +478,33 @@ def changelog(ctx):
       'os': 'linux',
       'arch': 'amd64',
     },
+    'clone': {
+      'disable': True,
+    },
     'steps': [
       {
+        'name': 'clone',
+        'image': 'plugins/git-action:1',
+        'pull': 'always',
+        'settings': {
+          'actions': [
+            'clone',
+          ],
+          'remote': 'https://github.com/%s' % (ctx.repo.slug),
+          'branch': ctx.build.branch if ctx.build.event == 'pull_request' else 'master',
+          'path': '/drone/src',
+          'netrc_machine': 'github.com',
+          'netrc_username': {
+            'from_secret': 'github_username',
+          },
+          'netrc_password': {
+            'from_secret': 'github_token',
+          },
+        },
+      },
+      {
         'name': 'generate',
-        'image': 'toolhippie/calens:latest',
+        'image': 'webhippie/golang:1.13',
         'pull': 'always',
         'commands': [
           'make changelog',
@@ -460,7 +512,7 @@ def changelog(ctx):
       },
       {
         'name': 'output',
-        'image': 'toolhippie/calens:latest',
+        'image': 'webhippie/golang:1.13',
         'pull': 'always',
         'commands': [
           'cat CHANGELOG.md',
