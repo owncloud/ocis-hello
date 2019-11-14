@@ -81,12 +81,16 @@ test:
 .PHONY: install
 install: $(SOURCES)
 	go install -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' ./cmd/$(NAME)
+	go install -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' ./cmd/$(NAME)-cli
 
 .PHONY: build
-build: $(BIN)/$(EXECUTABLE)
+build: $(BIN)/$(EXECUTABLE) $(BIN)/$(EXECUTABLE)-cli
 
 $(BIN)/$(EXECUTABLE): $(SOURCES)
 	go build -i -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(BIN)/$(EXECUTABLE)-cli: $(SOURCES)
+	go build -i -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)-cli
 
 .PHONY: release
 release: release-dirs release-linux release-windows release-darwin release-copy release-check
