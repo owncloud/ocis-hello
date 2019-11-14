@@ -5,14 +5,16 @@ import (
 	"os"
 	"path"
 
-	"github.com/rs/zerolog/log"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
 )
 
 //go:generate go run github.com/UnnoTed/fileb0x embed.yml
 
 // assets gets initialized by New and provides the handler.
 type assets struct {
-	path string
+	logger log.Logger
+	path   string
 }
 
 // Open just implements the HTTP filesystem interface.
@@ -34,8 +36,10 @@ func (a assets) Open(original string) (http.File, error) {
 				return f, nil
 			}
 		} else {
-			log.Warn().
-				Msg("Assets directory doesn't exist")
+			level.Warn(a.logger).Log(
+				"msg", "Assets directory doesn't exist",
+				"path", a.path,
+			)
 		}
 	}
 

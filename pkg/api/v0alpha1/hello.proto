@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package ocis.hello.v0alpha1;
-option go_package = "v0alpha1";
+option go_package = "v0alpha1api";
 
 import "google/api/annotations.proto";
 import "protoc-gen-swagger/options/annotations.proto";

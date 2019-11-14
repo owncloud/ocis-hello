@@ -3,16 +3,29 @@ module github.com/owncloud/ocis-hello
 go 1.12
 
 require (
-	github.com/UnnoTed/fileb0x v1.1.3 // indirect
+	contrib.go.opencensus.io/exporter/jaeger v0.2.0
+	contrib.go.opencensus.io/exporter/ocagent v0.6.0
+	contrib.go.opencensus.io/exporter/prometheus v0.1.0
+	contrib.go.opencensus.io/exporter/zipkin v0.1.1
+	github.com/UnnoTed/fileb0x v1.1.4 // indirect
+	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5 // indirect
 	github.com/go-chi/chi v4.0.2+incompatible
-	github.com/haya14busa/goverage v0.0.0-20180129164344-eec3514a20b5 // indirect
-	github.com/mitchellh/gox v1.0.1 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/go-kit/kit v0.9.0
+	github.com/golang/protobuf v1.3.2
+	github.com/grpc-ecosystem/grpc-gateway v1.12.1
+	github.com/jackspirou/syscerts v0.0.0-20160531025014-b68f5469dff1
 	github.com/oklog/run v1.0.0
-	github.com/prometheus/client_golang v1.1.0
-	github.com/rs/zerolog v1.15.0
+	github.com/openzipkin/zipkin-go v0.2.2
+	github.com/prometheus/client_golang v0.9.3
+	github.com/restic/calens v0.0.0-20190419101620-10f36cb4a529 // indirect
+	github.com/rs/zerolog v1.16.0
+	github.com/sony/gobreaker v0.4.1
 	github.com/spf13/cobra v0.0.5
-	github.com/spf13/viper v1.4.0
-	golang.org/x/net v0.0.0-20190909003024-a7b16738d86b
+	github.com/spf13/viper v1.5.0
+	github.com/streadway/handy v0.0.0-20190108123426-d5acb3125c2a // indirect
+	go.opencensus.io v0.22.1
+	golang.org/x/net v0.0.0-20191108063844-7e6e90b9ea88
+	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
+	google.golang.org/genproto v0.0.0-20191028173616-919d9bdd9fe6
+	google.golang.org/grpc v1.25.0
 )

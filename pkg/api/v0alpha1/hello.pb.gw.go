@@ -2,11 +2,11 @@
 // source: v0alpha1/hello.proto
 
 /*
-Package v0alpha1 is a reverse proxy.
+Package v0alpha1api is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package v0alpha1
+package v0alpha1api
 
 import (
 	"context"

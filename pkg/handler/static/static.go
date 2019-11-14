@@ -2,7 +2,9 @@ package static
 
 import (
 	"net/http"
+	"os"
 
+	"github.com/go-kit/kit/log"
 	"github.com/owncloud/ocis-hello/pkg/assets"
 )
 
@@ -31,6 +33,7 @@ func Handler(opts ...Option) http.Handler {
 		s.root,
 		http.FileServer(
 			assets.New(
+				assets.WithLogger(log.NewLogfmtLogger(log.NewSyncWriter(os.Stdout))),
 				assets.WithPath(s.path),
 			),
 		),

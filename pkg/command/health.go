@@ -5,29 +5,32 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/rs/zerolog/log"
+	"github.com/go-kit/kit/log/level"
+	"github.com/owncloud/ocis-hello/pkg/config"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // Health is the entrypoint for the health command.
-func Health() *cobra.Command {
+func Health(cfg *config.Config) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "health",
 		Short: "Check health status",
-		Long:  "",
+		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {
+			logger := NewLogger(cfg)
+
 			resp, err := http.Get(
 				fmt.Sprintf(
 					"http://%s/healthz",
-					viper.GetString("debug.addr"),
+					cfg.Debug.Addr,
 				),
 			)
 
 			if err != nil {
-				log.Error().
-					Err(err).
-					Msg("Failed to request health check")
+				level.Error(logger).Log(
+					"msg", "Failed to request health check",
+					"err", err,
+				)
 
 				os.Exit(1)
 			}
@@ -35,20 +38,26 @@ func Health() *cobra.Command {
 			defer resp.Body.Close()
 
 			if resp.StatusCode != 200 {
-				log.Error().
-					Int("code", resp.StatusCode).
-					Msg("Health seems to be in bad state")
+				level.Error(logger).Log(
+					"msg", "Health seems to be in bad state",
+					"code", resp.StatusCode,
+				)
 
 				os.Exit(1)
 			}
+
+			level.Debug(logger).Log(
+				"msg", "Health got a good state",
+				"code", resp.StatusCode,
+			)
 
 			os.Exit(0)
 		},
 	}
 
 	cmd.Flags().String("debug-addr", "", "Address to debug endpoint")
-	viper.BindPFlag("debug.addr", cmd.Flags().Lookup("debug-addr"))
-	viper.BindEnv("debug.addr", "HELLO_DEBUG_ADDR")
+	cfg.Viper.BindPFlag("debug.addr", cmd.Flags().Lookup("debug-addr"))
+	cfg.Viper.SetDefault("debug.addr", "0.0.0.0:8390")
 
 	return cmd
 }
