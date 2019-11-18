@@ -9,11 +9,15 @@ require (
 	contrib.go.opencensus.io/exporter/zipkin v0.1.1
 	github.com/UnnoTed/fileb0x v1.1.4 // indirect
 	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5 // indirect
+	github.com/cespare/reflex v0.2.0 // indirect
 	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/go-kit/kit v0.9.0
 	github.com/golang/protobuf v1.3.2
 	github.com/grpc-ecosystem/grpc-gateway v1.12.1
 	github.com/jackspirou/syscerts v0.0.0-20160531025014-b68f5469dff1
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
+	github.com/kr/pty v1.1.8 // indirect
+	github.com/ogier/pflag v0.0.1 // indirect
 	github.com/oklog/run v1.0.0
 	github.com/openzipkin/zipkin-go v0.2.2
 	github.com/prometheus/client_golang v0.9.3

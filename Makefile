@@ -126,6 +126,10 @@ release-finish: release-copy release-check
 docs:
 	cd docs; hugo
 
+.PHONY: watch
+watch:
+	go run github.com/cespare/reflex -c reflex.conf
+
 pkg/api/v0alpha1/hello.pb.go: pkg/api/v0alpha1/hello.proto
 	protoc -I=third_party/ -I=pkg/api/ --go_out=plugins=grpc:pkg/api v0alpha1/hello.proto
 
