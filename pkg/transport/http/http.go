@@ -11,9 +11,9 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/justinas/alice"
 	"github.com/owncloud/ocis-hello/pkg/api/v0alpha1"
-	// "github.com/owncloud/ocis-hello/pkg/handler/static"
-	// "github.com/owncloud/ocis-hello/pkg/middleware"
+	"github.com/owncloud/ocis-hello/pkg/middleware"
 	"google.golang.org/grpc"
 )
 
@@ -54,8 +54,24 @@ func (s *Server) ListenAndServe() error {
 	}
 
 	s.server = &http.Server{
-		Addr:         s.addr,
-		Handler:      mux,
+		Addr: s.addr,
+		Handler: alice.New(
+			middleware.RequestID,
+			middleware.RealIP,
+			middleware.Version,
+			middleware.Cache,
+			middleware.Secure,
+			middleware.Options,
+
+			middleware.Logger(
+				middleware.WithLogger(s.logger),
+			),
+			middleware.Static(
+				middleware.WithLogger(s.logger),
+				middleware.WithRoot(s.root),
+				middleware.WithAssets(s.assets),
+			),
+		).Then(mux),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
@@ -147,85 +163,3 @@ func NewServer(opts ...Option) (*Server, error) {
 
 	return s, nil
 }
-
-// func (s Server) Router() *chi.Mux {
-// 	mux := chi.NewRouter()
-
-// 	// mux.Use(hlog.NewHandler(log.Logger))
-// 	// mux.Use(hlog.RemoteAddrHandler("ip"))
-// 	// mux.Use(hlog.URLHandler("path"))
-// 	// mux.Use(hlog.MethodHandler("method"))
-// 	// mux.Use(hlog.RequestIDHandler("request_id", "Request-Id"))
-
-// 	// mux.Use(hlog.AccessHandler(func(r *http.Request, status, size int, duration time.Duration) {
-// 	// 	hlog.FromRequest(r).Debug().
-// 	// 		Str("method", r.Method).
-// 	// 		Str("url", r.URL.String()).
-// 	// 		Int("status", status).
-// 	// 		Int("size", size).
-// 	// 		Dur("duration", duration).
-// 	// 		Msg("")
-// 	// }))
-
-// 	mux.Use(middleware.RealIP)
-// 	mux.Use(middleware.Version)
-// 	mux.Use(middleware.Cache)
-// 	mux.Use(middleware.Secure)
-// 	mux.Use(middleware.Options)
-
-// 	mux.Route(s.root, func(root chi.Router) {
-// 		root.Get("/", func(w http.ResponseWriter, r *http.Request) {
-// 			w.Header().Set("Content-Type", "text/plain")
-// 			w.WriteHeader(http.StatusNotFound)
-
-// 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-// 		})
-
-// 		root.Route("/api", func(base chi.Router) {
-// 			// base.Post("/hello", func(w http.ResponseWriter, r *http.Request) {
-// 			// 	request := struct {
-// 			// 		Name string `json:"name"`
-// 			// 	}{}
-
-// 			// 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-// 			// 		log.Error().
-// 			// 			Err(err).
-// 			// 			Msg("Failed to parse request")
-
-// 			// 		http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
-// 			// 		return
-// 			// 	}
-
-// 			// 	payload := struct {
-// 			// 		Message string `json:"message"`
-// 			// 	}{}
-
-// 			// 	payload.Message = fmt.Sprintf("Hello %s", request.Name)
-// 			// 	response, err := json.Marshal(payload)
-
-// 			// 	if err != nil {
-// 			// 		log.Error().
-// 			// 			Err(err).
-// 			// 			Msg("Failed to build response")
-
-// 			// 		http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
-// 			// 		return
-// 			// 	}
-
-// 			// 	w.Header().Set("Content-Type", "application/json")
-// 			// 	w.WriteHeader(http.StatusOK)
-// 			// 	w.Write(response)
-// 			// })
-// 		})
-
-// 		root.Mount(
-// 			"/",
-// 			static.Handler(
-// 				static.WithRoot(s.root),
-// 				static.WithPath(s.assets),
-// 			),
-// 		)
-// 	})
-
-// 	return mux
-// }

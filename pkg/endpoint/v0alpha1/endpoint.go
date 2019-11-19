@@ -69,8 +69,13 @@ func New(opts ...Option) Set {
 			"hello/greet",
 		)(greet)
 
-		greet = Logging(log.With(o.logger, "type", "endpoint"))(greet)
-		greet = Instrument(o.duration.With("method", "greet"))(greet)
+		greet = Logging(
+			log.With(o.logger, "type", "endpoint"),
+		)(greet)
+
+		greet = Instrument(
+			o.duration.With("method", "greet"),
+		)(greet)
 	}
 
 	return Set{

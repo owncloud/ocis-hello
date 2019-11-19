@@ -5,5 +5,3 @@ coverage.out
 
 /node_modules
 /assets
-
-/pkg/assets/embed.go

@@ -76,7 +76,7 @@ func Root() *cobra.Command {
 
 	cmd.PersistentFlags().Bool("log-pretty", false, "Enable pretty logging")
 	cfg.Viper.BindPFlag("log.pretty", cmd.PersistentFlags().Lookup("log-pretty"))
-	cfg.Viper.SetDefault("log.pretty", true)
+	cfg.Viper.SetDefault("log.pretty", false)
 
 	cmd.AddCommand(Server(cfg))
 	cmd.AddCommand(Health(cfg))
