@@ -11,7 +11,7 @@ else
 endif
 
 PACKAGES ?= $(shell go list ./...)
-SOURCES ?= $(shell find . -name "*.go" -type f)
+SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./node_modules/*")
 GENERATE ?= $(IMPORT)/pkg/assets
 
 TAGS ?=
@@ -67,7 +67,7 @@ lint:
 	for PKG in $(PACKAGES); do go run golang.org/x/lint/golint -set_exit_status $$PKG || exit 1; done;
 
 .PHONY: generate
-generate:
+generate: protobuf
 	go generate $(GENERATE)
 
 .PHONY: changelog
@@ -130,14 +130,26 @@ docs:
 watch:
 	go run github.com/cespare/reflex -c reflex.conf
 
-pkg/api/v0alpha1/hello.pb.go: pkg/api/v0alpha1/hello.proto
-	protoc -I=third_party/ -I=pkg/api/ --go_out=plugins=grpc:pkg/api v0alpha1/hello.proto
+pkg/proto/v0/hello.pb.go: pkg/proto/v0/hello.proto
+	protoc \
+		-I=third_party/ \
+		-I=pkg/proto/v0/ \
+		--go_out=plugins=micro:pkg/proto/v0 hello.proto
 
-pkg/api/v0alpha1/hello.pb.gw.go: pkg/api/v0alpha1/hello.proto
-	protoc -I=third_party/ -I=pkg/api/ --grpc-gateway_out=logtostderr=true:pkg/api v0alpha1/hello.proto
-
-pkg/api/v0alpha1/hello.swagger.json: pkg/api/v0alpha1/hello.proto
-	protoc -I=third_party/ -I=pkg/api/ --swagger_out=logtostderr=true:pkg/api v0alpha1/hello.proto
+pkg/proto/v0/hello.swagger.json: pkg/proto/v0/hello.proto
+	protoc \
+		-I=third_party/ \
+		-I=pkg/proto/v0/ \
+		--swagger_out=logtostderr=true:pkg/proto/v0 hello.proto
 
 .PHONY: protobuf
-protobuf: pkg/api/v0alpha1/hello.pb.go pkg/api/v0alpha1/hello.pb.gw.go pkg/api/v0alpha1/hello.swagger.json
+protobuf:  $(GOPATH)/bin/protoc-gen-go $(GOPATH)/bin/protoc-gen-micro $(GOPATH)/bin/protoc-gen-swagger pkg/proto/v0/hello.pb.go pkg/proto/v0/hello.swagger.json
+
+$(GOPATH)/bin/protoc-gen-go:
+	GO111MODULE=off go get -v github.com/golang/protobuf/protoc-gen-go
+
+$(GOPATH)/bin/protoc-gen-micro:
+	GO111MODULE=off go get -v github.com/micro/protoc-gen-micro
+
+$(GOPATH)/bin/protoc-gen-swagger:
+	GO111MODULE=off go get -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
