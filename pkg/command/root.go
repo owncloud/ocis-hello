@@ -4,111 +4,153 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/micro/cli"
 	"github.com/owncloud/ocis-hello/pkg/config"
 	"github.com/owncloud/ocis-hello/pkg/version"
-	"github.com/spf13/cobra"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
-// Root is the entry point for the ocis-hello command.
-func Root() *cobra.Command {
+// Execute is the entry point for the ocis-hello command.
+func Execute() error {
 	cfg := config.New()
 
-	cmd := &cobra.Command{
-		Use:          "ocis-hello",
-		Short:        "Reva service for helloworld",
-		Long:         ``,
-		Version:      version.String,
-		SilenceUsage: true,
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+	app := &cli.App{
+		Name:     "ocis-hello",
+		Version:  version.String,
+		Usage:    "Example service for Reva/oCIS",
+		Compiled: version.Compiled(),
+
+		Authors: []cli.Author{
+			{
+				Name:  "ownCloud GmbH",
+				Email: "support@owncloud.com",
+			},
+		},
+
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:        "config-file",
+				Value:       "",
+				Usage:       "Path to config file",
+				EnvVar:      "HELLO_CONFIG_FILE",
+				Destination: &cfg.File,
+			},
+			&cli.StringFlag{
+				Name:        "log-level",
+				Value:       "info",
+				Usage:       "Set logging level",
+				EnvVar:      "HELLO_LOG_LEVEL",
+				Destination: &cfg.Log.Level,
+			},
+			&cli.BoolTFlag{
+				Name:        "log-pretty",
+				Usage:       "Enable pretty logging",
+				EnvVar:      "HELLO_LOG_PRETTY",
+				Destination: &cfg.Log.Pretty,
+			},
+			&cli.BoolTFlag{
+				Name:        "log-color",
+				Usage:       "Enable colored logging",
+				EnvVar:      "HELLO_LOG_COLOR",
+				Destination: &cfg.Log.Color,
+			},
+		},
+
+		Before: func(c *cli.Context) error {
 			logger := NewLogger(cfg)
 
-			cfg.Viper.SetConfigName("hello")
+			viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+			viper.SetEnvPrefix("HELLO")
+			viper.AutomaticEnv()
 
-			cfg.Viper.AddConfigPath("/etc/ocis")
-			cfg.Viper.AddConfigPath("$HOME/.ocis")
-			cfg.Viper.AddConfigPath("./config")
+			if c.IsSet("config-file") {
+				viper.SetConfigFile(c.String("config-file"))
+			} else {
+				viper.SetConfigName("hello")
 
-			if err := cfg.Viper.ReadInConfig(); err != nil {
+				viper.AddConfigPath("/etc/ocis")
+				viper.AddConfigPath("$HOME/.ocis")
+				viper.AddConfigPath("./config")
+			}
+
+			if err := viper.ReadInConfig(); err != nil {
 				switch err.(type) {
 				case viper.ConfigFileNotFoundError:
-					level.Debug(logger).Log(
-						"msg", "Continue without config",
-					)
+					logger.Info().
+						Msg("Continue without config")
 				case viper.UnsupportedConfigError:
-					level.Error(logger).Log(
-						"msg", "Unsupported config type",
-					)
+					logger.Fatal().
+						Err(err).
+						Msg("Unsupported config type")
 
 					return err
 				default:
-					level.Error(logger).Log(
-						"msg", "Failed to read config",
-						"err", err,
-					)
+					logger.Fatal().
+						Err(err).
+						Msg("Failed to read config")
 
 					return err
 				}
 			}
 
-			if err := cfg.Viper.Unmarshal(&cfg); err != nil {
-				level.Error(logger).Log(
-					"msg", "Failed to process config",
-					"err", err,
-				)
-
-				return err
+			if err := viper.Unmarshal(&cfg); err != nil {
+				logger.Fatal().
+					Err(err).
+					Msg("Failed to parse config")
 			}
 
 			return nil
 		},
+
+		Commands: []cli.Command{
+			Server(cfg),
+			Health(cfg),
+		},
 	}
 
-	cfg.Viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	cfg.Viper.SetEnvPrefix("HELLO")
-	cfg.Viper.AutomaticEnv()
+	cli.HelpFlag = &cli.BoolFlag{
+		Name:  "help,h",
+		Usage: "Show the help",
+	}
 
-	cmd.PersistentFlags().String("log-level", "", "Set logging level")
-	cfg.Viper.BindPFlag("log.level", cmd.PersistentFlags().Lookup("log-level"))
-	cfg.Viper.SetDefault("log.level", "info")
+	cli.VersionFlag = &cli.BoolFlag{
+		Name:  "version,v",
+		Usage: "Print the version",
+	}
 
-	cmd.PersistentFlags().Bool("log-pretty", false, "Enable pretty logging")
-	cfg.Viper.BindPFlag("log.pretty", cmd.PersistentFlags().Lookup("log-pretty"))
-	cfg.Viper.SetDefault("log.pretty", false)
-
-	cmd.AddCommand(Server(cfg))
-	cmd.AddCommand(Health(cfg))
-
-	return cmd
+	return app.Run(os.Args)
 }
 
-func NewLogger(cfg *config.Config) log.Logger {
-	var (
-		logger log.Logger
-	)
-
-	if cfg.Viper.GetBool("log.pretty") {
-		logger = log.NewSyncLogger(log.NewLogfmtLogger(log.NewSyncWriter(os.Stdout)))
-	} else {
-		logger = log.NewSyncLogger(log.NewJSONLogger(log.NewSyncWriter(os.Stdout)))
-	}
-
-	switch strings.ToLower(cfg.Viper.GetString("log.level")) {
-	case "debug":
-		logger = level.NewFilter(logger, level.AllowDebug())
-	case "warn":
-		logger = level.NewFilter(logger, level.AllowWarn())
+func NewLogger(cfg *config.Config) zerolog.Logger {
+	switch strings.ToLower(cfg.Log.Level) {
+	case "panic":
+		zerolog.SetGlobalLevel(zerolog.PanicLevel)
+	case "fatal":
+		zerolog.SetGlobalLevel(zerolog.FatalLevel)
 	case "error":
-		logger = level.NewFilter(logger, level.AllowError())
+		zerolog.SetGlobalLevel(zerolog.ErrorLevel)
+	case "warn":
+		zerolog.SetGlobalLevel(zerolog.WarnLevel)
+	case "info":
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	case "debug":
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	default:
-		logger = level.NewFilter(logger, level.AllowInfo())
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
 
-	return log.With(
-		logger,
-		"time", log.DefaultTimestampUTC,
-		"service", "hello",
-	)
+	if cfg.Log.Pretty {
+		log.Logger = log.Output(
+			zerolog.NewConsoleWriter(
+				func(w *zerolog.ConsoleWriter) {
+					w.Out = os.Stderr
+					w.NoColor = !cfg.Log.Color
+				},
+			),
+		)
+	}
+
+	return log.Logger.With().Str("service", "hello").Timestamp().Logger()
 }

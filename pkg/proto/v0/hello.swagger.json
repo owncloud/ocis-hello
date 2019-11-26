@@ -24,14 +24,14 @@
     "application/json"
   ],
   "paths": {
-    "/api/v0alpha1/greet": {
+    "/api/v0/greet": {
       "post": {
         "operationId": "Greet",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v0alpha1GreetResponse"
+              "$ref": "#/definitions/v0GreetResponse"
             }
           }
         },
@@ -41,18 +41,18 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v0alpha1GreetRequest"
+              "$ref": "#/definitions/v0GreetRequest"
             }
           }
         ],
         "tags": [
-          "HelloService"
+          "Hello"
         ]
       }
     }
   },
   "definitions": {
-    "v0alpha1GreetRequest": {
+    "v0GreetRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -60,7 +60,7 @@
         }
       }
     },
-    "v0alpha1GreetResponse": {
+    "v0GreetResponse": {
       "type": "object",
       "properties": {
         "message": {

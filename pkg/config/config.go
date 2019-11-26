@@ -1,12 +1,9 @@
 package config
 
-import (
-	"github.com/spf13/viper"
-)
-
-type Client struct {
-	Protocol string
-	Endpoint string
+type Log struct {
+	Level  string
+	Pretty bool
+	Color  bool
 }
 
 type Debug struct {
@@ -38,8 +35,8 @@ type Asset struct {
 }
 
 type Config struct {
-	Viper   *viper.Viper
-	Client  Client
+	File    string
+	Log     Log
 	Debug   Debug
 	HTTP    HTTP
 	GRPC    GRPC
@@ -48,7 +45,5 @@ type Config struct {
 }
 
 func New() *Config {
-	return &Config{
-		Viper: viper.New(),
-	}
+	return &Config{}
 }

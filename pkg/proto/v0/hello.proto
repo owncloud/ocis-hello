@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package ocis.hello.v0alpha1;
-option go_package = "v0alpha1api";
+package com.owncloud.ocis.hello.v0;
+option go_package = "proto";
 
 import "google/api/annotations.proto";
 import "protoc-gen-swagger/options/annotations.proto";
@@ -30,10 +30,10 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
 	};
 };
 
-service HelloService {
+service Hello {
 	rpc Greet(GreetRequest) returns (GreetResponse) {
 		option (google.api.http) = {
-			post: "/api/v0alpha1/greet"
+			post: "/api/v0/greet"
 			body: "*"
 		};
 	}

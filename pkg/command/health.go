@@ -3,20 +3,26 @@ package command
 import (
 	"fmt"
 	"net/http"
-	"os"
 
-	"github.com/go-kit/kit/log/level"
+	"github.com/micro/cli"
 	"github.com/owncloud/ocis-hello/pkg/config"
-	"github.com/spf13/cobra"
 )
 
 // Health is the entrypoint for the health command.
-func Health(cfg *config.Config) *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "health",
-		Short: "Check health status",
-		Long:  ``,
-		Run: func(cmd *cobra.Command, args []string) {
+func Health(cfg *config.Config) cli.Command {
+	return cli.Command{
+		Name:  "health",
+		Usage: "Check health status",
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:        "debug-addr",
+				Value:       "0.0.0.0:8390",
+				Usage:       "Address to debug endpoint",
+				EnvVar:      "HELLO_DEBUG_ADDR",
+				Destination: &cfg.Debug.Addr,
+			},
+		},
+		Action: func(c *cli.Context) error {
 			logger := NewLogger(cfg)
 
 			resp, err := http.Get(
@@ -27,37 +33,24 @@ func Health(cfg *config.Config) *cobra.Command {
 			)
 
 			if err != nil {
-				level.Error(logger).Log(
-					"msg", "Failed to request health check",
-					"err", err,
-				)
-
-				os.Exit(1)
+				logger.Fatal().
+					Err(err).
+					Msg("Failed to request health check")
 			}
 
 			defer resp.Body.Close()
 
 			if resp.StatusCode != 200 {
-				level.Error(logger).Log(
-					"msg", "Health seems to be in bad state",
-					"code", resp.StatusCode,
-				)
-
-				os.Exit(1)
+				logger.Fatal().
+					Int("code", resp.StatusCode).
+					Msg("Health seems to be in bad state")
 			}
 
-			level.Debug(logger).Log(
-				"msg", "Health got a good state",
-				"code", resp.StatusCode,
-			)
+			logger.Debug().
+				Int("code", resp.StatusCode).
+				Msg("Health got a good state")
 
-			os.Exit(0)
+			return nil
 		},
 	}
-
-	cmd.Flags().String("debug-addr", "", "Address to debug endpoint")
-	cfg.Viper.BindPFlag("debug.addr", cmd.Flags().Lookup("debug-addr"))
-	cfg.Viper.SetDefault("debug.addr", "0.0.0.0:8390")
-
-	return cmd
 }
