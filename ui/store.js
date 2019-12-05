@@ -1,4 +1,4 @@
-const namespaced = true
+const hello = require('./client/hello')
 
 const state = {
   config: null,
@@ -11,22 +11,18 @@ const getters = {
 }
 
 const actions = {
-  // Action triggered from within apps store
   loadConfig ({ commit }, config) {
     commit('LOAD_CONFIG', config)
   },
 
   submitName ({ commit, dispatch, getters }, value) {
-    fetch(getters.config.fetchUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'name': value
-      })
+    hello.Greet({
+      $domain: getters.config.url,
+      name: value
     })
       .then(response => {
+        console.log(response)
+
         if (response.ok) {
           response.json()
             .then(json => {
@@ -40,7 +36,9 @@ const actions = {
           }, { root: true })
         }
       })
-      .catch((error) => {
+      .catch(error => {
+        console.log(error)
+
         dispatch('showMessage', {
           title: 'Saving your name failed',
           desc: error.message,
@@ -61,7 +59,7 @@ const mutations = {
 }
 
 export default {
-  namespaced,
+  namespaced: true,
   state,
   getters,
   actions,

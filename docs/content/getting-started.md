@@ -27,6 +27,9 @@ If you prefer to configure the service with environment variables you can see th
 
 ##### Global
 
+HELLO_CONFIG_FILE
+: Path to config file, empty default value
+
 HELLO_LOG_LEVEL
 : Set logging level, defaults to `info`
 
@@ -38,6 +41,21 @@ HELLO_LOG_PRETTY
 
 ##### Server
 
+HELLO_TRACING_ENABLED
+: Enable sending traces, defaults to `false`
+
+HELLO_TRACING_TYPE
+: Tracing backend type, defaults to `jaeger`
+
+HELLO_TRACING_ENDPOINT
+: Endpoint for the agent, empty default value
+
+HELLO_TRACING_COLLECTOR
+: Endpoint for the collector, empty default value
+
+HELLO_TRACING_SERVICE
+: Service name for tracing, defaults to `hello`
+
 HELLO_DEBUG_ADDR
 : Address to bind debug server, defaults to `0.0.0.0:8390`
 
@@ -47,11 +65,14 @@ HELLO_DEBUG_TOKEN
 HELLO_DEBUG_PPROF
 : Enable pprof debugging, defaults to `false`
 
+HELLO_DEBUG_ZPAGES
+: Enable zpages debugging, defaults to `false`
+
 HELLO_HTTP_ADDR
 : Address to bind http server, defaults to `0.0.0.0:8380`
 
-HELLO_HTTP_ROOT
-: Root path for http endpoint, defaults to `/`
+HELLO_GRPC_ADDR
+: Address to bind grpc server, defaults to `0.0.0.0:8381`
 
 HELLO_ASSET_PATH
 : Path to custom assets, empty default value
@@ -67,6 +88,9 @@ If you prefer to configure the service with commandline flags you can see the av
 
 ##### Global
 
+--config-file
+: Path to config file, empty default value
+
 --log-level
 : Set logging level, defaults to `info`
 
@@ -78,6 +102,21 @@ If you prefer to configure the service with commandline flags you can see the av
 
 ##### Server
 
+--tracing-enabled
+: Enable sending traces, defaults to `false`
+
+--tracing-type
+: Tracing backend type, defaults to `jaeger`
+
+--tracing-endpoint
+: Endpoint for the agent, empty default value
+
+--tracing-collector
+: Endpoint for the collector, empty default value
+
+--tracing-service
+: Service name for tracing, defaults to `hello`
+
 --debug-addr
 : Address to bind debug server, defaults to `0.0.0.0:8390`
 
@@ -87,11 +126,14 @@ If you prefer to configure the service with commandline flags you can see the av
 --debug-pprof
 : Enable pprof debugging, defaults to `false`
 
+--debug-zpages
+: Enable zpages debugging, defaults to `false`
+
 --http-addr
 : Address to bind http server, defaults to `0.0.0.0:8380`
 
---http-root
-: Root path for http endpoint, defaults to `/`
+--grpc-addr
+: Address to bind grpc server, defaults to `0.0.0.0:8381`
 
 --asset-path
 : Path to custom assets, empty default value

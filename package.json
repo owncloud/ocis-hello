@@ -15,7 +15,8 @@
     "lint": "eslint ui/**/*.vue ui/**/*.js --color --global requirejs --global require",
     "watch": "webpack --progress --colors --watch --mode development --config webpack.js",
     "build": "webpack -p --config webpack.js",
-    "test": "echo 'Not implemented'"
+    "test": "echo 'Not implemented'",
+    "hello": "node node_modules/swagger-vue-generator/bin/generate-api.js --package-version v0 --source pkg/api/v0/hello.swagger.json --moduleName hello --destination ui/client/hello/index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.0",
@@ -28,6 +29,7 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/register": "^7.4.4",
     "@babel/runtime": "^7.5.4",
+    "axios": "^0.19.0",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
     "core-js": "3",
@@ -44,13 +46,15 @@
     "eslint-plugin-vue": "^5.2.2",
     "husky": ">=2",
     "lint-staged": ">=9",
+    "qs": "^6.9.1",
+    "rimraf": "^3.0.0",
+    "swagger-vue-generator": "^1.0.6",
     "vue-loader": "^15.7.0",
     "vue-template-compiler": "2.6.10",
     "vuex": "3.1.1",
     "webpack": "4.35.3",
     "webpack-cli": "3.3.4",
-    "webpack-merge": "4.2.1",
-    "rimraf": "^3.0.0"
+    "webpack-merge": "4.2.1"
   },
   "browserslist": [
     "last 1 version",

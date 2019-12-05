@@ -1,7 +1,7 @@
 ---
 repository:
   name: ocis-hello
-  description: ':atom_symbol: Example service for Reva/oCIS'
+  description: ':atom_symbol: Example service for oCIS'
   homepage: https://owncloud.github.io/ocis-hello/
   topics: reva, ocis
 

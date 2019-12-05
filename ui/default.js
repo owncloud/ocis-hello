@@ -9,7 +9,7 @@ const appInfo = {
   isFileEditor: false,
   extensions: [],
   config: {
-    fetchUrl: 'http://localhost:8380/api/hello'
+    url: 'http://localhost:8380'
   }
 }
 
