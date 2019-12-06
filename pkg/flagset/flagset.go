@@ -42,7 +42,7 @@ func HealthWithConfig(cfg *config.Config) []cli.Flag {
 	return []cli.Flag{
 		&cli.StringFlag{
 			Name:        "debug-addr",
-			Value:       "0.0.0.0:9110",
+			Value:       "0.0.0.0:9109",
 			Usage:       "Address to debug endpoint",
 			EnvVar:      "HELLO_DEBUG_ADDR",
 			Destination: &cfg.Debug.Addr,
@@ -89,7 +89,7 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "debug-addr",
-			Value:       "0.0.0.0:9110",
+			Value:       "0.0.0.0:9109",
 			Usage:       "Address to bind debug server",
 			EnvVar:      "HELLO_DEBUG_ADDR",
 			Destination: &cfg.Debug.Addr,

@@ -49,7 +49,7 @@ sync:
 .PHONY: clean
 clean:
 	go clean -i ./...
-	rm -rf $(BIN) $(DIST) pkg/assets/embed.go
+	rm -rf $(BIN) $(DIST)
 
 .PHONY: fmt
 fmt:

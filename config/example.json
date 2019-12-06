@@ -1,6 +1,6 @@
 {
   "debug": {
-    "addr": "0.0.0.0:9110",
+    "addr": "0.0.0.0:9109",
     "token": "",
     "pprof": false,
     "zpages": false
