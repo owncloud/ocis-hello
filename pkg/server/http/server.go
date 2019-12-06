@@ -26,9 +26,9 @@ func Server(opts ...Option) (http.Service, error) {
 		http.Flags(flagset.ServerWithConfig(config.New())...),
 	)
 
-	var hello proto.HelloHandler
+	hello := svc.NewService()
+
 	{
-		hello = svc.NewService()
 		hello = svc.NewInstrument(hello, options.Metrics)
 		hello = svc.NewLogging(hello, options.Logger)
 		hello = svc.NewTracing(hello)
@@ -51,6 +51,7 @@ func Server(opts ...Option) (http.Service, error) {
 		),
 		middleware.Static(
 			assets.New(
+				assets.Logger(options.Logger),
 				assets.Config(options.Config),
 			),
 		),

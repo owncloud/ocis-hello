@@ -6,14 +6,14 @@ import (
 	"path"
 
 	"github.com/owncloud/ocis-hello/pkg/config"
-	"github.com/rs/zerolog"
+	"github.com/owncloud/ocis-pkg/log"
 )
 
 //go:generate go run github.com/UnnoTed/fileb0x embed.yml
 
 // assets gets initialized by New and provides the handler.
 type assets struct {
-	logger zerolog.Logger
+	logger log.Logger
 	config *config.Config
 }
 
