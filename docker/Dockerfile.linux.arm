@@ -11,6 +11,8 @@ LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
   org.label-schema.vendor="ownCloud GmbH" \
   org.label-schema.schema-version="1.0"
 
+EXPOSE 9105 9106 9110
+
 ENTRYPOINT ["/usr/bin/ocis-hello"]
 CMD ["server"]
 

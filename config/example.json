@@ -1,12 +1,15 @@
 {
   "debug": {
-    "addr": "0.0.0.0:8390",
+    "addr": "0.0.0.0:9110",
     "token": "",
-    "pprof": false
+    "pprof": false,
+    "zpages": false
   },
   "http": {
-    "addr": "0.0.0.0:8380",
-    "root": "/"
+    "addr": "0.0.0.0:9105",
+  },
+  "grpc": {
+    "addr": "0.0.0.0:9106",
   },
   "tracing": {
     "enabled": false,

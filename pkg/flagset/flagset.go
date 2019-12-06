@@ -42,7 +42,7 @@ func HealthWithConfig(cfg *config.Config) []cli.Flag {
 	return []cli.Flag{
 		&cli.StringFlag{
 			Name:        "debug-addr",
-			Value:       "0.0.0.0:8390",
+			Value:       "0.0.0.0:9110",
 			Usage:       "Address to debug endpoint",
 			EnvVar:      "HELLO_DEBUG_ADDR",
 			Destination: &cfg.Debug.Addr,
@@ -89,7 +89,7 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "debug-addr",
-			Value:       "0.0.0.0:8390",
+			Value:       "0.0.0.0:9110",
 			Usage:       "Address to bind debug server",
 			EnvVar:      "HELLO_DEBUG_ADDR",
 			Destination: &cfg.Debug.Addr,
@@ -115,14 +115,14 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "http-addr",
-			Value:       "0.0.0.0:8380",
+			Value:       "0.0.0.0:9105",
 			Usage:       "Address to bind http server",
 			EnvVar:      "HELLO_HTTP_ADDR",
 			Destination: &cfg.HTTP.Addr,
 		},
 		&cli.StringFlag{
 			Name:        "grpc-addr",
-			Value:       "0.0.0.0:8381",
+			Value:       "0.0.0.0:9106",
 			Usage:       "Address to bind grpc server",
 			EnvVar:      "HELLO_GRPC_ADDR",
 			Destination: &cfg.GRPC.Addr,

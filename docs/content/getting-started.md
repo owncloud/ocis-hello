@@ -57,7 +57,7 @@ HELLO_TRACING_SERVICE
 : Service name for tracing, defaults to `hello`
 
 HELLO_DEBUG_ADDR
-: Address to bind debug server, defaults to `0.0.0.0:8390`
+: Address to bind debug server, defaults to `0.0.0.0:9110`
 
 HELLO_DEBUG_TOKEN
 : Token to grant metrics access, empty default value
@@ -69,10 +69,10 @@ HELLO_DEBUG_ZPAGES
 : Enable zpages debugging, defaults to `false`
 
 HELLO_HTTP_ADDR
-: Address to bind http server, defaults to `0.0.0.0:8380`
+: Address to bind http server, defaults to `0.0.0.0:9105`
 
 HELLO_GRPC_ADDR
-: Address to bind grpc server, defaults to `0.0.0.0:8381`
+: Address to bind grpc server, defaults to `0.0.0.0:9106`
 
 HELLO_ASSET_PATH
 : Path to custom assets, empty default value
@@ -80,7 +80,7 @@ HELLO_ASSET_PATH
 ##### Health
 
 HELLO_DEBUG_ADDR
-: Address to debug endpoint, defaults to `0.0.0.0:8390`
+: Address to debug endpoint, defaults to `0.0.0.0:9110`
 
 #### Commandline flags
 
@@ -118,7 +118,7 @@ If you prefer to configure the service with commandline flags you can see the av
 : Service name for tracing, defaults to `hello`
 
 --debug-addr
-: Address to bind debug server, defaults to `0.0.0.0:8390`
+: Address to bind debug server, defaults to `0.0.0.0:9110`
 
 --debug-token
 : Token to grant metrics access, empty default value
@@ -130,10 +130,10 @@ If you prefer to configure the service with commandline flags you can see the av
 : Enable zpages debugging, defaults to `false`
 
 --http-addr
-: Address to bind http server, defaults to `0.0.0.0:8380`
+: Address to bind http server, defaults to `0.0.0.0:9105`
 
 --grpc-addr
-: Address to bind grpc server, defaults to `0.0.0.0:8381`
+: Address to bind grpc server, defaults to `0.0.0.0:9106`
 
 --asset-path
 : Path to custom assets, empty default value
@@ -141,7 +141,7 @@ If you prefer to configure the service with commandline flags you can see the av
 ##### Health
 
 --debug-addr
-: Address to debug endpoint, defaults to `0.0.0.0:8390`
+: Address to debug endpoint, defaults to `0.0.0.0:9110`
 
 #### Configuration file
 
@@ -169,7 +169,7 @@ ocis-hello health --help
 
 ### Metrics
 
-This service provides some [Prometheus](prom) metrics through the debug endpoint, you can optionally secure the metrics endpoint by some random token, which got to be configured through one of the flag `--debug-token` or the environment variable `HELLO_DEBUG_TOKEN` mentioned above. By default the metrics endpoint is bound to `http://0.0.0.0:8390/metrics`.
+This service provides some [Prometheus](prom) metrics through the debug endpoint, you can optionally secure the metrics endpoint by some random token, which got to be configured through one of the flag `--debug-token` or the environment variable `HELLO_DEBUG_TOKEN` mentioned above. By default the metrics endpoint is bound to `http://0.0.0.0:9110/metrics`.
 
 go_gc_duration_seconds
 : A summary of the GC invocation durations
