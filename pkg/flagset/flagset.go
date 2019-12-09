@@ -121,6 +121,13 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.HTTP.Addr,
 		},
 		&cli.StringFlag{
+			Name:        "http-root",
+			Value:       "/",
+			Usage:       "Root path of http server",
+			EnvVar:      "HELLO_HTTP_ROOT",
+			Destination: &cfg.HTTP.Root,
+		},
+		&cli.StringFlag{
 			Name:        "grpc-addr",
 			Value:       "0.0.0.0:9106",
 			Usage:       "Address to bind grpc server",

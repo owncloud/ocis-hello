@@ -18,6 +18,7 @@ type Debug struct {
 // HTTP defines the available http configuration.
 type HTTP struct {
 	Addr string
+	Root string
 }
 
 // GRPC defines the available grpc configuration.

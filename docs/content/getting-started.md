@@ -71,6 +71,9 @@ HELLO_DEBUG_ZPAGES
 HELLO_HTTP_ADDR
 : Address to bind http server, defaults to `0.0.0.0:9105`
 
+HELLO_HTTP_ROOT
+: Root path of http server, defaults to `/`
+
 HELLO_GRPC_ADDR
 : Address to bind grpc server, defaults to `0.0.0.0:9106`
 
@@ -131,6 +134,9 @@ If you prefer to configure the service with commandline flags you can see the av
 
 --http-addr
 : Address to bind http server, defaults to `0.0.0.0:9105`
+
+--http-root
+: Root path of http server, defaults to `/`
 
 --grpc-addr
 : Address to bind grpc server, defaults to `0.0.0.0:9106`
