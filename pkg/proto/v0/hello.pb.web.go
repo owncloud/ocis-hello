@@ -12,16 +12,15 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/golang/protobuf/jsonpb"
-	"github.com/micro/go-micro/web"
 )
 
 type webHelloHandler struct {
-	m *chi.Mux
+	r chi.Router
 	h HelloHandler
 }
 
 func (h *webHelloHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h.m.ServeHTTP(w, r)
+	h.r.ServeHTTP(w, r)
 }
 
 func (h *webHelloHandler) Greet(w http.ResponseWriter, r *http.Request) {
@@ -46,17 +45,13 @@ func (h *webHelloHandler) Greet(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, resp)
 }
 
-func RegisterHelloWeb(svc web.Service, i HelloHandler, middlewares ...func(http.Handler) http.Handler) {
-	m := chi.NewMux()
-	m.Use(middlewares...)
-
+func RegisterHelloWeb(r chi.Router, i HelloHandler, middlewares ...func(http.Handler) http.Handler) {
 	handler := &webHelloHandler{
-		m: m,
+		r: r,
 		h: i,
 	}
 
-	m.MethodFunc("POST", "/api/v0/greet", handler.Greet)
-	svc.Handle("/", handler)
+	r.MethodFunc("POST", "/api/v0/greet", handler.Greet)
 }
 
 // GreetRequestJSONMarshaler describes the default jsonpb.Marshaler used by all

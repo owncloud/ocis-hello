@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/go-chi/chi"
 	"github.com/owncloud/ocis-hello/pkg/assets"
 	"github.com/owncloud/ocis-hello/pkg/config"
 	"github.com/owncloud/ocis-hello/pkg/flagset"
@@ -34,27 +35,41 @@ func Server(opts ...Option) (http.Service, error) {
 		hello = svc.NewTracing(hello)
 	}
 
-	proto.RegisterHelloWeb(
-		service,
-		hello,
-		middleware.RealIP,
-		middleware.RequestID,
-		middleware.Cache,
-		middleware.Cors,
-		middleware.Secure,
-		middleware.Version(
-			"hello",
-			version.String,
+	mux := chi.NewMux()
+
+	mux.Use(middleware.RealIP)
+	mux.Use(middleware.RequestID)
+	mux.Use(middleware.Cache)
+	mux.Use(middleware.Cors)
+	mux.Use(middleware.Secure)
+
+	mux.Use(middleware.Version(
+		"hello",
+		version.String,
+	))
+
+	mux.Use(middleware.Logger(
+		options.Logger,
+	))
+
+	mux.Use(middleware.Static(
+		options.Config.HTTP.Root,
+		assets.New(
+			assets.Logger(options.Logger),
+			assets.Config(options.Config),
 		),
-		middleware.Logger(
-			options.Logger,
-		),
-		middleware.Static(
-			assets.New(
-				assets.Logger(options.Logger),
-				assets.Config(options.Config),
-			),
-		),
+	))
+
+	mux.Route(options.Config.HTTP.Root, func(r chi.Router) {
+		proto.RegisterHelloWeb(
+			r,
+			hello,
+		)
+	})
+
+	service.Handle(
+		"/",
+		mux,
 	)
 
 	service.Init()
