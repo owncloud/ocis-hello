@@ -3,10 +3,8 @@ package http
 import (
 	"github.com/go-chi/chi"
 	"github.com/owncloud/ocis-hello/pkg/assets"
-	"github.com/owncloud/ocis-hello/pkg/config"
-	"github.com/owncloud/ocis-hello/pkg/flagset"
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
-	"github.com/owncloud/ocis-hello/pkg/service/v0"
+	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/version"
 	"github.com/owncloud/ocis-pkg/middleware"
 	"github.com/owncloud/ocis-pkg/service/http"
@@ -23,8 +21,7 @@ func Server(opts ...Option) (http.Service, error) {
 		http.Version(version.String),
 		http.Address(options.Config.HTTP.Addr),
 		http.Context(options.Context),
-		http.Flags(flagset.RootWithConfig(config.New())...),
-		http.Flags(flagset.ServerWithConfig(config.New())...),
+		http.Flags(options.Flags...),
 	)
 
 	hello := svc.NewService()
