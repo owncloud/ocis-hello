@@ -132,12 +132,15 @@ func Server(cfg *config.Config) cli.Command {
 
 			defer cancel()
 
+			// Flags have to be injected all the way down to the go-micro service
 			{
 				server, err := http.Server(
 					http.Logger(logger),
 					http.Context(ctx),
 					http.Config(cfg),
 					http.Metrics(metrics),
+					http.Flags(flagset.RootWithConfig(cfg)),
+					http.Flags(flagset.ServerWithConfig(cfg)),
 				)
 
 				if err != nil {
@@ -166,6 +169,8 @@ func Server(cfg *config.Config) cli.Command {
 					grpc.Context(ctx),
 					grpc.Config(cfg),
 					grpc.Metrics(metrics),
+					grpc.Flags(flagset.RootWithConfig(cfg)),
+					grpc.Flags(flagset.ServerWithConfig(cfg)),
 				)
 
 				if err != nil {
