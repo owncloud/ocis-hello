@@ -144,9 +144,9 @@ func Server(cfg *config.Config) cli.Command {
 				)
 
 				if err != nil {
-					logger.Info().
+					logger.Error().
 						Err(err).
-						Str("transport", "http").
+						Str("server", "http").
 						Msg("Failed to initialize server")
 
 					return err
@@ -156,7 +156,7 @@ func Server(cfg *config.Config) cli.Command {
 					return server.Run()
 				}, func(_ error) {
 					logger.Info().
-						Str("transport", "http").
+						Str("server", "http").
 						Msg("Shutting down server")
 
 					cancel()
@@ -174,9 +174,9 @@ func Server(cfg *config.Config) cli.Command {
 				)
 
 				if err != nil {
-					logger.Info().
+					logger.Error().
 						Err(err).
-						Str("transport", "grpc").
+						Str("server", "grpc").
 						Msg("Failed to initialize server")
 
 					return err
@@ -186,7 +186,7 @@ func Server(cfg *config.Config) cli.Command {
 					return server.Run()
 				}, func(_ error) {
 					logger.Info().
-						Str("transport", "grpc").
+						Str("server", "grpc").
 						Msg("Shutting down server")
 
 					cancel()
@@ -201,9 +201,9 @@ func Server(cfg *config.Config) cli.Command {
 				)
 
 				if err != nil {
-					logger.Info().
+					logger.Error().
 						Err(err).
-						Str("transport", "debug").
+						Str("server", "debug").
 						Msg("Failed to initialize server")
 
 					return err
@@ -218,13 +218,13 @@ func Server(cfg *config.Config) cli.Command {
 					defer cancel()
 
 					if err := server.Shutdown(ctx); err != nil {
-						logger.Info().
+						logger.Error().
 							Err(err).
-							Str("transport", "debug").
+							Str("server", "debug").
 							Msg("Failed to shutdown server")
 					} else {
 						logger.Info().
-							Str("transport", "debug").
+							Str("server", "debug").
 							Msg("Shutting down server")
 					}
 				})
