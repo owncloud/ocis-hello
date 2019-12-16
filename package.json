@@ -16,7 +16,7 @@
     "watch": "webpack --progress --colors --watch --mode development --config webpack.js",
     "build": "webpack -p --config webpack.js",
     "test": "echo 'Not implemented'",
-    "hello": "node node_modules/swagger-vue-generator/bin/generate-api.js --package-version v0 --source pkg/api/v0/hello.swagger.json --moduleName hello --destination ui/client/hello/index.js"
+    "hello": "node node_modules/swagger-vue-generator/bin/generate-api.js --package-version v0 --source pkg/proto/v0/hello.swagger.json --moduleName hello --destination ui/client/hello/index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.0",
