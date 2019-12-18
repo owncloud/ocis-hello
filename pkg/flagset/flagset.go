@@ -144,9 +144,9 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 		&cli.StringFlag{
 			Name:        "namespace",
 			Value:       "com.owncloud",
-			Usage:       "",
+			Usage:       "Set the base namespace for both web and api gateway",
 			EnvVar:      "HELLO_NAMESPACE",
-			Destination: &cfg.HTTP.Namespace,
+			Destination: &cfg.Namespace,
 		},
 	}
 }
