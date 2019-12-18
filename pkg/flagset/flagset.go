@@ -141,5 +141,12 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVar:      "HELLO_ASSET_PATH",
 			Destination: &cfg.Asset.Path,
 		},
+		&cli.StringFlag{
+			Name:        "namespace",
+			Value:       "com.owncloud",
+			Usage:       "",
+			EnvVar:      "HELLO_NAMESPACE",
+			Destination: &cfg.HTTP.Namespace,
+		},
 	}
 }
