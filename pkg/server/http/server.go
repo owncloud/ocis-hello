@@ -16,7 +16,7 @@ func Server(opts ...Option) (http.Service, error) {
 
 	service := http.NewService(
 		http.Logger(options.Logger),
-		http.Namespace("go.micro.web"),
+		http.Namespace("com.owncloud.web"),
 		http.Name("hello"),
 		http.Version(version.String),
 		http.Address(options.Config.HTTP.Addr),
