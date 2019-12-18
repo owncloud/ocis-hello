@@ -42,13 +42,14 @@ type Asset struct {
 
 // Config combines all available configuration parts.
 type Config struct {
-	File    string
-	Log     Log
-	Debug   Debug
-	HTTP    HTTP
-	GRPC    GRPC
-	Tracing Tracing
-	Asset   Asset
+	File      string
+	Namespace string
+	Log       Log
+	Debug     Debug
+	HTTP      HTTP
+	GRPC      GRPC
+	Tracing   Tracing
+	Asset     Asset
 }
 
 // New initializes a new configuration with or without defaults.
