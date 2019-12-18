@@ -39,6 +39,8 @@ func Server(cfg *config.Config) cli.Command {
 		},
 		Action: func(c *cli.Context) error {
 			logger := NewLogger(cfg)
+			httpNamespace := c.String("http-namespace")
+			grpcNamespace := c.String("grpc-namespace")
 
 			if cfg.Tracing.Enabled {
 				switch t := cfg.Tracing.Type; t {
@@ -136,6 +138,7 @@ func Server(cfg *config.Config) cli.Command {
 			{
 				server, err := http.Server(
 					http.Logger(logger),
+					http.Namespace(httpNamespace),
 					http.Context(ctx),
 					http.Config(cfg),
 					http.Metrics(metrics),
@@ -166,6 +169,7 @@ func Server(cfg *config.Config) cli.Command {
 			{
 				server, err := grpc.Server(
 					grpc.Logger(logger),
+					grpc.Namespace(grpcNamespace),
 					grpc.Context(ctx),
 					grpc.Config(cfg),
 					grpc.Metrics(metrics),

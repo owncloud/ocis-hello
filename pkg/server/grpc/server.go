@@ -13,8 +13,8 @@ func Server(opts ...Option) (grpc.Service, error) {
 
 	service := grpc.NewService(
 		grpc.Logger(options.Logger),
-		grpc.Namespace("go.micro.api"),
-		grpc.Name("hello"),
+		grpc.Namespace(options.Namespace),
+		grpc.Name("api.hello"),
 		grpc.Version(version.String),
 		grpc.Address(options.Config.GRPC.Addr),
 		grpc.Context(options.Context),

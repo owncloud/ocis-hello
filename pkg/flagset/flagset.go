@@ -141,5 +141,19 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVar:      "HELLO_ASSET_PATH",
 			Destination: &cfg.Asset.Path,
 		},
+		&cli.StringFlag{
+			Name:        "http-namespace",
+			Value:       "com.owncloud",
+			Usage:       "Set the base namespace for the http namespace",
+			EnvVar:      "HELLO_HTTP_NAMESPACE",
+			Destination: &cfg.HTTP.Namespace,
+		},
+		&cli.StringFlag{
+			Name:        "grpc-namespace",
+			Value:       "com.owncloud",
+			Usage:       "Set the base namespace for the grpc namespace",
+			EnvVar:      "HELLO_GRPC_NAMESPACE",
+			Destination: &cfg.GRPC.Namespace,
+		},
 	}
 }
