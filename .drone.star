@@ -128,6 +128,21 @@ def testing(ctx):
         ],
       },
       {
+        'name': 'acceptance-tests',
+        'image': 'webhippie/nodejs:latest',
+        'pull': 'always',
+        'commands': [
+          './bin/ocis-hello server &',
+          'yarn acceptance-tests tests/acceptance/features/',
+        ],
+        'volumes': [
+          {
+            'name': 'gopath',
+            'path': '/srv/app',
+          },
+        ],
+      },
+      {
         'name': 'codacy',
         'image': 'plugins/codacy:1',
         'pull': 'always',
