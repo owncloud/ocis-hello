@@ -12,8 +12,8 @@ module.exports = {
   output: {
     path: require('path').resolve(__dirname, 'assets'),
     publicPath: 'apps/hello/',
-    chunkFilename: '[name].hello.js',
-    filename: 'hello.js'
+    chunkFilename: '[name].hello.bundle.js',
+    filename: 'hello.bundle.js'
   },
   module: {
     rules: [{
