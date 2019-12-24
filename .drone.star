@@ -118,6 +118,7 @@ def testing(ctx):
         'image': 'webhippie/golang:1.13',
         'pull': 'always',
         'commands': [
+          './bin/ocis-hello server &',
           'make test',
         ],
         'volumes': [
