@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"github.com/magiconair/properties/assert"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -71,7 +71,7 @@ func sendRequest(t *testing.T, method, endpoint, data string) *http.Response {
 	if err != nil {
 		t.Error(err)
 	}
-	
+
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
 		t.Error(err)
