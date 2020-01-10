@@ -1,4 +1,4 @@
-const hello = require('./client/hello')
+import { Greet } from './client/hello'
 
 const state = {
   config: null,
@@ -16,7 +16,7 @@ const actions = {
   },
 
   submitName ({ commit, dispatch, getters }, value) {
-    hello.Greet({
+    Greet({
       $domain: getters.config.url,
       name: value
     })
