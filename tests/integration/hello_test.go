@@ -1,12 +1,13 @@
 package proto
 
 import (
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var host = "http://localhost:9105/"
