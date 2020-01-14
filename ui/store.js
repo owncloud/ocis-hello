@@ -18,16 +18,13 @@ const actions = {
   submitName ({ commit, dispatch, getters }, value) {
     Greet({
       $domain: getters.config.url,
-      name: value
+      body: { name: value }
     })
       .then(response => {
         console.log(response)
 
-        if (response.ok) {
-          response.json()
-            .then(json => {
-              commit('SET_MESSAGE', json.message)
-            })
+        if (response.status === 200 || response.status === 201) {
+          commit('SET_MESSAGE', response.data.message)
         } else {
           dispatch('showMessage', {
             title: 'Response failed',
@@ -37,7 +34,7 @@ const actions = {
         }
       })
       .catch(error => {
-        console.log(error)
+        console.error(error)
 
         dispatch('showMessage', {
           title: 'Saving your name failed',
