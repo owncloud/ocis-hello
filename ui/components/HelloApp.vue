@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-
 export default {
   name: 'HelloApp',
   data: function () {
@@ -26,11 +24,15 @@ export default {
       name: 'World'
     }
   },
-  methods: {
-    ...mapActions('Hello', ['submitName'])
-  },
   computed: {
-    ...mapGetters('Hello', ['message'])
+    message () {
+      return this.$store.getters['Hello/message']
+    }
+  },
+  methods: {
+    submitName (name) {
+      this.$store.dispatch('Hello/submitName', name)
+    }
   }
 }
 </script>

@@ -1,19 +1,17 @@
-import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import HelloApp from './components/HelloApp.vue'
+import store from './store'
 
 const appInfo = {
   name: 'Hello',
   id: 'hello',
-  icon: 'folder',
+  icon: 'info',
   isFileEditor: false,
   extensions: [],
   config: {
     url: 'http://localhost:9105'
   }
 }
-
-const store = require('./store.js')
 
 const routes = [
   {
@@ -36,9 +34,9 @@ const navItems = [
   }
 ]
 
-export default define({
+export default {
   appInfo,
   store,
   routes,
   navItems
-})
+}
