@@ -397,7 +397,7 @@ def binary(ctx, name):
           'files': [
             'dist/release/*',
           ],
-          'title': ctx.build.ref.replace("refs/tags/", ""),
+          'title': ctx.build.ref.replace("refs/tags/v", ""),
           'note': 'dist/CHANGELOG.md',
           'overwrite': True,
         },
@@ -470,6 +470,7 @@ def manifest(ctx):
   }
 
 def changelog(ctx):
+  repo_slug = ctx.build.source_repo if ctx.build.source_repo else ctx.repo.slug
   return {
     'kind': 'pipeline',
     'type': 'docker',
@@ -490,8 +491,8 @@ def changelog(ctx):
           'actions': [
             'clone',
           ],
-          'remote': 'https://github.com/%s' % (ctx.repo.slug),
-          'branch': ctx.build.branch if ctx.build.event == 'pull_request' else 'master',
+          'remote': 'https://github.com/%s' % (repo_slug),
+          'branch': ctx.build.source if ctx.build.event == 'pull_request' else 'master',
           'path': '/drone/src',
           'netrc_machine': 'github.com',
           'netrc_username': {
@@ -508,6 +509,14 @@ def changelog(ctx):
         'pull': 'always',
         'commands': [
           'make changelog',
+        ],
+      },
+      {
+        'name': 'diff',
+        'image': 'owncloud/alpine:latest',
+        'pull': 'always',
+        'commands': [
+          'git diff',
         ],
       },
       {
@@ -554,7 +563,7 @@ def changelog(ctx):
     'trigger': {
       'ref': [
         'refs/heads/master',
-        'refs/tags/**',
+        'refs/pull/**',
       ],
     },
   }

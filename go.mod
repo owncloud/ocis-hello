@@ -21,6 +21,7 @@ require (
 	github.com/openzipkin/zipkin-go v0.1.6
 	github.com/owncloud/ocis-pkg v1.2.1-0.20191217084055-eab942498596
 	github.com/prometheus/client_golang v1.2.1
+	github.com/restic/calens v0.2.0 // indirect
 	github.com/spf13/viper v1.6.1
 	go.opencensus.io v0.22.2
 	golang.org/x/net v0.0.0-20191207000613-e7e4b65ae663

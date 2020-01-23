@@ -1,7 +1,29 @@
-{{- range $changes := . }}{{ with $changes -}}
-# Changelog for {{ .Version }}
+{{ $allVersions := . }}
+{{- range $index, $changes := . }}{{ with $changes -}}
+# Changelog for [{{ .Version }}] ({{ .Date }})
 
-The following sections list the changes for {{ .Version }}.
+The following sections list the changes in ownCloud ocis-hello {{ .Version }}.
+
+{{ if gt (len $allVersions) 1 -}}
+{{/* creating version compare links */ -}}
+{{ $next := add1 $index -}}
+{{ if ne (len $allVersions) $next -}}
+{{ $previousVersion := (index $allVersions $next).Version -}}
+{{ if eq .Version "unreleased" -}}
+[{{ .Version }}]: https://github.com/owncloud/ocis-hello/compare/v{{ $previousVersion }}...master
+
+{{ else -}}
+[{{ .Version }}]: https://github.com/owncloud/ocis-hello/compare/v{{ $previousVersion }}...v{{ .Version }}
+
+{{ end -}}
+{{ end -}}
+
+{{- /* last version managed by calens, end of the loop */ -}}
+{{ if eq .Version "0.1.0" -}}
+[{{ .Version }}]: https://github.com/owncloud/ocis-hello/compare/c43f3a33cb0b57d7e25ebc88c138d22e95f88cfe...v{{ .Version }}
+
+{{ end -}}
+{{- end -}}
 
 ## Summary
 {{ range $entry := .Entries }}{{ with $entry }}
@@ -23,6 +45,6 @@ The following sections list the changes for {{ .Version }}.
 {{ range $url := .OtherURLs }}
    {{ $url -}}
 {{ end }}
-{{ end }}{{ end }}
 
+{{ end }}{{ end -}}
 {{ end }}{{ end -}}
