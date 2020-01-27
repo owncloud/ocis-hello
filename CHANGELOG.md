@@ -1,6 +1,6 @@
-# Changelog for unreleased
+# Changelog for [0.1.0] (2020-01-24)
 
-The following sections list the changes for unreleased.
+The following sections list the changes in ownCloud ocis-hello 0.1.0.
 
 ## Summary
 
@@ -15,5 +15,4 @@ The following sections list the changes for unreleased.
    Infinite Scale.
 
    https://github.com/owncloud/ocis-hello/issues/1
-
 
