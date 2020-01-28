@@ -400,6 +400,7 @@ def binary(ctx, name):
           'title': ctx.build.ref.replace("refs/tags/v", ""),
           'note': 'dist/CHANGELOG.md',
           'overwrite': True,
+          'prerelease': len(ctx.build.ref.split("-")) > 1,
         },
         'when': {
           'ref': [
