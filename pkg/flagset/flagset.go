@@ -1,7 +1,7 @@
 package flagset
 
 import (
-	"github.com/micro/cli"
+	"github.com/micro/cli/v2"
 	"github.com/owncloud/ocis-hello/pkg/config"
 )
 
@@ -12,26 +12,26 @@ func RootWithConfig(cfg *config.Config) []cli.Flag {
 			Name:        "config-file",
 			Value:       "",
 			Usage:       "Path to config file",
-			EnvVar:      "HELLO_CONFIG_FILE",
+			EnvVars:     []string{"HELLO_CONFIG_FILE"},
 			Destination: &cfg.File,
 		},
 		&cli.StringFlag{
 			Name:        "log-level",
 			Value:       "info",
 			Usage:       "Set logging level",
-			EnvVar:      "HELLO_LOG_LEVEL",
+			EnvVars:     []string{"HELLO_LOG_LEVEL"},
 			Destination: &cfg.Log.Level,
 		},
-		&cli.BoolTFlag{
+		&cli.BoolFlag{
 			Name:        "log-pretty",
 			Usage:       "Enable pretty logging",
-			EnvVar:      "HELLO_LOG_PRETTY",
+			EnvVars:     []string{"HELLO_LOG_PRETTY"},
 			Destination: &cfg.Log.Pretty,
 		},
-		&cli.BoolTFlag{
+		&cli.BoolFlag{
 			Name:        "log-color",
 			Usage:       "Enable colored logging",
-			EnvVar:      "HELLO_LOG_COLOR",
+			EnvVars:     []string{"HELLO_LOG_COLOR"},
 			Destination: &cfg.Log.Color,
 		},
 	}
@@ -44,7 +44,7 @@ func HealthWithConfig(cfg *config.Config) []cli.Flag {
 			Name:        "debug-addr",
 			Value:       "0.0.0.0:9109",
 			Usage:       "Address to debug endpoint",
-			EnvVar:      "HELLO_DEBUG_ADDR",
+			EnvVars:     []string{"HELLO_DEBUG_ADDR"},
 			Destination: &cfg.Debug.Addr,
 		},
 	}
@@ -56,103 +56,103 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 		&cli.BoolFlag{
 			Name:        "tracing-enabled",
 			Usage:       "Enable sending traces",
-			EnvVar:      "HELLO_TRACING_ENABLED",
+			EnvVars:     []string{"HELLO_TRACING_ENABLED"},
 			Destination: &cfg.Tracing.Enabled,
 		},
 		&cli.StringFlag{
 			Name:        "tracing-type",
 			Value:       "jaeger",
 			Usage:       "Tracing backend type",
-			EnvVar:      "HELLO_TRACING_TYPE",
+			EnvVars:     []string{"HELLO_TRACING_TYPE"},
 			Destination: &cfg.Tracing.Type,
 		},
 		&cli.StringFlag{
 			Name:        "tracing-endpoint",
 			Value:       "",
 			Usage:       "Endpoint for the agent",
-			EnvVar:      "HELLO_TRACING_ENDPOINT",
+			EnvVars:     []string{"HELLO_TRACING_ENDPOINT"},
 			Destination: &cfg.Tracing.Endpoint,
 		},
 		&cli.StringFlag{
 			Name:        "tracing-collector",
 			Value:       "",
 			Usage:       "Endpoint for the collector",
-			EnvVar:      "HELLO_TRACING_COLLECTOR",
+			EnvVars:     []string{"HELLO_TRACING_COLLECTOR"},
 			Destination: &cfg.Tracing.Collector,
 		},
 		&cli.StringFlag{
 			Name:        "tracing-service",
 			Value:       "hello",
 			Usage:       "Service name for tracing",
-			EnvVar:      "HELLO_TRACING_SERVICE",
+			EnvVars:     []string{"HELLO_TRACING_SERVICE"},
 			Destination: &cfg.Tracing.Service,
 		},
 		&cli.StringFlag{
 			Name:        "debug-addr",
 			Value:       "0.0.0.0:9109",
 			Usage:       "Address to bind debug server",
-			EnvVar:      "HELLO_DEBUG_ADDR",
+			EnvVars:     []string{"HELLO_DEBUG_ADDR"},
 			Destination: &cfg.Debug.Addr,
 		},
 		&cli.StringFlag{
 			Name:        "debug-token",
 			Value:       "",
 			Usage:       "Token to grant metrics access",
-			EnvVar:      "HELLO_DEBUG_TOKEN",
+			EnvVars:     []string{"HELLO_DEBUG_TOKEN"},
 			Destination: &cfg.Debug.Token,
 		},
 		&cli.BoolFlag{
 			Name:        "debug-pprof",
 			Usage:       "Enable pprof debugging",
-			EnvVar:      "HELLO_DEBUG_PPROF",
+			EnvVars:     []string{"HELLO_DEBUG_PPROF"},
 			Destination: &cfg.Debug.Pprof,
 		},
 		&cli.BoolFlag{
 			Name:        "debug-zpages",
 			Usage:       "Enable zpages debugging",
-			EnvVar:      "HELLO_DEBUG_ZPAGES",
+			EnvVars:     []string{"HELLO_DEBUG_ZPAGES"},
 			Destination: &cfg.Debug.Zpages,
 		},
 		&cli.StringFlag{
 			Name:        "http-addr",
 			Value:       "0.0.0.0:9105",
 			Usage:       "Address to bind http server",
-			EnvVar:      "HELLO_HTTP_ADDR",
+			EnvVars:     []string{"HELLO_HTTP_ADDR"},
 			Destination: &cfg.HTTP.Addr,
 		},
 		&cli.StringFlag{
 			Name:        "http-root",
 			Value:       "/",
 			Usage:       "Root path of http server",
-			EnvVar:      "HELLO_HTTP_ROOT",
+			EnvVars:     []string{"HELLO_HTTP_ROOT"},
 			Destination: &cfg.HTTP.Root,
 		},
 		&cli.StringFlag{
 			Name:        "grpc-addr",
 			Value:       "0.0.0.0:9106",
 			Usage:       "Address to bind grpc server",
-			EnvVar:      "HELLO_GRPC_ADDR",
+			EnvVars:     []string{"HELLO_GRPC_ADDR"},
 			Destination: &cfg.GRPC.Addr,
 		},
 		&cli.StringFlag{
 			Name:        "asset-path",
 			Value:       "",
 			Usage:       "Path to custom assets",
-			EnvVar:      "HELLO_ASSET_PATH",
+			EnvVars:     []string{"HELLO_ASSET_PATH"},
 			Destination: &cfg.Asset.Path,
 		},
 		&cli.StringFlag{
 			Name:        "http-namespace",
 			Value:       "com.owncloud",
 			Usage:       "Set the base namespace for the http namespace",
-			EnvVar:      "HELLO_HTTP_NAMESPACE",
+			EnvVars:     []string{"HELLO_HTTP_NAMESPACE"},
 			Destination: &cfg.HTTP.Namespace,
 		},
 		&cli.StringFlag{
 			Name:        "grpc-namespace",
 			Value:       "com.owncloud",
 			Usage:       "Set the base namespace for the grpc namespace",
-			EnvVar:      "HELLO_GRPC_NAMESPACE",
+			EnvVars:     []string{"HELLO_GRPC_NAMESPACE"},
 			Destination: &cfg.GRPC.Namespace,
 		},
 	}
