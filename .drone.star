@@ -669,7 +669,7 @@ def website(ctx):
         'name': 'downstream',
         'image': 'plugins/downstream',
         'settings': {
-          'server': 'https://drone.owncloud.com',
+          'server': 'https://cloud.drone.io/',
           'token': {
             'from_secret': 'drone_token',
           },
