@@ -666,16 +666,15 @@ def website(ctx):
         },
       },
       {
-        'name': "downstream",
-        'image': "plugins/downstream",
+        'name': 'downstream',
+        'image': 'plugins/downstream',
         'settings': {
-          'server': "https://drone.owncloud.com",
+          'server': 'https://drone.owncloud.com',
           'token': {
-            'from_secret': "drone_token"
+            'from_secret': 'drone_token',
           },
-          'fork': 'true',
           'repositories': [
-            "owncloud-ansible/owncloud-ansible.github.io@source",
+            'owncloud/owncloud.github.io@source',
           ],
         },
       },
