@@ -1,8 +1,7 @@
 ---
-title: "About"
-date: 2018-05-02T00:00:00+00:00
-anchor: "about"
-weight: 10
+title: ocis-hello
 ---
+
+[![GitHub](https://img.shields.io/github/license/owncloud/ocis-hello)](https://github.com/owncloud/ocis-hello/blob/master/LICENSE)
 
 This service provides a simple hello world example API to show the integration of custom plugins within [Phoenix](https://github.com/owncloud/phoenix).

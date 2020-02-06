@@ -651,14 +651,6 @@ def website(ctx):
     },
     'steps': [
       {
-        'name': 'generate',
-        'image': 'webhippie/hugo:latest',
-        'pull': 'always',
-        'commands': [
-          'make docs',
-        ],
-      },
-      {
         'name': 'publish',
         'image': 'plugins/gh-pages:1',
         'pull': 'always',
@@ -669,15 +661,21 @@ def website(ctx):
           'password': {
             'from_secret': 'github_token',
           },
-          'pages_directory': 'docs/public/',
-          'temporary_base': 'tmp/',
+          'pages_directory': 'docs/',
+          'target_branch': 'docs',
         },
-        'when': {
-          'ref': {
-            'exclude': [
-              'refs/pull/**',
-            ],
+      },
+      {
+        'name': 'downstream',
+        'image': 'plugins/downstream',
+        'settings': {
+          'server': 'https://cloud.drone.io/',
+          'token': {
+            'from_secret': 'drone_token',
           },
+          'repositories': [
+            'owncloud/owncloud.github.io@source',
+          ],
         },
       },
     ],
@@ -687,7 +685,6 @@ def website(ctx):
     'trigger': {
       'ref': [
         'refs/heads/master',
-        'refs/pull/**',
       ],
     },
   }
