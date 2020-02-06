@@ -3,10 +3,10 @@
 package tools
 
 import (
-	"github.com/UnnoTed/fileb0x"
-	"github.com/cespare/reflex"
-	"github.com/haya14busa/goverage"
-	"github.com/kballard/go-shellquote"
-	"github.com/ogier/pflag"
-	"github.com/restic/calens"
+	_ "github.com/UnnoTed/fileb0x"
+	_ "github.com/cespare/reflex"
+	_ "github.com/haya14busa/goverage"
+	_ "github.com/kballard/go-shellquote"
+	_ "github.com/ogier/pflag"
+	_ "github.com/restic/calens"
 )
