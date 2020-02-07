@@ -3,10 +3,10 @@ package grpc
 import (
 	"context"
 
-	"github.com/micro/cli"
+	"github.com/micro/cli/v2"
 	"github.com/owncloud/ocis-hello/pkg/config"
 	"github.com/owncloud/ocis-hello/pkg/metrics"
-	"github.com/owncloud/ocis-pkg/log"
+	"github.com/owncloud/ocis-pkg/v2/log"
 )
 
 // Option defines a single option function.

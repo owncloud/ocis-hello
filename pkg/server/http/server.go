@@ -6,8 +6,8 @@ import (
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
 	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/version"
-	"github.com/owncloud/ocis-pkg/middleware"
-	"github.com/owncloud/ocis-pkg/service/http"
+	"github.com/owncloud/ocis-pkg/v2/middleware"
+	"github.com/owncloud/ocis-pkg/v2/service/http"
 )
 
 // Server initializes the http service and server.
