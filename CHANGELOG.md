@@ -6,9 +6,17 @@ The following sections list the changes in ownCloud ocis-hello unreleased.
 
 ## Summary
 
+ * Chg #49: Update micro
  * Enh #51: Track tool dependencies
 
 ## Details
+
+ * Change #49: Update micro
+
+   Updated the micro dependencies.
+
+   https://github.com/owncloud/ocis-hello/pull/49
+
 
  * Enhancement #51: Track tool dependencies
 

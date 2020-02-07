@@ -16,7 +16,7 @@ require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/micro/cli/v2 v2.1.1
 	github.com/micro/go-micro/v2 v2.0.0
-  github.com/mitchellh/gox v0.4.0
+	github.com/mitchellh/gox v0.4.0
 	github.com/ogier/pflag v0.0.1 // indirect
 	github.com/oklog/run v1.0.0
 	github.com/openzipkin/zipkin-go v0.1.6
@@ -25,8 +25,8 @@ require (
 	github.com/restic/calens v0.2.0
 	github.com/spf13/viper v1.6.1
 	go.opencensus.io v0.22.2
-	golang.org/x/lint v0.0.0-20190930215403-16217165b5de
-	golang.org/x/net v0.0.0-20191207000613-e7e4b65ae663
-	google.golang.org/genproto v0.0.0-20191108220845-16a3f7862a1a
+	golang.org/x/lint v0.0.0-20191125180803-fdd1cda4f05f
+	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa
+	google.golang.org/genproto v0.0.0-20200115191322-ca5a22157cba
 	honnef.co/go/tools v0.0.1-2019.2.3
 )
