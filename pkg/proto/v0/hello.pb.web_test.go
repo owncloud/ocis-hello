@@ -72,6 +72,6 @@ func sendRequest(t *testing.T, method, endpoint, data string) *httptest.Response
 }
 
 func assertResult(t *testing.T, rr *httptest.ResponseRecorder, expectedStatusCode int, expectedBody string) {
-	assert.Equal(t, rr.Body.String(), expectedBody, "response body not as expected")
-	assert.Equal(t, rr.Code, expectedStatusCode, "response code not as expected")
+	assert.Equal(t, expectedBody, rr.Body.String(), "response body not as expected")
+	assert.Equal(t, expectedStatusCode, rr.Code, "response code not as expected")
 }
