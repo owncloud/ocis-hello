@@ -1,5 +1,6 @@
 ---
-title: ocis-hello
+title: Hello
+anchor: ocis-hello
 ---
 
 [![GitHub](https://img.shields.io/github/license/owncloud/ocis-hello)](https://github.com/owncloud/ocis-hello/blob/master/LICENSE)
