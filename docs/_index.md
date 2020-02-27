@@ -1,6 +1,8 @@
 ---
 title: Hello
-anchor: ocis-hello
+geekdocRepo: https://github.com/owncloud/ocis-hello
+geekdocEditPath: edit/master/docs
+geekdocFilePath: _index.md
 ---
 
 [![GitHub](https://img.shields.io/github/license/owncloud/ocis-hello)](https://github.com/owncloud/ocis-hello/blob/master/LICENSE)

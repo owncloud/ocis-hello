@@ -651,6 +651,28 @@ def website(ctx):
     },
     'steps': [
       {
+        'name': 'prepare',
+        'image': 'owncloudci/alpine:latest',
+        'commands': [
+          'make docs-copy'
+        ],
+      },
+      {
+        'name': 'test',
+        'image': 'webhippie/hugo:latest',
+        'commands': [
+          'cd hugo',
+          'hugo',
+        ],
+      },
+      {
+        'name': 'list',
+        'image': 'owncloudci/alpine:latest',
+        'commands': [
+          'tree hugo/public',
+        ],
+      },
+      {
         'name': 'publish',
         'image': 'plugins/gh-pages:1',
         'pull': 'always',
@@ -663,6 +685,13 @@ def website(ctx):
           },
           'pages_directory': 'docs/',
           'target_branch': 'docs',
+        },
+        'when': {
+          'ref': {
+            'exclude': [
+              'refs/pull/**',
+            ],
+          },
         },
       },
       {
@@ -677,6 +706,13 @@ def website(ctx):
             'owncloud/owncloud.github.io@source',
           ],
         },
+        'when': {
+          'ref': {
+            'exclude': [
+              'refs/pull/**',
+            ],
+          },
+        },
       },
     ],
     'depends_on': [
@@ -685,6 +721,7 @@ def website(ctx):
     'trigger': {
       'ref': [
         'refs/heads/master',
+        'refs/pull/**',
       ],
     },
   }
