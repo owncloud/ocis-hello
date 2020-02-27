@@ -2,6 +2,9 @@
 title: "Getting Started"
 date: 2018-05-02T00:00:00+00:00
 weight: 10
+geekdocRepo: https://github.com/owncloud/ocis-hello
+geekdocEditPath: edit/master/docs
+geekdocFilePath: getting-started.md
 ---
 
 ### Installation
