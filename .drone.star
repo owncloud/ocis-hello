@@ -522,7 +522,7 @@ def changelog(ctx):
       },
       {
         'name': 'output',
-        'image': 'webhippie/golang:1.13',
+        'image': 'owncloud/alpine:latest',
         'pull': 'always',
         'commands': [
           'cat CHANGELOG.md',

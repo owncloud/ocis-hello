@@ -7,6 +7,8 @@ geekdocEditPath: edit/master/docs
 geekdocFilePath: building.md
 ---
 
+{{< toc >}}
+
 As this project is built with Go and NodeJS, so you need to install that first. The installation of Go and NodeJS is out of the scope of this document, please follow the official documentation for [Go](https://golang.org/doc/install), [NodeJS](https://nodejs.org/en/download/package-manager/) and [Yarn](https://yarnpkg.com/lang/en/docs/install/), to build this project you have to install Go >= v1.13. After the installation of the required tools you need to get the sources:
 
 {{< highlight txt >}}
@@ -16,7 +18,7 @@ cd ocis-hello
 
 All required tool besides Go itself and make are bundled or getting automatically installed within the `GOPATH`. All commands to build this project are part of our `Makefile` and respectively our `package.json`.
 
-### Frontend
+## Frontend
 
 {{< highlight txt >}}
 yarn install
@@ -25,7 +27,7 @@ yarn build
 
 The above commands will install the required build dependencies and build the whole frontend bundle. This bundle will we embeded into the binary later on.
 
-### Backend
+## Backend
 
 {{< highlight txt >}}
 make generate
