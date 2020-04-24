@@ -170,7 +170,7 @@ pkg/proto/v0/hello.pb.go: pkg/proto/v0/hello.proto
 	protoc \
 		-I=third_party/ \
 		-I=pkg/proto/v0/ \
-		--go_out=logtostderr=true:pkg/proto/v0 hello.proto
+		--go_out=pkg/proto/v0 hello.proto
 
 pkg/proto/v0/hello.pb.micro.go: pkg/proto/v0/hello.proto
 	protoc \
