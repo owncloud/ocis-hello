@@ -26,12 +26,12 @@ func TestPOSTCorrectEndpointVariousData(t *testing.T) {
 
 	var tests = []TestStruct{
 		{"no-data", `{}`, 400, "", "missing a name\n"},
-		{"wrong key", `{"naam": "Milan"}`, 412, "", `unknown field "naam" in proto.GreetRequest` +"\n"},
+		{"wrong key", `{"naam": "Milan"}`, 412, "", `unknown field "naam" in com.owncloud.ocis.hello.v0.GreetRequest` + "\n"},
 		{"empty body", ``, 412, "", "EOF\n"},
 		{"invalid json", `{"name":"Milan"{}`, 412, "", "invalid character '{' after object key:value pair\n"},
 		{"data is int", `{"name":23}`, 412, "", "json: cannot unmarshal number into Go value of type string\n"},
 		{"data is json", `{"name":{age: 23}}`, 412, "", "invalid character 'a' looking for beginning of object key string\n"},
-		{"additional data", `{"name":"Milan", "surname":"Bahadur"}`, 412, "", `unknown field "surname" in proto.GreetRequest` + "\n"},
+		{"additional data", `{"name":"Milan", "surname":"Bahadur"}`, 412, "", `unknown field "surname" in com.owncloud.ocis.hello.v0.GreetRequest` + "\n"},
 		{"value missing", `{"name":""}`, 400, "", "missing a name\n"},
 		{"ASCII name", `{"name":"Milan"}`, 201, "", `{"message":"Hello Milan"}` + "\n"},
 		{"UTF name", `{"name":"मिलन"}`, 201, "", `{"message":"Hello मिलन"}` + "\n"},
