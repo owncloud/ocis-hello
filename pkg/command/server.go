@@ -173,8 +173,6 @@ func Server(cfg *config.Config) *cli.Command {
 					grpc.Context(ctx),
 					grpc.Config(cfg),
 					grpc.Metrics(metrics),
-					grpc.Flags(flagset.RootWithConfig(cfg)),
-					grpc.Flags(flagset.ServerWithConfig(cfg)),
 				)
 
 				if err != nil {
