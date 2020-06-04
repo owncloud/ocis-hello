@@ -6,10 +6,20 @@ The following sections list the changes in ocis-hello unreleased.
 
 ## Summary
 
+* Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
 * Enhancement - Track tool dependencies: [#51](https://github.com/owncloud/ocis-hello/pull/51)
 
 ## Details
+
+* Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
+
+   We had the issue of the flagset being called twice (on both http and grpc server), which cause a
+   clash with already defined flags. We are now only calling the flagset once to get back to a
+   working build.
+
+   https://github.com/owncloud/ocis-hello/pull/72
+
 
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
 
