@@ -33,7 +33,7 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
 service Hello {
 	rpc Greet(GreetRequest) returns (GreetResponse) {
 		option (google.api.http) = {
-			post: "/api/v0/hello/greet"
+			post: "/api/v0/greet"
 			body: "*"
 		};
 	}

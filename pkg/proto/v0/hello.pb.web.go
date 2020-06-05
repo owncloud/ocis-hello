@@ -52,7 +52,7 @@ func RegisterHelloWeb(r chi.Router, i HelloHandler, middlewares ...func(http.Han
 		h: i,
 	}
 
-	r.MethodFunc("POST", "/api/v0/hello/greet", handler.Greet)
+	r.MethodFunc("POST", "/api/v0/greet", handler.Greet)
 }
 
 // GreetRequestJSONMarshaler describes the default jsonpb.Marshaler used by all

@@ -41,7 +41,7 @@ func NewHelloEndpoints() []*api.Endpoint {
 	return []*api.Endpoint{
 		&api.Endpoint{
 			Name:    "Hello.Greet",
-			Path:    []string{"/api/v0/hello/greet"},
+			Path:    []string{"/api/v0/greet"},
 			Method:  []string{"POST"},
 			Body:    "*",
 			Handler: "rpc",
@@ -93,7 +93,7 @@ func RegisterHelloHandler(s server.Server, hdlr HelloHandler, opts ...server.Han
 	h := &helloHandler{hdlr}
 	opts = append(opts, api.WithEndpoint(&api.Endpoint{
 		Name:    "Hello.Greet",
-		Path:    []string{"/api/v0/hello/greet"},
+		Path:    []string{"/api/v0/greet"},
 		Method:  []string{"POST"},
 		Body:    "*",
 		Handler: "rpc",
