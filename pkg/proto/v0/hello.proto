@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package com.owncloud.ocis.hello.v0;
-option go_package = "proto";
+package proto;
+option go_package = ".;proto";
 
 import "google/api/annotations.proto";
 import "protoc-gen-swagger/options/annotations.proto";
@@ -26,14 +26,14 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
 	produces: "application/json";
 	external_docs: {
 		description: "Developer Manual";
-		url: "https://owncloud.github.io/ocis-hello/";
+		url: "https://owncloud.github.io/extensions/ocis_hello/";
 	};
 };
 
 service Hello {
 	rpc Greet(GreetRequest) returns (GreetResponse) {
 		option (google.api.http) = {
-			post: "/api/v0/greet"
+			post: "/api/v0/hello/greet"
 			body: "*"
 		};
 	}

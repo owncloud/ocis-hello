@@ -5,7 +5,6 @@ package proto
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"net/http"
 
@@ -24,7 +23,9 @@ func (h *webHelloHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *webHelloHandler) Greet(w http.ResponseWriter, r *http.Request) {
+
 	req := &GreetRequest{}
+
 	resp := &GreetResponse{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -33,7 +34,7 @@ func (h *webHelloHandler) Greet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.h.Greet(
-		context.Background(),
+		r.Context(),
 		req,
 		resp,
 	); err != nil {
@@ -51,7 +52,7 @@ func RegisterHelloWeb(r chi.Router, i HelloHandler, middlewares ...func(http.Han
 		h: i,
 	}
 
-	r.MethodFunc("POST", "/api/v0/greet", handler.Greet)
+	r.MethodFunc("POST", "/api/v0/hello/greet", handler.Greet)
 }
 
 // GreetRequestJSONMarshaler describes the default jsonpb.Marshaler used by all

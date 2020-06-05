@@ -4,9 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
 	mclient "github.com/micro/go-micro/v2/client"
 	v0proto "github.com/owncloud/ocis-hello/pkg/proto/v0"
 	olog "github.com/owncloud/ocis-pkg/v2/log"
+	"github.com/owncloud/ocis-pkg/v2/middleware"
 	settings "github.com/owncloud/ocis-settings/pkg/proto/v0"
 )
 
@@ -31,12 +34,43 @@ func (s Hello) Greet(ctx context.Context, req *v0proto.GreetRequest, rsp *v0prot
 		return ErrMissingName
 	}
 
-	rsp.Message = fmt.Sprintf(
-		"Hello %s",
-		req.Name,
-	)
+	phrase := getGreetingPhrase(ctx)
+	rsp.Message = fmt.Sprintf(phrase, req.Name)
 
 	return nil
+}
+
+func getGreetingPhrase(ctx context.Context) string {
+	ownAccountUUID := ctx.Value(middleware.UUIDKey)
+	if ownAccountUUID != nil {
+		// request to the settings service requires to have the account uuid of the authenticated user available in the context
+		request := &settings.GetSettingsValueRequest{
+			Identifier: &settings.Identifier{
+				Extension:   "ocis-hello",
+				BundleKey:   "greeting",
+				SettingKey:  "phrase",
+				AccountUuid: ownAccountUUID.(string),
+			},
+		}
+
+		// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
+		// https://github.com/owncloud/ocis-proxy/issues/38
+		valueService := settings.NewValueService("com.owncloud.api.settings", mclient.DefaultClient)
+		response, err := valueService.GetSettingsValue(ctx, request)
+		if err == nil {
+			value := response.SettingsValue.Value.(*settings.SettingsValue_StringValue)
+			trimmedPhrase := strings.Trim(
+				value.StringValue,
+				" \t",
+			)
+			if trimmedPhrase != "" {
+				return trimmedPhrase + " %s"
+			}
+		}
+	} else {
+		fmt.Println("account uuid in context is nil")
+	}
+	return "Hello %s"
 }
 
 // RegisterSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.

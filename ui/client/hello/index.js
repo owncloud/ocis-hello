@@ -29,16 +29,16 @@ export const request = (method, url, body, queryParameters, form, config) => {
  ==========================================================*/
 /**
  * 
- * request: Greet
- * url: GreetURL
- * method: Greet_TYPE
- * raw_url: Greet_RAW_URL
+ * request: Hello_Greet
+ * url: Hello_GreetURL
+ * method: Hello_Greet_TYPE
+ * raw_url: Hello_Greet_RAW_URL
  * @param body - 
  */
-export const Greet = function(parameters = {}) {
+export const Hello_Greet = function(parameters = {}) {
   const domain = parameters.$domain ? parameters.$domain : getDomain()
   const config = parameters.$config
-  let path = '/api/v0/greet'
+  let path = '/api/v0/hello/greet'
   let body
   let queryParameters = {}
   let form = {}
@@ -55,16 +55,16 @@ export const Greet = function(parameters = {}) {
   }
   return request('post', domain + path, body, queryParameters, form, config)
 }
-export const Greet_RAW_URL = function() {
-  return '/api/v0/greet'
+export const Hello_Greet_RAW_URL = function() {
+  return '/api/v0/hello/greet'
 }
-export const Greet_TYPE = function() {
+export const Hello_Greet_TYPE = function() {
   return 'post'
 }
-export const GreetURL = function(parameters = {}) {
+export const Hello_GreetURL = function(parameters = {}) {
   let queryParameters = {}
   const domain = parameters.$domain ? parameters.$domain : getDomain()
-  let path = '/api/v0/greet'
+  let path = '/api/v0/hello/greet'
   if (parameters.$queryParameters) {
     Object.keys(parameters.$queryParameters).forEach(function(parameterName) {
       queryParameters[parameterName] = parameters.$queryParameters[parameterName]

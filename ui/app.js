@@ -9,7 +9,7 @@ const appInfo = {
   isFileEditor: false,
   extensions: [],
   config: {
-    url: 'http://localhost:9105'
+    url: 'https://localhost:9200'
   }
 }
 
