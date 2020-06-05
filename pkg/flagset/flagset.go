@@ -155,5 +155,12 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"HELLO_GRPC_NAMESPACE"},
 			Destination: &cfg.GRPC.Namespace,
 		},
+		&cli.StringFlag{
+			Name:        "jwt-secret",
+			Value:       "Pive-Fumkiu4",
+			Usage:       "Used to create JWT to talk to reva, should equal reva's jwt-secret",
+			EnvVars:     []string{"HELLO_JWT_SECRET"},
+			Destination: &cfg.TokenManager.JWTSecret,
+		},
 	}
 }
