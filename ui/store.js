@@ -1,4 +1,6 @@
-import { Greet } from './client/hello'
+// eslint-disable-next-line camelcase
+import { Hello_Greet } from './client/hello'
+import axios from 'axios'
 
 const state = {
   config: null,
@@ -15,8 +17,9 @@ const actions = {
     commit('LOAD_CONFIG', config)
   },
 
-  submitName ({ commit, dispatch, getters }, value) {
-    Greet({
+  submitName ({ commit, dispatch, getters, rootGetters }, value) {
+    injectAuthToken(rootGetters)
+    Hello_Greet({
       $domain: getters.config.url,
       body: { name: value }
     })
@@ -61,4 +64,16 @@ export default {
   getters,
   actions,
   mutations
+}
+
+function injectAuthToken (rootGetters) {
+  axios.interceptors.request.use(config => {
+    if (typeof config.headers.Authorization === 'undefined') {
+      const token = rootGetters.user.token
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+    }
+    return config
+  })
 }

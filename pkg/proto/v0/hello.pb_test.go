@@ -15,14 +15,14 @@ type TestStruct struct {
 
 func TestRequestString(t *testing.T) {
 	var tests = []TestStruct{
-		{"ASCII", "Milan", `name:"Milan" `},
-		{"UTF", "मिलन", `name:"\340\244\256\340\244\277\340\244\262\340\244\250" `},
+		{"ASCII", "Milan", `name:"Milan"`},
+		{"UTF", "मिलन", `name:"मिलन"`},
 		{"empty", "" , ``},
 	}
 
 	for _, testCase := range tests {
 		t.Run(testCase.testDataName, func(t *testing.T) {
-			request := proto.GreetRequest{Name: testCase.name,}
+			request := proto.GreetRequest{Name: testCase.name}
 			assert.Equal(t, testCase.expected, request.String())
 		})
 	}
@@ -30,16 +30,14 @@ func TestRequestString(t *testing.T) {
 
 func TestResponseString(t *testing.T) {
 	var tests = []TestStruct{
-		{"ASCII", "Milan", `message:"Milan" `},
-		{"UTF", "मिलन", `message:"\340\244\256\340\244\277\340\244\262\340\244\250" `},
+		{"ASCII", "Milan", `message:"Milan"`},
+		{"UTF", "मिलन", `message:"मिलन"`},
 		{"empty", "" , ``},
 	}
 
 	for _, testCase := range tests {
 		t.Run(testCase.testDataName, func(t *testing.T) {
-			response := proto.GreetResponse{
-				Message: testCase.name,
-			}
+			response := proto.GreetResponse{Message: testCase.name}
 			assert.Equal(t, testCase.expected, response.String())
 		})
 	}

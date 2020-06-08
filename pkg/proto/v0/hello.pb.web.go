@@ -5,7 +5,6 @@ package proto
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"net/http"
 
@@ -24,7 +23,9 @@ func (h *webHelloHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *webHelloHandler) Greet(w http.ResponseWriter, r *http.Request) {
+
 	req := &GreetRequest{}
+
 	resp := &GreetResponse{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -33,7 +34,7 @@ func (h *webHelloHandler) Greet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.h.Greet(
-		context.Background(),
+		r.Context(),
 		req,
 		resp,
 	); err != nil {

@@ -13,25 +13,25 @@ require (
 	github.com/golang/protobuf v1.4.1
 	github.com/grpc-ecosystem/grpc-gateway v1.14.4
 	github.com/haya14busa/goverage v0.0.0-20180129164344-eec3514a20b5
-	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/micro/cli/v2 v2.1.2
-	github.com/micro/go-micro/v2 v2.5.1-0.20200417165434-16db76bee2fb
+	github.com/micro/go-micro/v2 v2.6.0
 	github.com/mitchellh/gox v1.0.1
-	github.com/ogier/pflag v0.0.1 // indirect
 	github.com/oklog/run v1.1.0
 	github.com/openzipkin/zipkin-go v0.2.2
-	github.com/owncloud/ocis-pkg/v2 v2.2.1
+	github.com/owncloud/ocis-pkg/v2 v2.2.2-0.20200527082518-5641fa4a4c8c
+	github.com/owncloud/ocis-settings v0.0.0-20200604122409-3a12bff1145e
 	github.com/prometheus/client_golang v1.6.0
 	github.com/restic/calens v0.2.0
 	github.com/spf13/viper v1.6.3
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.0
 	go.opencensus.io v0.22.3
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b
 	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	google.golang.org/genproto v0.0.0-20200430143042-b979b6f78d84
+	google.golang.org/protobuf v1.22.0
 	honnef.co/go/tools v0.0.1-2020.1.3
 )
 

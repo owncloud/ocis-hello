@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"os"
 	"os/signal"
 	"strings"
@@ -185,6 +186,8 @@ func Server(cfg *config.Config) *cli.Command {
 				}
 
 				gr.Add(func() error {
+					logger.Info().Str("service", server.Name()).Msg("Reporting settings bundles to settings service")
+					go svc.RegisterSettingsBundles(&logger)
 					return server.Run()
 				}, func(_ error) {
 					logger.Info().
