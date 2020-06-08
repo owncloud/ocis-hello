@@ -67,8 +67,6 @@ func getGreetingPhrase(ctx context.Context) string {
 				return trimmedPhrase + " %s"
 			}
 		}
-	} else {
-		fmt.Println("account uuid in context is nil")
 	}
 	return "Hello %s"
 }
