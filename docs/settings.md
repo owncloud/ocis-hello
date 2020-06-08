@@ -17,7 +17,7 @@ a settings bundle and oCIS takes care of everything else. Your service can simpl
 that were set by users.
 
 With this chapter we want to show you, how to register a settings bundle and how to use the respective
-values that were set by uses. We do this by customizing the greeter phrase from our greeter service in ocis-hello.
+values that were set by users. We do this by customizing the greeter phrase from our greeter service in ocis-hello.
 
 You can find the source code, especially how it's integrated into the service, in the following files:
 - `pkg/service/v0/service.go` for the requests,
@@ -59,7 +59,7 @@ and a list of `Settings`.
 - The `Extension` and `BundleKey` inside the `Identifier` are required and have to be
 alphanumeric (`-` and `_` are allowed as well). The `Identifier` has to stay stable - if you change it, existing
 settings will not be migrated to the new identifier.
-- The `DisplayName` is required but contain any UTF8 character. It will be shown in the settings user frontend
+- The `DisplayName` is required and may contain any UTF8 character. It will be shown in the settings user frontend
 in a generated form, so please try to be descriptive. You can change the `DisplayName` at any time.
 - `Settings` is the list of settings you want to make available with this settings bundle. In this example, there
 is only one setting defined - a string setting for the phrase our greeter uses in the response. You can explore

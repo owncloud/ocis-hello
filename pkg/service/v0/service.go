@@ -54,7 +54,7 @@ func getGreetingPhrase(ctx context.Context) string {
 		}
 
 		// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
-		// https://github.com/owncloud/ocis-proxy/issues/38
+		// https://github.com/owncloud/ocis-hello/issues/74
 		valueService := settings.NewValueService("com.owncloud.api.settings", mclient.DefaultClient)
 		response, err := valueService.GetSettingsValue(ctx, request)
 		if err == nil {
