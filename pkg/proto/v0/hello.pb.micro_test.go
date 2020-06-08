@@ -81,7 +81,7 @@ func TestCorrectService(t *testing.T) {
 
 	for _, testCase := range tests {
 		t.Run(testCase.testDataName, func(t *testing.T) {
-			request := proto.GreetRequest{Name: testCase.name,}
+			request := proto.GreetRequest{Name: testCase.name}
 			client := service.Client()
 			cl := proto.NewHelloService("com.owncloud.api.hello", client)
 			response, err := cl.Greet(context.Background(), &request)
@@ -96,9 +96,10 @@ func TestCorrectService(t *testing.T) {
 				assert.Equal(t, testCase.expectedError.Status, errorData.Status)
 			}
 			if testCase.expectedResponse != nil {
-				assert.Equal(t, testCase.expectedResponse, response)
-			} else {
-				assert.Nil(t, response)
+				assert.Nil(t, err)
+				// TODO: this should test the whole response, not just the message. BUT: response body doesn't get closed
+				// when only checking the `response` itself and there is no way to close it, other than accessing it as of now.
+				assert.Equal(t, testCase.expectedResponse.(*proto.GreetResponse).Message, response.Message)
 			}
 		})
 	}
