@@ -86,6 +86,8 @@ func TestCorrectService(t *testing.T) {
 			cl := proto.NewHelloService("com.owncloud.api.hello", client)
 			response, err := cl.Greet(context.Background(), &request)
 			if err != nil || (ErrorMessage{}) != testCase.expectedError {
+				assert.Nil(t, response)
+				assert.Error(t, err)
 				var errorData ErrorMessage
 				json.Unmarshal([]byte(err.Error()), &errorData)
 				assert.Equal(t, testCase.expectedError.Id, errorData.Id)
@@ -118,6 +120,7 @@ func TestWrongService(t *testing.T) {
 			cl := proto.NewHelloService(testCase, client)
 			response, err := cl.Greet(context.Background(), &request)
 			assert.Nil(t, response)
+			assert.Error(t, err)
 			var errorData ErrorMessage
 			json.Unmarshal([]byte(err.Error()), &errorData)
 			assert.Equal(t, 500, errorData.Code)
