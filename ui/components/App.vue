@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'HelloApp',
+  name: 'App',
   data: function () {
     return {
       name: 'World'
