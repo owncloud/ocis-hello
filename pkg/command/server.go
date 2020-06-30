@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"os"
 	"os/signal"
 	"strings"
@@ -21,6 +20,7 @@ import (
 	"github.com/owncloud/ocis-hello/pkg/server/debug"
 	"github.com/owncloud/ocis-hello/pkg/server/grpc"
 	"github.com/owncloud/ocis-hello/pkg/server/http"
+	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 )
@@ -31,17 +31,17 @@ func Server(cfg *config.Config) *cli.Command {
 		Name:  "server",
 		Usage: "Start integrated server",
 		Flags: flagset.ServerWithConfig(cfg),
-		Before: func(c *cli.Context) error {
+		Before: func(ctx *cli.Context) error {
 			if cfg.HTTP.Root != "/" {
 				cfg.HTTP.Root = strings.TrimSuffix(cfg.HTTP.Root, "/")
 			}
 
-			return nil
+			// When running on single binary mode the before hook from the root command won't get called. We manually
+			// call this before hook from ocis command, so the configuration can be loaded.
+			return ParseConfig(ctx, cfg)
 		},
 		Action: func(c *cli.Context) error {
 			logger := NewLogger(cfg)
-			httpNamespace := c.String("http-namespace")
-			grpcNamespace := c.String("grpc-namespace")
 
 			if cfg.Tracing.Enabled {
 				switch t := cfg.Tracing.Type; t {
@@ -130,31 +130,22 @@ func Server(cfg *config.Config) *cli.Command {
 			var (
 				gr          = run.Group{}
 				ctx, cancel = context.WithCancel(context.Background())
-				metrics     = metrics.New()
+				mtrcs       = metrics.New()
 			)
 
 			defer cancel()
 
 			// Flags have to be injected all the way down to the go-micro service
 			{
-				server, err := http.Server(
+				server := http.Server(
 					http.Logger(logger),
-					http.Namespace(httpNamespace),
+					http.Name("hello"),
 					http.Context(ctx),
 					http.Config(cfg),
-					http.Metrics(metrics),
+					http.Metrics(mtrcs),
 					http.Flags(flagset.RootWithConfig(cfg)),
 					http.Flags(flagset.ServerWithConfig(cfg)),
 				)
-
-				if err != nil {
-					logger.Error().
-						Err(err).
-						Str("server", "http").
-						Msg("Failed to initialize server")
-
-					return err
-				}
 
 				gr.Add(func() error {
 					return server.Run()
@@ -168,22 +159,13 @@ func Server(cfg *config.Config) *cli.Command {
 			}
 
 			{
-				server, err := grpc.Server(
+				server := grpc.Server(
 					grpc.Logger(logger),
-					grpc.Namespace(grpcNamespace),
+					grpc.Name("hello"),
 					grpc.Context(ctx),
 					grpc.Config(cfg),
-					grpc.Metrics(metrics),
+					grpc.Metrics(mtrcs),
 				)
-
-				if err != nil {
-					logger.Error().
-						Err(err).
-						Str("server", "grpc").
-						Msg("Failed to initialize server")
-
-					return err
-				}
 
 				gr.Add(func() error {
 					logger.Info().Str("service", server.Name()).Msg("Reporting settings bundles to settings service")
