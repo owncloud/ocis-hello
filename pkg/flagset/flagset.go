@@ -114,6 +114,13 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Debug.Zpages,
 		},
 		&cli.StringFlag{
+			Name:        "http-namespace",
+			Value:       "com.owncloud.web",
+			Usage:       "Set the base namespace for the http namespace",
+			EnvVars:     []string{"HELLO_HTTP_NAMESPACE"},
+			Destination: &cfg.HTTP.Namespace,
+		},
+		&cli.StringFlag{
 			Name:        "http-addr",
 			Value:       "0.0.0.0:9105",
 			Usage:       "Address to bind http server",
@@ -128,6 +135,13 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.HTTP.Root,
 		},
 		&cli.StringFlag{
+			Name:        "grpc-namespace",
+			Value:       "com.owncloud.api",
+			Usage:       "Set the base namespace for the grpc namespace",
+			EnvVars:     []string{"HELLO_GRPC_NAMESPACE"},
+			Destination: &cfg.GRPC.Namespace,
+		},
+		&cli.StringFlag{
 			Name:        "grpc-addr",
 			Value:       "0.0.0.0:9106",
 			Usage:       "Address to bind grpc server",
@@ -140,20 +154,6 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			Usage:       "Path to custom assets",
 			EnvVars:     []string{"HELLO_ASSET_PATH"},
 			Destination: &cfg.Asset.Path,
-		},
-		&cli.StringFlag{
-			Name:        "http-namespace",
-			Value:       "com.owncloud",
-			Usage:       "Set the base namespace for the http namespace",
-			EnvVars:     []string{"HELLO_HTTP_NAMESPACE"},
-			Destination: &cfg.HTTP.Namespace,
-		},
-		&cli.StringFlag{
-			Name:        "grpc-namespace",
-			Value:       "com.owncloud",
-			Usage:       "Set the base namespace for the grpc namespace",
-			EnvVars:     []string{"HELLO_GRPC_NAMESPACE"},
-			Destination: &cfg.GRPC.Namespace,
 		},
 		&cli.StringFlag{
 			Name:        "jwt-secret",
