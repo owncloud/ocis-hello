@@ -8,6 +8,7 @@ The following sections list the changes in ocis-hello unreleased.
 
 * Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
+* Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
 * Enhancement - Track tool dependencies: [#51](https://github.com/owncloud/ocis-hello/pull/51)
 
 ## Details
@@ -26,6 +27,14 @@ The following sections list the changes in ocis-hello unreleased.
    Updated the micro dependencies.
 
    https://github.com/owncloud/ocis-hello/pull/49
+
+
+* Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
+
+   We have aligned the project structure of ocis-hello with other repositories and improved
+   error logging.
+
+   https://github.com/owncloud/ocis-hello/pull/79
 
 
 * Enhancement - Track tool dependencies: [#51](https://github.com/owncloud/ocis-hello/pull/51)
