@@ -20,7 +20,9 @@ type Metrics struct {
 }
 
 // New initializes the available metrics.
-func New() *Metrics {
+func New(opts ...Option) *Metrics {
+	options := newOptions(opts...)
+
 	m := &Metrics{
 		Counter: prometheus.NewCounterVec(prometheus.CounterOpts{
 			Namespace: Namespace,
@@ -42,17 +44,26 @@ func New() *Metrics {
 		}, []string{}),
 	}
 
-	prometheus.Register(
-		m.Counter,
-	)
+	if err := prometheus.Register(m.Counter); err != nil {
+		options.Logger.Error().
+			Err(err).
+			Str("metric", "counter").
+			Msg("Failed to register prometheus metric")
+	}
 
-	prometheus.Register(
-		m.Latency,
-	)
+	if err := prometheus.Register(m.Latency); err != nil {
+		options.Logger.Error().
+			Err(err).
+			Str("metric", "latency").
+			Msg("Failed to register prometheus metric")
+	}
 
-	prometheus.Register(
-		m.Duration,
-	)
+	if  err := prometheus.Register(m.Duration); err != nil {
+		options.Logger.Error().
+			Err(err).
+			Str("metric", "duration").
+			Msg("Failed to register prometheus metric")
+	}
 
 	return m
 }

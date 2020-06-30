@@ -130,7 +130,7 @@ func Server(cfg *config.Config) *cli.Command {
 			var (
 				gr          = run.Group{}
 				ctx, cancel = context.WithCancel(context.Background())
-				mtrcs       = metrics.New()
+				mtrcs       = metrics.New(metrics.Logger(logger))
 			)
 
 			defer cancel()
