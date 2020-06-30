@@ -49,8 +49,8 @@ trap clean_up SIGHUP SIGINT SIGTERM EXIT
 cp -r $PHOENIX_PATH/tests ./$testFolder
 
 export SERVER_HOST=${SERVER_HOST:-https://localhost:9200}
-export BACKEND_HOST=${BACKEND_HOST:-http://localhost:9140}
-export RUN_ON_OCIS=true
+export BACKEND_HOST=${BACKEND_HOST:-https://localhost:9200}
+export RUN_ON_OCIS='true'
 export TEST_TAGS=${TEST_TAGS:-"not @skip"}
 
 yarn run acceptance-tests $1
