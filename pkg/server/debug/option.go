@@ -12,6 +12,7 @@ type Option func(o *Options)
 
 // Options defines the available options for this package.
 type Options struct {
+	Name    string
 	Logger  log.Logger
 	Context context.Context
 	Config  *config.Config
@@ -26,6 +27,13 @@ func newOptions(opts ...Option) Options {
 	}
 
 	return opt
+}
+
+// Name provides a function to set the name option.
+func Name(val string) Option {
+	return func(o *Options) {
+		o.Name = val
+	}
 }
 
 // Logger provides a function to set the logger option.

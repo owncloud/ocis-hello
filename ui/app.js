@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime'
-import HelloApp from './components/HelloApp.vue'
+import App from './components/App.vue'
 import store from './store'
 
 const appInfo = {
@@ -18,7 +18,7 @@ const routes = [
     name: 'hello',
     path: '/',
     components: {
-      app: HelloApp
+      app: App
     }
   }
 ]

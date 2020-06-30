@@ -12,25 +12,25 @@ import (
 )
 
 // Server initializes the http service and server.
-func Server(opts ...Option) (http.Service, error) {
+func Server(opts ...Option) http.Service {
 	options := newOptions(opts...)
 
 	service := http.NewService(
 		http.Logger(options.Logger),
-		http.Namespace(options.Namespace),
-		http.Name("web.hello"),
+		http.Name(options.Name),
 		http.Version(version.String),
 		http.Address(options.Config.HTTP.Addr),
+		http.Namespace(options.Config.HTTP.Namespace),
 		http.Context(options.Context),
 		http.Flags(options.Flags...),
 	)
 
-	hello := svc.NewService()
+	handle := svc.NewService()
 
 	{
-		hello = svc.NewInstrument(hello, options.Metrics)
-		hello = svc.NewLogging(hello, options.Logger)
-		hello = svc.NewTracing(hello)
+		handle = svc.NewInstrument(handle, options.Metrics)
+		handle = svc.NewLogging(handle, options.Logger)
+		handle = svc.NewTracing(handle)
 	}
 
 	mux := chi.NewMux()
@@ -46,7 +46,7 @@ func Server(opts ...Option) (http.Service, error) {
 	)
 
 	mux.Use(middleware.Version(
-		"hello",
+		options.Name,
 		version.String,
 	))
 
@@ -63,10 +63,7 @@ func Server(opts ...Option) (http.Service, error) {
 	))
 
 	mux.Route(options.Config.HTTP.Root, func(r chi.Router) {
-		proto.RegisterHelloWeb(
-			r,
-			hello,
-		)
+		proto.RegisterHelloWeb(r, handle)
 	})
 
 	service.Handle(
@@ -74,6 +71,8 @@ func Server(opts ...Option) (http.Service, error) {
 		mux,
 	)
 
-	service.Init()
-	return service, nil
+	if err := service.Init(); err != nil {
+		panic(err)
+	}
+	return service
 }
