@@ -183,6 +183,7 @@ func Server(cfg *config.Config) *cli.Command {
 			{
 				server, err := debug.Server(
 					debug.Logger(logger),
+					debug.Name("hello"),
 					debug.Context(ctx),
 					debug.Config(cfg),
 				)
