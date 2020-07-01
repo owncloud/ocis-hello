@@ -72,5 +72,8 @@
   "browserslist": [
     "> 1%",
     "not dead"
-  ]
+  ],
+  "peerDependencies": {
+    "owncloud-design-system": "^1.7.0"
+  }
 }
