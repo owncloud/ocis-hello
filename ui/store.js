@@ -13,6 +13,7 @@ const getters = {
 }
 
 const actions = {
+  // Used by ocis-web.
   loadConfig ({ commit }, config) {
     commit('LOAD_CONFIG', config)
   },
@@ -20,7 +21,7 @@ const actions = {
   submitName ({ commit, dispatch, getters, rootGetters }, value) {
     injectAuthToken(rootGetters)
     Hello_Greet({
-      $domain: getters.config.url,
+      $domain: rootGetters.configuration.server,
       body: { name: value }
     })
       .then(response => {
