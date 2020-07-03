@@ -8,6 +8,7 @@ The following sections list the changes in ocis-hello unreleased.
 
 * Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
+* Change - Use server config variable from ocis-web: [#81](https://github.com/owncloud/ocis-hello/pull/81)
 * Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
 * Enhancement - Track tool dependencies: [#51](https://github.com/owncloud/ocis-hello/pull/51)
 
@@ -27,6 +28,14 @@ The following sections list the changes in ocis-hello unreleased.
    Updated the micro dependencies.
 
    https://github.com/owncloud/ocis-hello/pull/49
+
+
+* Change - Use server config variable from ocis-web: [#81](https://github.com/owncloud/ocis-hello/pull/81)
+
+   We are not providing an api url anymore but use the server url from ocis-web config instead. This
+   still - as before - requires that ocis-proxy is in place for routing API requests to ocis-hello.
+
+   https://github.com/owncloud/ocis-hello/pull/81
 
 
 * Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
