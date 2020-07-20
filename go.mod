@@ -22,6 +22,7 @@ require (
 	github.com/openzipkin/zipkin-go v0.2.2
 	github.com/owncloud/ocis-pkg/v2 v2.2.2-0.20200527082518-5641fa4a4c8c
 	github.com/owncloud/ocis-settings v0.0.0-20200604122409-3a12bff1145e
+	github.com/pact-foundation/pact-go v1.4.3
 	github.com/prometheus/client_golang v1.6.0
 	github.com/restic/calens v0.2.0
 	github.com/spf13/viper v1.6.3

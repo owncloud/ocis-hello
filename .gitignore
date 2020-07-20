@@ -6,3 +6,6 @@ coverage.out
 
 /node_modules
 /assets
+/pact
+/tests/pact/log
+.idea
