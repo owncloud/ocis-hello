@@ -177,7 +177,7 @@ def docker(ctx, arch):
         'image': 'webhippie/nodejs:latest',
         'pull': 'always',
         'commands': [
-          'yarn install --frozen-lockfile --production',
+          'yarn install --frozen-lockfile',
           'yarn build',
         ],
       },
@@ -512,7 +512,7 @@ def binary(ctx, name):
         'image': 'webhippie/nodejs:latest',
         'pull': 'always',
         'commands': [
-          'yarn install --frozen-lockfile --production',
+          'yarn install --frozen-lockfile',
           'yarn build',
         ],
       },
