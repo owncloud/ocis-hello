@@ -38,10 +38,13 @@ def testing(ctx):
         'image': 'webhippie/nodejs:latest',
         'pull': 'always',
         'commands': [
+          'apk add --no-cache --virtual build-dependencies build-base',
+          'apk --no-cache add ca-certificates wget bash && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-2.29-r0.apk && apk add glibc-2.29-r0.apk',
           'yarn install --frozen-lockfile',
           'yarn lint',
           'yarn test',
           'yarn build',
+          'yarn test:pact',
         ],
       },
       {
@@ -119,6 +122,10 @@ def testing(ctx):
         'image': 'webhippie/golang:1.13',
         'pull': 'always',
         'commands': [
+          'apk add --no-cache --virtual build-dependencies build-base',
+          'apk --no-cache add ca-certificates wget bash && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-2.29-r0.apk && apk add glibc-2.29-r0.apk',
+          'curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/master/install.sh | bash',
+          'export PATH=$PATH:/drone/src/pact/bin',
           'make test',
         ],
         'volumes': [
@@ -133,6 +140,7 @@ def testing(ctx):
         'image': 'plugins/codacy:1',
         'pull': 'always',
         'settings': {
+          'pattern': '/drone/src/*.out',
           'token': {
             'from_secret': 'codacy_token',
           },
@@ -169,7 +177,7 @@ def docker(ctx, arch):
         'image': 'webhippie/nodejs:latest',
         'pull': 'always',
         'commands': [
-          'yarn install --frozen-lockfile',
+          'yarn install --frozen-lockfile --production',
           'yarn build',
         ],
       },
@@ -504,7 +512,7 @@ def binary(ctx, name):
         'image': 'webhippie/nodejs:latest',
         'pull': 'always',
         'commands': [
-          'yarn install --frozen-lockfile',
+          'yarn install --frozen-lockfile --production',
           'yarn build',
         ],
       },
