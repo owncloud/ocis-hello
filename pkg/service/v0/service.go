@@ -53,12 +53,7 @@ func getGreetingPhrase(ctx context.Context) string {
 	if ownAccountUUID != nil {
 		// request to the settings service requires to have the account uuid of the authenticated user available in the context
 		request := &settings.GetValueRequest{
-			// Identifier: &settings.Identifier{
-			// 	Extension:   "ocis-hello",
-			// 	BundleKey:   "greeting",
-			// 	SettingKey:  "phrase",
-			// 	AccountUuid: ownAccountUUID.(string),
-			// },
+			Id: ownAccountUUID.(string),
 		}
 
 		// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
