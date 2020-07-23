@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	mclient "github.com/micro/go-micro/v2/client"
@@ -18,8 +19,11 @@ var (
 	// ErrMissingName defines the error if name is missing.
 	ErrMissingName = errors.New("missing a name")
 
-	bundleIdGreeting       = "21fb587b-7b69-4aa6-b0a7-93c74af1918f"
-	settingIdGreeterPhrase = "b3584ea8-caec-4951-a2c1-92cbc70071b7"
+	bundleIDGreeting       = "21fb587b-7b69-4aa6-b0a7-93c74af1918f"
+	settingIDGreeterPhrase = "b3584ea8-caec-4951-a2c1-92cbc70071b7"
+
+	// maxRetries indicates how many times to try a request for network reasons.
+	maxRetries = 5
 )
 
 // NewService returns a service implementation for HelloHandler.
@@ -49,12 +53,12 @@ func getGreetingPhrase(ctx context.Context) string {
 	if ownAccountUUID != nil {
 		// request to the settings service requires to have the account uuid of the authenticated user available in the context
 		request := &settings.GetValueRequest{
-			Identifier: &settings.Identifier{
-				Extension:   "ocis-hello",
-				BundleKey:   "greeting",
-				SettingKey:  "phrase",
-				AccountUuid: ownAccountUUID.(string),
-			},
+			// Identifier: &settings.Identifier{
+			// 	Extension:   "ocis-hello",
+			// 	BundleKey:   "greeting",
+			// 	SettingKey:  "phrase",
+			// 	AccountUuid: ownAccountUUID.(string),
+			// },
 		}
 
 		// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
@@ -79,7 +83,7 @@ func getGreetingPhrase(ctx context.Context) string {
 func RegisterSettingsBundles(l *olog.Logger) {
 	request := &settings.SaveBundleRequest{
 		Bundle: &settings.Bundle{
-			Id:          bundleIdGreeting,
+			Id:          bundleIDGreeting,
 			Name:        "greeting",
 			DisplayName: "Greeting",
 			Extension:   "ocis-hello",
@@ -89,7 +93,7 @@ func RegisterSettingsBundles(l *olog.Logger) {
 			},
 			Settings: []*settings.Setting{
 				{
-					Id:          settingIdGreeterPhrase,
+					Id:          settingIDGreeterPhrase,
 					Name:        "phrase",
 					DisplayName: "Phrase",
 					Description: "Phrase for replies on the greet request",
@@ -113,15 +117,33 @@ func RegisterSettingsBundles(l *olog.Logger) {
 	bundleService := settings.NewBundleService("com.owncloud.api.settings", mclient.DefaultClient)
 	response, err := bundleService.SaveBundle(context.Background(), request)
 	if err != nil {
-		l.Err(err).
-			Msg("Error registering settings bundle")
+		l.Warn().Msg("error registering settings bundle at first try. retrying")
+		for i := 1; i <= maxRetries; i++ {
+			if _, err := bundleService.SaveBundle(context.Background(), request); err != nil {
+				l.Warn().
+					Str("bundle_name", request.Bundle.Name).
+					Str("attempt", fmt.Sprintf("%v/%v", strconv.Itoa(i), strconv.Itoa(maxRetries))).
+					Msgf("error creating bundle")
+				continue
+			} else {
+				l.Info().
+					Str("bundle_name", request.Bundle.Name).
+					Str("after", fmt.Sprintf("%v retries", strconv.Itoa(i))).
+					Str("bundleName", request.Bundle.Name).
+					Str("bundleId", request.Bundle.Id).
+					Msg("default settings bundle registered")
+				goto OUT
+			}
+		}
+		l.Fatal().Str("setting_name", request.Bundle.Name).Msg("bundle could not be registered. max number of retries reached")
 	} else {
 		l.Info().
 			Str("bundleName", response.Bundle.Name).
 			Str("bundleId", response.Bundle.Id).
-			Msg("Successfully registered settings bundle")
+			Msg("default settings bundle registered")
 	}
 
+OUT:
 	permissionRequests := []*settings.AddSettingToBundleRequest{
 		{
 			BundleId: ssvc.BundleUUIDRoleUser,
@@ -129,7 +151,7 @@ func RegisterSettingsBundles(l *olog.Logger) {
 				Id: "45f52511-f9cc-4226-92e3-779e07179714",
 				Resource: &settings.Resource{
 					Type: settings.Resource_TYPE_SETTING,
-					Id:   settingIdGreeterPhrase,
+					Id:   settingIDGreeterPhrase,
 				},
 				Name: "phrase-user-read",
 				Value: &settings.Setting_PermissionValue{
@@ -146,7 +168,7 @@ func RegisterSettingsBundles(l *olog.Logger) {
 				Id: "d5f42c4b-e1b6-4b59-8eca-fc4b9e9f2320",
 				Resource: &settings.Resource{
 					Type: settings.Resource_TYPE_SETTING,
-					Id:   settingIdGreeterPhrase,
+					Id:   settingIDGreeterPhrase,
 				},
 				Name: "phrase-admin-read",
 				Value: &settings.Setting_PermissionValue{
@@ -163,7 +185,7 @@ func RegisterSettingsBundles(l *olog.Logger) {
 				Id: "8732811a-147c-4b28-89f5-112573c40682",
 				Resource: &settings.Resource{
 					Type: settings.Resource_TYPE_SETTING,
-					Id:   settingIdGreeterPhrase,
+					Id:   settingIDGreeterPhrase,
 				},
 				Name: "phrase-admin-create",
 				Value: &settings.Setting_PermissionValue{
@@ -180,7 +202,7 @@ func RegisterSettingsBundles(l *olog.Logger) {
 				Id: "9bd896e2-127e-4946-871d-3d1c5f2a52f2",
 				Resource: &settings.Resource{
 					Type: settings.Resource_TYPE_SETTING,
-					Id:   settingIdGreeterPhrase,
+					Id:   settingIDGreeterPhrase,
 				},
 				Name: "phrase-admin-update",
 				Value: &settings.Setting_PermissionValue{
@@ -193,5 +215,26 @@ func RegisterSettingsBundles(l *olog.Logger) {
 		},
 	}
 
+	for i := range permissionRequests {
+		l.Debug().Str("setting_name", permissionRequests[i].Setting.Name).Str("bundle_id", permissionRequests[i].BundleId).Msg("registering setting to bundle")
+		if res, err := bundleService.AddSettingToBundle(context.Background(), permissionRequests[i]); err != nil {
+			go retryPermissionRequests(context.Background(), bundleService, permissionRequests[i], maxRetries, l)
+		} else {
+			l.Info().Str("setting_name", res.Setting.Name).Msg("permission registered")
+		}
+	}
+}
 
+// proposal: the retry logic should live in the settings service.
+func retryPermissionRequests(ctx context.Context, bs settings.BundleService, setting *settings.AddSettingToBundleRequest, count int, l *olog.Logger) {
+	for i := 1; i < maxRetries; i++ {
+		if _, err := bs.AddSettingToBundle(ctx, setting); err != nil {
+			l.Warn().Str("setting_name", setting.Setting.Name).Str("attempt", fmt.Sprintf("%v/%v", strconv.Itoa(i), strconv.Itoa(maxRetries))).Msgf("error on add setting to bundle")
+			continue
+		}
+		l.Info().Str("setting_name", setting.Setting.Name).Str("after", fmt.Sprintf("%v retries", strconv.Itoa(i))).Msg("permission registered")
+		return
+	}
+
+	l.Error().Str("setting_name", setting.Setting.Name).Msg("setting could not be registered. max number of retries reached")
 }
