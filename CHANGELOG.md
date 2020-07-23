@@ -7,6 +7,7 @@ The following sections list the changes in ocis-hello unreleased.
 ## Summary
 
 * Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
+* Bugfix - Build docker images with alpine:latest instead of alpine:edge: [#84](https://github.com/owncloud/ocis-hello/pull/84)
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
 * Change - Use server config variable from ocis-web: [#81](https://github.com/owncloud/ocis-hello/pull/81)
 * Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
@@ -21,6 +22,13 @@ The following sections list the changes in ocis-hello unreleased.
    working build.
 
    https://github.com/owncloud/ocis-hello/pull/72
+
+
+* Bugfix - Build docker images with alpine:latest instead of alpine:edge: [#84](https://github.com/owncloud/ocis-hello/pull/84)
+
+   ARM builds were failing when built on alpine:edge, so we switched to alpine:latest instead.
+
+   https://github.com/owncloud/ocis-hello/pull/84
 
 
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
