@@ -11,11 +11,15 @@ import (
 	olog "github.com/owncloud/ocis-pkg/v2/log"
 	"github.com/owncloud/ocis-pkg/v2/middleware"
 	settings "github.com/owncloud/ocis-settings/pkg/proto/v0"
+	ssvc "github.com/owncloud/ocis-settings/pkg/service/v0"
 )
 
 var (
 	// ErrMissingName defines the error if name is missing.
 	ErrMissingName = errors.New("missing a name")
+
+	bundleIdGreeting       = "21fb587b-7b69-4aa6-b0a7-93c74af1918f"
+	settingIdGreeterPhrase = "b3584ea8-caec-4951-a2c1-92cbc70071b7"
 )
 
 // NewService returns a service implementation for HelloHandler.
@@ -44,7 +48,7 @@ func getGreetingPhrase(ctx context.Context) string {
 	ownAccountUUID := ctx.Value(middleware.UUIDKey)
 	if ownAccountUUID != nil {
 		// request to the settings service requires to have the account uuid of the authenticated user available in the context
-		request := &settings.GetSettingsValueRequest{
+		request := &settings.GetValueRequest{
 			Identifier: &settings.Identifier{
 				Extension:   "ocis-hello",
 				BundleKey:   "greeting",
@@ -56,9 +60,9 @@ func getGreetingPhrase(ctx context.Context) string {
 		// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
 		// https://github.com/owncloud/ocis-hello/issues/74
 		valueService := settings.NewValueService("com.owncloud.api.settings", mclient.DefaultClient)
-		response, err := valueService.GetSettingsValue(ctx, request)
+		response, err := valueService.GetValue(ctx, request)
 		if err == nil {
-			value := response.SettingsValue.Value.(*settings.SettingsValue_StringValue)
+			value := response.Value.Value.Value.(*settings.Value_StringValue)
 			trimmedPhrase := strings.Trim(
 				value.StringValue,
 				" \t",
@@ -73,20 +77,27 @@ func getGreetingPhrase(ctx context.Context) string {
 
 // RegisterSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.
 func RegisterSettingsBundles(l *olog.Logger) {
-	request := &settings.SaveSettingsBundleRequest{
-		SettingsBundle: &settings.SettingsBundle{
-			Identifier: &settings.Identifier{
-				Extension: "ocis-hello",
-				BundleKey: "greeting",
-			},
+	request := &settings.SaveBundleRequest{
+		Bundle: &settings.Bundle{
+			Id:          bundleIdGreeting,
+			Name:        "greeting",
 			DisplayName: "Greeting",
+			Extension:   "ocis-hello",
+			Type:        settings.Bundle_TYPE_DEFAULT,
+			Resource: &settings.Resource{
+				Type: settings.Resource_TYPE_SYSTEM,
+			},
 			Settings: []*settings.Setting{
 				{
-					SettingKey:  "phrase",
+					Id:          settingIdGreeterPhrase,
+					Name:        "phrase",
 					DisplayName: "Phrase",
 					Description: "Phrase for replies on the greet request",
+					Resource: &settings.Resource{
+						Type: settings.Resource_TYPE_USER,
+					},
 					Value: &settings.Setting_StringValue{
-						StringValue: &settings.StringSetting{
+						StringValue: &settings.String{
 							Required:  true,
 							Default:   "Hello",
 							MaxLength: 15,
@@ -100,13 +111,87 @@ func RegisterSettingsBundles(l *olog.Logger) {
 	// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
 	// https://github.com/owncloud/ocis-proxy/issues/38
 	bundleService := settings.NewBundleService("com.owncloud.api.settings", mclient.DefaultClient)
-	response, err := bundleService.SaveSettingsBundle(context.Background(), request)
+	response, err := bundleService.SaveBundle(context.Background(), request)
 	if err != nil {
 		l.Err(err).
 			Msg("Error registering settings bundle")
 	} else {
 		l.Info().
-			Str("bundle key", response.SettingsBundle.Identifier.BundleKey).
+			Str("bundleName", response.Bundle.Name).
+			Str("bundleId", response.Bundle.Id).
 			Msg("Successfully registered settings bundle")
 	}
+
+	permissionRequests := []*settings.AddSettingToBundleRequest{
+		{
+			BundleId: ssvc.BundleUUIDRoleUser,
+			Setting: &settings.Setting{
+				Id: "45f52511-f9cc-4226-92e3-779e07179714",
+				Resource: &settings.Resource{
+					Type: settings.Resource_TYPE_SETTING,
+					Id:   settingIdGreeterPhrase,
+				},
+				Name: "phrase-user-read",
+				Value: &settings.Setting_PermissionValue{
+					PermissionValue: &settings.Permission{
+						Operation:  settings.Permission_OPERATION_READ,
+						Constraint: settings.Permission_CONSTRAINT_OWN,
+					},
+				},
+			},
+		},
+		{
+			BundleId: ssvc.BundleUUIDRoleAdmin,
+			Setting: &settings.Setting{
+				Id: "d5f42c4b-e1b6-4b59-8eca-fc4b9e9f2320",
+				Resource: &settings.Resource{
+					Type: settings.Resource_TYPE_SETTING,
+					Id:   settingIdGreeterPhrase,
+				},
+				Name: "phrase-admin-read",
+				Value: &settings.Setting_PermissionValue{
+					PermissionValue: &settings.Permission{
+						Operation:  settings.Permission_OPERATION_READ,
+						Constraint: settings.Permission_CONSTRAINT_OWN,
+					},
+				},
+			},
+		},
+		{
+			BundleId: ssvc.BundleUUIDRoleAdmin,
+			Setting: &settings.Setting{
+				Id: "8732811a-147c-4b28-89f5-112573c40682",
+				Resource: &settings.Resource{
+					Type: settings.Resource_TYPE_SETTING,
+					Id:   settingIdGreeterPhrase,
+				},
+				Name: "phrase-admin-create",
+				Value: &settings.Setting_PermissionValue{
+					PermissionValue: &settings.Permission{
+						Operation:  settings.Permission_OPERATION_CREATE,
+						Constraint: settings.Permission_CONSTRAINT_OWN,
+					},
+				},
+			},
+		},
+		{
+			BundleId: ssvc.BundleUUIDRoleAdmin,
+			Setting: &settings.Setting{
+				Id: "9bd896e2-127e-4946-871d-3d1c5f2a52f2",
+				Resource: &settings.Resource{
+					Type: settings.Resource_TYPE_SETTING,
+					Id:   settingIdGreeterPhrase,
+				},
+				Name: "phrase-admin-update",
+				Value: &settings.Setting_PermissionValue{
+					PermissionValue: &settings.Permission{
+						Operation:  settings.Permission_OPERATION_UPDATE,
+						Constraint: settings.Permission_CONSTRAINT_OWN,
+					},
+				},
+			},
+		},
+	}
+
+
 }
