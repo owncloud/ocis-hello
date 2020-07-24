@@ -52,14 +52,15 @@ func getGreetingPhrase(ctx context.Context) string {
 	ownAccountUUID := ctx.Value(middleware.UUIDKey)
 	if ownAccountUUID != nil {
 		// request to the settings service requires to have the account uuid of the authenticated user available in the context
-		request := &settings.GetValueRequest{
-			Id: ownAccountUUID.(string),
+		rq := settings.GetValueByUniqueIdentifiersRequest{
+			AccountUuid: ownAccountUUID.(string),
+			SettingId:   settingIDGreeterPhrase,
 		}
 
 		// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
 		// https://github.com/owncloud/ocis-hello/issues/74
 		valueService := settings.NewValueService("com.owncloud.api.settings", mclient.DefaultClient)
-		response, err := valueService.GetValue(ctx, request)
+		response, err := valueService.GetValueByUniqueIdentifiers(ctx, &rq)
 		if err == nil {
 			value := response.Value.Value.Value.(*settings.Value_StringValue)
 			trimmedPhrase := strings.Trim(

@@ -17,7 +17,7 @@ require (
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/micro/cli/v2 v2.1.2
-	github.com/micro/go-micro/v2 v2.6.0
+	github.com/micro/go-micro/v2 v2.8.0
 	github.com/mitchellh/gox v1.0.1
 	github.com/ogier/pflag v0.0.1 // indirect
 	github.com/oklog/run v1.1.0
@@ -30,7 +30,7 @@ require (
 	github.com/stretchr/testify v1.6.0
 	go.opencensus.io v0.22.3
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b
-	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f
+	golang.org/x/net v0.0.0-20200520182314-0ba52f642ac2
 	google.golang.org/genproto v0.0.0-20200513103714-09dca8ec2884
 	google.golang.org/protobuf v1.23.0
 	honnef.co/go/tools v0.0.1-2020.1.3
