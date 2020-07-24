@@ -130,7 +130,7 @@ func RegisterSettingsBundles(l *olog.Logger) {
 				goto OUT
 			}
 		}
-		l.Fatal().Str("setting_name", request.Bundle.Name).Msg("bundle could not be registered. max number of retries reached")
+		l.Err(err).Str("setting_name", request.Bundle.Name).Msg("bundle could not be registered. max number of retries reached")
 	} else {
 		l.Info().
 			Str("bundleName", response.Bundle.Name).
