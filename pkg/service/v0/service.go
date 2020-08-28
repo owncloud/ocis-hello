@@ -62,13 +62,15 @@ func getGreetingPhrase(ctx context.Context) string {
 		valueService := settings.NewValueService("com.owncloud.api.settings", mclient.DefaultClient)
 		response, err := valueService.GetValueByUniqueIdentifiers(ctx, &rq)
 		if err == nil {
-			value := response.Value.Value.Value.(*settings.Value_StringValue)
-			trimmedPhrase := strings.Trim(
-				value.StringValue,
-				" \t",
-			)
-			if trimmedPhrase != "" {
-				return trimmedPhrase + " %s"
+			value, ok := response.Value.Value.Value.(*settings.Value_StringValue)
+			if ok {
+				trimmedPhrase := strings.Trim(
+					value.StringValue,
+					" \t",
+				)
+				if trimmedPhrase != "" {
+					return trimmedPhrase + " %s"
+				}
 			}
 		}
 	}
@@ -94,7 +96,7 @@ func RegisterSettingsBundles(l *olog.Logger) {
 					DisplayName: "Phrase",
 					Description: "Phrase for replies on the greet request",
 					Resource: &settings.Resource{
-						Type: settings.Resource_TYPE_USER,
+						Type: settings.Resource_TYPE_SYSTEM,
 					},
 					Value: &settings.Setting_StringValue{
 						StringValue: &settings.String{

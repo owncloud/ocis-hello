@@ -807,6 +807,7 @@ github.com/owncloud/ocis-pkg/v2 v2.2.2-0.20200812103920-db41b5a3d14d h1:eruHqxLf
 github.com/owncloud/ocis-pkg/v2 v2.2.2-0.20200812103920-db41b5a3d14d/go.mod h1:FSzIvhx9HcZcq4jgNaDowNvM7PTX/XCyoMvyfzidUpE=
 github.com/owncloud/ocis-pkg/v2 v2.3.0 h1:bdDgfPkPdL3D6bGKhQ56pfwT1XdiKBtQ34qErVyXzys=
 github.com/owncloud/ocis-pkg/v2 v2.3.0/go.mod h1:FSzIvhx9HcZcq4jgNaDowNvM7PTX/XCyoMvyfzidUpE=
+github.com/owncloud/ocis-pkg/v2 v2.4.0 h1:/3ZOd4txtwjiNKJA9iLT9BjrJw5YgHSX13fQR4BYfGY=
 github.com/owncloud/ocis-pkg/v2 v2.4.0/go.mod h1:FSzIvhx9HcZcq4jgNaDowNvM7PTX/XCyoMvyfzidUpE=
 github.com/owncloud/ocis-settings v0.1.1-0.20200819111829-a987d53702a8 h1:Et/p4+iG1GnnPZhz5HGPb0HaOsbBkwL6rI72+fr1YDc=
 github.com/owncloud/ocis-settings v0.1.1-0.20200819111829-a987d53702a8/go.mod h1:pvB0Mk24i0Gf6bmiIFEINgOFvViXtzVyossovxMRv0s=
