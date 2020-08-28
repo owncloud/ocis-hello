@@ -142,23 +142,6 @@ func RegisterSettingsBundles(l *olog.Logger) {
 OUT:
 	permissionRequests := []*settings.AddSettingToBundleRequest{
 		{
-			BundleId: ssvc.BundleUUIDRoleUser,
-			Setting: &settings.Setting{
-				Id: "45f52511-f9cc-4226-92e3-779e07179714",
-				Resource: &settings.Resource{
-					Type: settings.Resource_TYPE_SETTING,
-					Id:   settingIDGreeterPhrase,
-				},
-				Name: "phrase-user-read",
-				Value: &settings.Setting_PermissionValue{
-					PermissionValue: &settings.Permission{
-						Operation:  settings.Permission_OPERATION_READ,
-						Constraint: settings.Permission_CONSTRAINT_OWN,
-					},
-				},
-			},
-		},
-		{
 			BundleId: ssvc.BundleUUIDRoleAdmin,
 			Setting: &settings.Setting{
 				Id: "d5f42c4b-e1b6-4b59-8eca-fc4b9e9f2320",
@@ -169,41 +152,7 @@ OUT:
 				Name: "phrase-admin-read",
 				Value: &settings.Setting_PermissionValue{
 					PermissionValue: &settings.Permission{
-						Operation:  settings.Permission_OPERATION_READ,
-						Constraint: settings.Permission_CONSTRAINT_OWN,
-					},
-				},
-			},
-		},
-		{
-			BundleId: ssvc.BundleUUIDRoleAdmin,
-			Setting: &settings.Setting{
-				Id: "8732811a-147c-4b28-89f5-112573c40682",
-				Resource: &settings.Resource{
-					Type: settings.Resource_TYPE_SETTING,
-					Id:   settingIDGreeterPhrase,
-				},
-				Name: "phrase-admin-create",
-				Value: &settings.Setting_PermissionValue{
-					PermissionValue: &settings.Permission{
-						Operation:  settings.Permission_OPERATION_CREATE,
-						Constraint: settings.Permission_CONSTRAINT_OWN,
-					},
-				},
-			},
-		},
-		{
-			BundleId: ssvc.BundleUUIDRoleAdmin,
-			Setting: &settings.Setting{
-				Id: "9bd896e2-127e-4946-871d-3d1c5f2a52f2",
-				Resource: &settings.Resource{
-					Type: settings.Resource_TYPE_SETTING,
-					Id:   settingIDGreeterPhrase,
-				},
-				Name: "phrase-admin-update",
-				Value: &settings.Setting_PermissionValue{
-					PermissionValue: &settings.Permission{
-						Operation:  settings.Permission_OPERATION_UPDATE,
+						Operation:  settings.Permission_OPERATION_READWRITE,
 						Constraint: settings.Permission_CONSTRAINT_OWN,
 					},
 				},
@@ -222,7 +171,7 @@ OUT:
 }
 
 // proposal: the retry logic should live in the settings service.
-func retryPermissionRequests(ctx context.Context, bs settings.BundleService, setting *settings.AddSettingToBundleRequest, count int, l *olog.Logger) {
+func retryPermissionRequests(ctx context.Context, bs settings.BundleService, setting *settings.AddSettingToBundleRequest, maxRetries int, l *olog.Logger) {
 	for i := 1; i < maxRetries; i++ {
 		if _, err := bs.AddSettingToBundle(ctx, setting); err != nil {
 			l.Warn().Str("setting_name", setting.Setting.Name).Str("attempt", fmt.Sprintf("%v/%v", strconv.Itoa(i), strconv.Itoa(maxRetries))).Msgf("error on add setting to bundle")
