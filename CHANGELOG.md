@@ -8,6 +8,7 @@ The following sections list the changes in ocis-hello unreleased.
 
 * Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
 * Bugfix - Build docker images with alpine:latest instead of alpine:edge: [#84](https://github.com/owncloud/ocis-hello/pull/84)
+* Change - Adapt to new ocis-settings data model: [#85](https://github.com/owncloud/ocis-hello/pull/85)
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
 * Change - Use server config variable from ocis-web: [#81](https://github.com/owncloud/ocis-hello/pull/81)
 * Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
@@ -29,6 +30,15 @@ The following sections list the changes in ocis-hello unreleased.
    ARM builds were failing when built on alpine:edge, so we switched to alpine:latest instead.
 
    https://github.com/owncloud/ocis-hello/pull/84
+
+
+* Change - Adapt to new ocis-settings data model: [#85](https://github.com/owncloud/ocis-hello/pull/85)
+
+   Ocis-settings introduced UUIDs and less verbose endpoint and message type names. This PR
+   adjusts ocis-hello accordingly.
+
+   https://github.com/owncloud/ocis-hello/pull/85
+   https://github.com/owncloud/ocis-settings/pull/46
 
 
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
