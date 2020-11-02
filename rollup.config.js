@@ -8,6 +8,9 @@ import babel from 'rollup-plugin-babel'
 import json from '@rollup/plugin-json'
 import builtins from '@erquhart/rollup-plugin-node-builtins'
 import globals from 'rollup-plugin-node-globals'
+import serve from 'rollup-plugin-serve'
+import copy from 'rollup-plugin-copy'
+import postcss from 'rollup-plugin-postcss'
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -18,35 +21,58 @@ function onwarn (warning) {
   }
 }
 
-export default {
-  input: 'ui/app.js',
-  output: {
-    file: 'assets/hello.js',
-    format: 'amd',
-    sourcemap: !production
+const pipeline = [
+  vue(),
+  replace({
+    'process.env.NODE_ENV': JSON.stringify('production')
+  }),
+  resolve({
+    mainFields: ['browser', 'jsnext', 'module', 'main'],
+    include: 'node_modules/**',
+    preferBuiltins: true
+  }),
+  babel({
+    exclude: 'node_modules/**',
+    runtimeHelpers: true
+  }),
+  commonjs({
+    include: 'node_modules/**'
+  }),
+  json(),
+  globals(),
+  builtins(),
+  production && terser(),
+  production && filesize()
+]
+
+export default [
+  {
+    input: 'ui/app.js',
+    output: {
+      file: 'assets/hello.js',
+      format: 'amd'
+    },
+    onwarn,
+    plugins: [
+      ...pipeline,
+      !production && serve('assets')
+    ]
   },
-  onwarn,
-  plugins: [
-    vue(),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    resolve({
-      mainFields: ['browser', 'jsnext', 'module', 'main'],
-      include: 'node_modules/**',
-      preferBuiltins: true
-    }),
-    babel({
-      exclude: 'node_modules/**',
-      runtimeHelpers: true
-    }),
-    commonjs({
-      include: 'node_modules/**'
-    }),
-    json(),
-    globals(),
-    builtins(),
-    production && terser(),
-    production && filesize()
-  ]
-}
+  {
+    input: 'ui/dev/src/main.js',
+    output: {
+      file: 'assets/app.js',
+      format: 'iife'
+    },
+    onwarn,
+    plugins: [
+      ...pipeline,
+      !production && copy({
+        targets: [
+          { src: 'ui/dev/public/*', dest: 'assets' }
+        ]
+      }),
+      postcss()
+    ]
+  }
+]
