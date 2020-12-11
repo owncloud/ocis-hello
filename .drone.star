@@ -848,7 +848,7 @@ def website(ctx):
       },
       {
         'name': 'test',
-        'image': 'webhippie/hugo:latest',
+        'image': 'owncloudci/hugo:0.71.0',
         'commands': [
           'cd hugo',
           'hugo',
