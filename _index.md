@@ -3,6 +3,7 @@ title: Hello
 geekdocRepo: https://github.com/owncloud/ocis-hello
 geekdocEditPath: edit/master/docs
 geekdocFilePath: _index.md
+geekdocCollapseSection: true
 ---
 
 [![GitHub](https://img.shields.io/github/license/owncloud/ocis-hello)](https://github.com/owncloud/ocis-hello/blob/master/LICENSE)
