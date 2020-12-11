@@ -848,7 +848,7 @@ def website(ctx):
       },
       {
         'name': 'test',
-        'image': 'webhippie/hugo:latest',
+        'image': 'owncloudci/hugo:0.71.0',
         'commands': [
           'cd hugo',
           'hugo',
@@ -887,7 +887,7 @@ def website(ctx):
         'name': 'downstream',
         'image': 'plugins/downstream',
         'settings': {
-          'server': 'https://cloud.drone.io/',
+          'server': 'https://drone.owncloud.com/',
           'token': {
             'from_secret': 'drone_token',
           },
