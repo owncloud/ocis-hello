@@ -170,7 +170,7 @@ $(GOPATH)/bin/protoc-gen-microweb:
 	GO111MODULE=off go get -v github.com/webhippie/protoc-gen-microweb
 
 $(GOPATH)/bin/protoc-gen-swagger:
-	GO111MODULE=off go get -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+	GO111MODULE=off go get -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2
 
 pkg/proto/v0/hello.pb.go: pkg/proto/v0/hello.proto
 	protoc \
