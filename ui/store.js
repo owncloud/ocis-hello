@@ -9,7 +9,8 @@ const state = {
 
 const getters = {
   config: state => state.config,
-  message: state => state.message
+  message: state => state.message,
+  getServerForJsClient: (state, getters, rootState, rootGetters) => rootGetters.configuration.server.replace(/\/$/, '')
 }
 
 const actions = {
@@ -21,7 +22,7 @@ const actions = {
   submitName ({ commit, dispatch, getters, rootGetters }, value) {
     injectAuthToken(rootGetters)
     Hello_Greet({
-      $domain: rootGetters.configuration.server,
+      $domain: getters.getServerForJsClient,
       body: { name: value }
     })
       .then(response => {
