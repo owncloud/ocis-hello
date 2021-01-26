@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
-	"github.com/owncloud/ocis-pkg/v2/service/grpc"
+	"github.com/owncloud/ocis/ocis-pkg/service/grpc"
 	"github.com/stretchr/testify/assert"
 
 	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
@@ -116,7 +116,7 @@ func TestWrongService(t *testing.T) {
 
 	for _, testCase := range tests {
 		t.Run(testCase, func(t *testing.T) {
-			request := proto.GreetRequest{Name: "Milan",}
+			request := proto.GreetRequest{Name: "Milan"}
 			client := service.Client()
 			cl := proto.NewHelloService(testCase, client)
 			response, err := cl.Greet(context.Background(), &request)
@@ -125,7 +125,7 @@ func TestWrongService(t *testing.T) {
 			var errorData ErrorMessage
 			json.Unmarshal([]byte(err.Error()), &errorData)
 			assert.Equal(t, 500, errorData.Code)
-			assert.Equal(t, "service " + testCase + ": not found", errorData.Detail)
+			assert.Equal(t, "service "+testCase+": not found", errorData.Detail)
 			assert.Equal(t, "Internal Server Error", errorData.Status)
 		})
 	}

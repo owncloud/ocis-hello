@@ -6,9 +6,9 @@ import (
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
 	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/version"
-	"github.com/owncloud/ocis-pkg/v2/account"
-	"github.com/owncloud/ocis-pkg/v2/middleware"
-	"github.com/owncloud/ocis-pkg/v2/service/http"
+	"github.com/owncloud/ocis/ocis-pkg/account"
+	"github.com/owncloud/ocis/ocis-pkg/middleware"
+	"github.com/owncloud/ocis/ocis-pkg/service/http"
 )
 
 // Server initializes the http service and server.
@@ -37,7 +37,7 @@ func Server(opts ...Option) http.Service {
 
 	mux.Use(middleware.RealIP)
 	mux.Use(middleware.RequestID)
-	mux.Use(middleware.Cache)
+	mux.Use(middleware.NoCache)
 	mux.Use(middleware.Cors)
 	mux.Use(middleware.Secure)
 	mux.Use(middleware.ExtractAccountUUID(
@@ -60,7 +60,10 @@ func Server(opts ...Option) http.Service {
 			assets.Logger(options.Logger),
 			assets.Config(options.Config),
 		),
-	))
+		// Currently this option does not affect anything but might again in the future
+		// when the static middleware implements caching again.
+		// TTL = 7 days in seconds = 60 * 60 * 24 * 7
+		604800))
 
 	mux.Route(options.Config.HTTP.Root, func(r chi.Router) {
 		proto.RegisterHelloWeb(r, handle)
