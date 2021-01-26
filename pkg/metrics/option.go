@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"github.com/owncloud/ocis-pkg/v2/log"
+	"github.com/owncloud/ocis/ocis-pkg/log"
 )
 
 // Option defines a single option function.
@@ -9,7 +9,7 @@ type Option func(o *Options)
 
 // Options defines the available options for this package.
 type Options struct {
-	Logger  log.Logger
+	Logger log.Logger
 }
 
 // newOptions initializes the available default options.

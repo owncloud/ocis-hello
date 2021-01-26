@@ -4,7 +4,7 @@ import (
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
 	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/version"
-	"github.com/owncloud/ocis-pkg/v2/service/grpc"
+	"github.com/owncloud/ocis/ocis-pkg/service/grpc"
 )
 
 // Server initializes the grpc service and server.

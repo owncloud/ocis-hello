@@ -9,10 +9,10 @@ import (
 
 	mclient "github.com/micro/go-micro/v2/client"
 	v0proto "github.com/owncloud/ocis-hello/pkg/proto/v0"
-	olog "github.com/owncloud/ocis-pkg/v2/log"
-	"github.com/owncloud/ocis-pkg/v2/middleware"
-	settings "github.com/owncloud/ocis-settings/pkg/proto/v0"
-	ssvc "github.com/owncloud/ocis-settings/pkg/service/v0"
+	olog "github.com/owncloud/ocis/ocis-pkg/log"
+	"github.com/owncloud/ocis/ocis-pkg/middleware"
+	settings "github.com/owncloud/ocis/settings/pkg/proto/v0"
+	ssvc "github.com/owncloud/ocis/settings/pkg/service/v0"
 )
 
 var (
