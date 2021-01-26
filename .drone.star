@@ -46,7 +46,7 @@ def testing(ctx):
       },
       {
         'name': 'generate',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make generate',
@@ -60,7 +60,7 @@ def testing(ctx):
       },
       {
         'name': 'vet',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make vet',
@@ -74,7 +74,7 @@ def testing(ctx):
       },
       {
         'name': 'staticcheck',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make staticcheck',
@@ -88,7 +88,7 @@ def testing(ctx):
       },
       {
         'name': 'lint',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make lint',
@@ -102,7 +102,7 @@ def testing(ctx):
       },
       {
         'name': 'build',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make protobuf build',
@@ -116,7 +116,7 @@ def testing(ctx):
       },
       {
         'name': 'test',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make test',
@@ -175,7 +175,7 @@ def docker(ctx, arch):
       },
       {
         'name': 'generate',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make generate',
@@ -189,7 +189,7 @@ def docker(ctx, arch):
       },
       {
         'name': 'build',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make protobuf build',
@@ -274,7 +274,7 @@ def UITests(ctx, ocisBranch, ocisCommitId, phoenixBranch, phoenixCommitId):
     'steps': [
       {
         'name': 'build',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make protobuf build',
@@ -288,7 +288,7 @@ def UITests(ctx, ocisBranch, ocisCommitId, phoenixBranch, phoenixCommitId):
       },
       {
         'name': 'hello',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'detach': True,
         'commands': [
@@ -305,7 +305,7 @@ def UITests(ctx, ocisBranch, ocisCommitId, phoenixBranch, phoenixCommitId):
       },
       {
         'name': 'build-ocis',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'git clone -b %s --single-branch --no-tags https://github.com/owncloud/ocis /srv/app/ocis' % (ocisBranch),
@@ -322,7 +322,7 @@ def UITests(ctx, ocisBranch, ocisCommitId, phoenixBranch, phoenixCommitId):
       },
       {
         'name': 'ocis-server',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'detach': True,
         'environment' : {
@@ -510,7 +510,7 @@ def binary(ctx, name):
       },
       {
         'name': 'generate',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make generate',
@@ -524,7 +524,7 @@ def binary(ctx, name):
       },
       {
         'name': 'build',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make release-%s' % (name),
@@ -538,7 +538,7 @@ def binary(ctx, name):
       },
       {
         'name': 'finish',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make release-finish',
@@ -695,7 +695,7 @@ def changelog(ctx):
       },
       {
         'name': 'generate',
-        'image': 'webhippie/golang:1.13',
+        'image': 'webhippie/golang:1.15',
         'pull': 'always',
         'commands': [
           'make changelog',
