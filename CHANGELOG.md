@@ -6,15 +6,25 @@ The following sections list the changes in ocis-hello unreleased.
 
 ## Summary
 
+* Bugfix - Fix api path: [#99](https://github.com/owncloud/ocis-hello/pull/99)
 * Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
 * Bugfix - Build docker images with alpine:latest instead of alpine:edge: [#84](https://github.com/owncloud/ocis-hello/pull/84)
 * Change - Adapt to new ocis-settings data model: [#85](https://github.com/owncloud/ocis-hello/pull/85)
+* Change - Update ocis-pkg and ocis settings: [#593](https://github.com/owncloud/ocis/pull/593)
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
 * Change - Use server config variable from ocis-web: [#81](https://github.com/owncloud/ocis-hello/pull/81)
 * Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
 * Enhancement - Track tool dependencies: [#51](https://github.com/owncloud/ocis-hello/pull/51)
 
 ## Details
+
+* Bugfix - Fix api path: [#99](https://github.com/owncloud/ocis-hello/pull/99)
+
+   The server path coming from ownCloud Web now has an enforced trailing slash. Concatenating the
+   api path to the server path resulted in a path containing a double slash.
+
+   https://github.com/owncloud/ocis-hello/pull/99
+
 
 * Bugfix - Fix build error: [#72](https://github.com/owncloud/ocis-hello/pull/72)
 
@@ -39,6 +49,14 @@ The following sections list the changes in ocis-hello unreleased.
 
    https://github.com/owncloud/ocis-hello/pull/85
    https://github.com/owncloud/ocis-settings/pull/46
+
+
+* Change - Update ocis-pkg and ocis settings: [#593](https://github.com/owncloud/ocis/pull/593)
+
+   Ocis-pkg and ocis settings have been moved to the ocis mono-repo.
+
+   https://github.com/owncloud/ocis/pull/593
+   https://github.com/owncloud/ocis-hello/pull/99
 
 
 * Change - Update micro: [#49](https://github.com/owncloud/ocis-hello/pull/49)
