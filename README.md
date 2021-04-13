@@ -1,4 +1,4 @@
-# ownCloud Infinite Scale: Hello
+# oCIS Hello: an example extension for ownCloud Infinite Scale
 
 [![Build Status](https://cloud.drone.io/api/badges/owncloud/ocis-hello/status.svg)](https://cloud.drone.io/owncloud/ocis-hello)
 [![Gitter chat](https://badges.gitter.im/cs3org/reva.svg)](https://gitter.im/cs3org/reva)

@@ -1,4 +1,4 @@
-package svc
+package service
 
 import (
 	"context"
@@ -7,10 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	mclient "github.com/micro/go-micro/v2/client"
+	"github.com/owncloud/ocis-hello/pkg/config"
 	v0proto "github.com/owncloud/ocis-hello/pkg/proto/v0"
-	olog "github.com/owncloud/ocis/ocis-pkg/log"
+	"github.com/owncloud/ocis/ocis-pkg/log"
 	"github.com/owncloud/ocis/ocis-pkg/middleware"
+	"github.com/owncloud/ocis/ocis-pkg/service/grpc"
 	settings "github.com/owncloud/ocis/settings/pkg/proto/v0"
 	ssvc "github.com/owncloud/ocis/settings/pkg/service/v0"
 )
@@ -26,18 +27,39 @@ var (
 	maxRetries = 5
 )
 
-// NewService returns a service implementation for HelloHandler.
-func NewService() v0proto.HelloHandler {
-	return Hello{}
+// New returns a new instance of Service
+func New(opts ...Option) (s *Service, err error) {
+	options := newOptions(opts...)
+	logger := options.Logger
+	cfg := options.Config
+
+	bundleService := options.BundleService
+	if bundleService == nil {
+		bundleService = settings.NewBundleService("com.owncloud.api.settings", grpc.DefaultClient)
+	}
+
+	s = &Service{
+		id:            cfg.GRPC.Namespace + "." + cfg.Server.Name,
+		log:           logger,
+		Config:        cfg,
+		BundleService: bundleService,
+	}
+
+	registerSettingsBundles(s, &logger)
+
+	return s, nil
 }
 
-// Hello defines implements the business logic for HelloHandler.
-type Hello struct {
-	// Add database handlers here.
+// Service implements the AccountsServiceHandler interface
+type Service struct {
+	id            string
+	log           log.Logger
+	Config        *config.Config
+	BundleService settings.BundleService
 }
 
 // Greet implements the HelloHandler interface.
-func (s Hello) Greet(ctx context.Context, req *v0proto.GreetRequest, rsp *v0proto.GreetResponse) error {
+func (s Service) Greet(ctx context.Context, req *v0proto.GreetRequest, rsp *v0proto.GreetResponse) error {
 	if req.Name == "" {
 		return ErrMissingName
 	}
@@ -57,9 +79,7 @@ func getGreetingPhrase(ctx context.Context) string {
 			SettingId:   settingIDGreeterPhrase,
 		}
 
-		// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
-		// https://github.com/owncloud/ocis-hello/issues/74
-		valueService := settings.NewValueService("com.owncloud.api.settings", mclient.DefaultClient)
+		valueService := settings.NewValueService("com.owncloud.api.settings", grpc.DefaultClient)
 		response, err := valueService.GetValueByUniqueIdentifiers(ctx, &rq)
 		if err == nil {
 			value, ok := response.Value.Value.Value.(*settings.Value_StringValue)
@@ -77,8 +97,8 @@ func getGreetingPhrase(ctx context.Context) string {
 	return "Hello %s"
 }
 
-// RegisterSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.
-func RegisterSettingsBundles(l *olog.Logger) {
+// registerSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.
+func registerSettingsBundles(s *Service, l *log.Logger) {
 	request := &settings.SaveBundleRequest{
 		Bundle: &settings.Bundle{
 			Id:          bundleIDGreeting,
@@ -110,14 +130,11 @@ func RegisterSettingsBundles(l *olog.Logger) {
 		},
 	}
 
-	// TODO this won't work with a registry other than mdns. Look into Micro's client initialization.
-	// https://github.com/owncloud/ocis-proxy/issues/38
-	bundleService := settings.NewBundleService("com.owncloud.api.settings", mclient.DefaultClient)
-	response, err := bundleService.SaveBundle(context.Background(), request)
+	response, err := s.BundleService.SaveBundle(context.Background(), request)
 	if err != nil {
 		l.Warn().Msg("error registering settings bundle at first try. retrying")
 		for i := 1; i <= maxRetries; i++ {
-			if _, err := bundleService.SaveBundle(context.Background(), request); err != nil {
+			if _, err := s.BundleService.SaveBundle(context.Background(), request); err != nil {
 				l.Warn().
 					Str("bundle_name", request.Bundle.Name).
 					Str("attempt", fmt.Sprintf("%v/%v", strconv.Itoa(i), strconv.Itoa(maxRetries))).
@@ -164,8 +181,8 @@ OUT:
 
 	for i := range permissionRequests {
 		l.Debug().Str("setting_name", permissionRequests[i].Setting.Name).Str("bundle_id", permissionRequests[i].BundleId).Msg("registering setting to bundle")
-		if res, err := bundleService.AddSettingToBundle(context.Background(), permissionRequests[i]); err != nil {
-			go retryPermissionRequests(context.Background(), bundleService, permissionRequests[i], maxRetries, l)
+		if res, err := s.BundleService.AddSettingToBundle(context.Background(), permissionRequests[i]); err != nil {
+			go retryPermissionRequests(context.Background(), s.BundleService, permissionRequests[i], maxRetries, l)
 		} else {
 			l.Info().Str("setting_name", res.Setting.Name).Msg("permission registered")
 		}
@@ -173,7 +190,7 @@ OUT:
 }
 
 // proposal: the retry logic should live in the settings service.
-func retryPermissionRequests(ctx context.Context, bs settings.BundleService, setting *settings.AddSettingToBundleRequest, maxRetries int, l *olog.Logger) {
+func retryPermissionRequests(ctx context.Context, bs settings.BundleService, setting *settings.AddSettingToBundleRequest, maxRetries int, l *log.Logger) {
 	for i := 1; i < maxRetries; i++ {
 		if _, err := bs.AddSettingToBundle(ctx, setting); err != nil {
 			l.Warn().Str("setting_name", setting.Setting.Name).Str("attempt", fmt.Sprintf("%v/%v", strconv.Itoa(i), strconv.Itoa(maxRetries))).Msgf("error on add setting to bundle")

@@ -1,4 +1,6 @@
 coverage.out
+checkstyle.xml
+.drone.yml
 
 /bin
 /dist

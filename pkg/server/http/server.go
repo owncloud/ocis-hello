@@ -1,10 +1,10 @@
 package http
 
 import (
+	"github.com/asim/go-micro/v3"
 	"github.com/go-chi/chi"
 	"github.com/owncloud/ocis-hello/pkg/assets"
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
-	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/version"
 	"github.com/owncloud/ocis/ocis-pkg/account"
 	"github.com/owncloud/ocis/ocis-pkg/middleware"
@@ -14,24 +14,17 @@ import (
 // Server initializes the http service and server.
 func Server(opts ...Option) http.Service {
 	options := newOptions(opts...)
+	handler := options.Handler
 
 	service := http.NewService(
 		http.Logger(options.Logger),
 		http.Name(options.Name),
-		http.Version(version.String),
+		http.Version(options.Config.Server.Version),
 		http.Address(options.Config.HTTP.Addr),
 		http.Namespace(options.Config.HTTP.Namespace),
 		http.Context(options.Context),
 		http.Flags(options.Flags...),
 	)
-
-	handle := svc.NewService()
-
-	{
-		handle = svc.NewInstrument(handle, options.Metrics)
-		handle = svc.NewLogging(handle, options.Logger)
-		handle = svc.NewTracing(handle)
-	}
 
 	mux := chi.NewMux()
 
@@ -60,22 +53,18 @@ func Server(opts ...Option) http.Service {
 			assets.Logger(options.Logger),
 			assets.Config(options.Config),
 		),
-		// Currently this option does not affect anything but might again in the future
-		// when the static middleware implements caching again.
-		// TTL = 7 days in seconds = 60 * 60 * 24 * 7
-		604800))
+		options.Config.HTTP.CacheTTL,
+	))
 
 	mux.Route(options.Config.HTTP.Root, func(r chi.Router) {
-		proto.RegisterHelloWeb(r, handle)
+		proto.RegisterHelloWeb(r, handler)
 	})
 
-	service.Handle(
-		"/",
-		mux,
-	)
-
-	if err := service.Init(); err != nil {
-		panic(err)
+	err := micro.RegisterHandler(service.Server(), mux)
+	if err != nil {
+		options.Logger.Fatal().Err(err).Msg("failed to register the handler")
 	}
+
+	service.Init()
 	return service
 }

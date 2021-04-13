@@ -4,12 +4,12 @@
   },
   "policy_selector": {
     "static": {
-      "policy": "reva"
+      "policy": "oCIS"
     }
   },
   "policies": [
     {
-      "name": "reva",
+      "name": "oCIS",
       "routes": [
         {
           "endpoint": "/",
@@ -32,16 +32,17 @@
           "backend": "http://localhost:9140"
         },
         {
+          "type": "regex",
+          "endpoint": "/ocs/v[12].php/cloud/user",
+          "backend": "http://localhost:9110"
+        },
+        {
           "endpoint": "/remote.php/",
           "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/dav/",
           "backend": "http://localhost:9140"
-        },
-        {
-          "endpoint": "/data/",
-          "backend": "http://localhost:9164"
         },
         {
           "endpoint": "/webdav/",
@@ -56,12 +57,32 @@
           "backend": "http://localhost:9140"
         },
         {
+          "endpoint": "/data",
+          "backend": "http://localhost:9140"
+        },
+        {
+          "endpoint": "/api/v0/accounts",
+          "backend": "http://localhost:9181"
+        },
+        {
+          "endpoint": "/accounts.js",
+          "backend": "http://localhost:9181"
+        },
+        {
+          "endpoint": "/api/v0/settings",
+          "backend":  "http://localhost:9190"
+        },
+        {
+          "endpoint": "/settings.js",
+          "backend":  "http://localhost:9190"
+	      },
+        {
           "endpoint": "/api/v0/greet",
-          "backend": "http://hello:9105"
+          "backend": "http://hello-server:9105"
         },
         {
           "endpoint": "/hello.js",
-          "backend": "http://hello:9105"
+          "backend": "http://hello-server:9105"
         }
       ]
     }

@@ -1,8 +1,11 @@
 package command
 
 import (
+	"context"
 	"os"
 	"strings"
+
+	"github.com/owncloud/ocis/ocis-pkg/sync"
 
 	"github.com/micro/cli/v2"
 	"github.com/owncloud/ocis-hello/pkg/config"
@@ -13,13 +16,11 @@ import (
 )
 
 // Execute is the entry point for the ocis-hello command.
-func Execute() error {
-	cfg := config.New()
-
+func Execute(cfg *config.Config) error {
 	app := &cli.App{
-		Name:     "ocis-hello",
+		Name:     "hello",
 		Version:  version.String,
-		Usage:    "Example service for Reva/oCIS",
+		Usage:    "Hello, an example oCIS extension",
 		Compiled: version.Compiled(),
 
 		Authors: []*cli.Author{
@@ -61,11 +62,14 @@ func NewLogger(cfg *config.Config) log.Logger {
 		log.Level(cfg.Log.Level),
 		log.Pretty(cfg.Log.Pretty),
 		log.Color(cfg.Log.Color),
+		log.File(cfg.Log.File),
 	)
 }
 
-// ParseConfig loads settings configuration from Viper known paths.
+// ParseConfig loads hello configuration from Viper known paths.
 func ParseConfig(c *cli.Context, cfg *config.Config) error {
+	sync.ParsingViperConfig.Lock()
+	defer sync.ParsingViperConfig.Unlock()
 	logger := NewLogger(cfg)
 
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -102,6 +106,32 @@ func ParseConfig(c *cli.Context, cfg *config.Config) error {
 		logger.Fatal().
 			Err(err).
 			Msg("Failed to parse config")
+	}
+
+	return nil
+}
+
+// SutureService allows for the hello command to be embedded and supervised by a suture supervisor tree.
+type SutureService struct {
+	cfg *config.Config
+}
+
+// NewSutureService creates a new hello.SutureService
+// TODO: how to do this for non core extensions?
+//func NewSutureService(cfg *ociscfg.Config) suture.Service {
+//	if cfg.Mode == 0 {
+//		cfg.Hello.Supervised = true
+//	}
+//	cfg.Hello.Log.File = cfg.Log.File
+//	return SutureService{
+//		cfg: cfg.Hello,
+//	}
+//}
+
+func (s SutureService) Serve(ctx context.Context) error {
+	s.cfg.Context = ctx
+	if err := Execute(s.cfg); err != nil {
+		return err
 	}
 
 	return nil

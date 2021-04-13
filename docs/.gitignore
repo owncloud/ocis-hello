@@ -1,0 +1,4 @@
+hugo/
+mutagen.yml.lock
+**/grpc.md
+**/configuration.md

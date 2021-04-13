@@ -1,4 +1,4 @@
-package svc
+package service
 
 import (
 	"context"
@@ -22,7 +22,7 @@ func TestHello_Greet(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := Hello{}
+			s := Service{}
 			req := &v0proto.GreetRequest{Name: tt.req}
 			var rsp = &v0proto.GreetResponse{}
 
