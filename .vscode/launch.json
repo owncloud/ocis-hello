@@ -11,8 +11,8 @@
             "env": {
                 "OCIS_LOG_LEVEL": "debug",
                 "OCIS_LOG_PRETTY": "true",
-                "OCIS_LOG_COLOR": "true",
+                "OCIS_LOG_COLOR": "true"
             }
-        },
+        }
     ]
 }
