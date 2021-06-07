@@ -6,11 +6,6 @@ package proto
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/golang/protobuf/ptypes/empty"
-	_ "github.com/golang/protobuf/ptypes/timestamp"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
-	_ "google.golang.org/genproto/protobuf/field_mask"
 	math "math"
 )
 
@@ -41,15 +36,7 @@ var _ server.Option
 // Api Endpoints for Hello service
 
 func NewHelloEndpoints() []*api.Endpoint {
-	return []*api.Endpoint{
-		&api.Endpoint{
-			Name:    "Hello.Greet",
-			Path:    []string{"/api/v0/greet"},
-			Method:  []string{"POST"},
-			Body:    "*",
-			Handler: "rpc",
-		},
-	}
+	return []*api.Endpoint{}
 }
 
 // Client API for Hello service
@@ -94,13 +81,6 @@ func RegisterHelloHandler(s server.Server, hdlr HelloHandler, opts ...server.Han
 		hello
 	}
 	h := &helloHandler{hdlr}
-	opts = append(opts, api.WithEndpoint(&api.Endpoint{
-		Name:    "Hello.Greet",
-		Path:    []string{"/api/v0/greet"},
-		Method:  []string{"POST"},
-		Body:    "*",
-		Handler: "rpc",
-	}))
 	return s.Handle(s.NewHandler(&Hello{h}, opts...))
 }
 

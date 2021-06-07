@@ -56,8 +56,6 @@ include .make/protobuf.mk
 .PHONY: protobuf
 protobuf: $(PROTO_SRC)/${NAME}.pb.go \
 		  $(PROTO_SRC)/${NAME}.pb.micro.go \
-		  $(PROTO_SRC)/${NAME}.pb.web.go \
-		  $(PROTO_SRC)/${NAME}.swagger.json \
 		  docs/extensions/${NAME}/grpc.md
 
 

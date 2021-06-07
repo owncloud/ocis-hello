@@ -21,7 +21,7 @@ type Options struct {
 	Config  *config.Config
 	Metrics *metrics.Metrics
 	Flags   []cli.Flag
-	Handler *svc.Service
+	Handler svc.Greeter
 }
 
 // newOptions initializes the available default options.
@@ -78,7 +78,7 @@ func Flags(val []cli.Flag) Option {
 }
 
 // Handler provides a function to set the handler option.
-func Handler(val *svc.Service) Option {
+func Handler(val svc.Greeter) Option {
 	return func(o *Options) {
 		o.Handler = val
 	}
