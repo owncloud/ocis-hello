@@ -388,6 +388,7 @@ def UITests(ctx):
                     "RUN_ON_OCIS": "true",
                     "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/owncloud/data",
                     "OCIS_SKELETON_DIR": "/srv/app/testing/data/webUISkeleton",
+                    "TESTING_DATA_DIR": "/srv/app/testing/data",
                     "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
                     "TEST_TAGS": "not @skipOnOCIS and not @skip",
                     "LOCAL_UPLOAD_DIR": "/uploads",
@@ -397,7 +398,7 @@ def UITests(ctx):
                 },
                 "commands": [
                     ". /drone/src/.drone.env",
-                    "git clone -b master --depth=1 https://github.com/owncloud/testing.git /srv/app/testing-app",
+                    "git clone -b master --depth=1 https://github.com/owncloud/testing.git /srv/app/testing",
                     "git clone -b $WEB_BRANCH --single-branch --no-tags https://github.com/owncloud/web.git /srv/app/web",
                     "cd /srv/app/web",
                     "git checkout $WEB_COMMITID",
@@ -838,7 +839,6 @@ def checkStarlark():
             ],
         },
     }]
-
 
 def pipelineSanityChecks(ctx, pipelines):
     """pipelineSanityChecks helps the CI developers to find errors before running it
