@@ -320,11 +320,19 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
     return [
         {
             "name": "ocis-server",
-            "image": "owncloud/ocis:1.4.0",
+            "image": "owncloud/ocis:1.7.0",
             "pull": "always",
             "detach": True,
             "environment": environment,
             "volumes": volumes,
+            "commands": [
+                "ocis server&",
+                "sleep 10",
+                "ocis kill proxy",
+                "sleep 10",
+                "ocis proxy server&",
+                "wait"
+            ]
         },
         {
             "name": "wait-for-ocis-server",
