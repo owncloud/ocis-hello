@@ -11,7 +11,6 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/golang/protobuf v1.5.2
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.2.0
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/micro/cli/v2 v2.1.2
 	github.com/oklog/run v1.1.0
@@ -23,7 +22,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	go.opencensus.io v0.23.0
 	golang.org/x/net v0.0.0-20210410081132-afb366fc7cd1
-	google.golang.org/genproto v0.0.0-20210413151531-c14fb6ef47c3
+	google.golang.org/genproto v0.0.0-20210413151531-c14fb6ef47c3 // indirect
 	google.golang.org/protobuf v1.26.0
 )
 

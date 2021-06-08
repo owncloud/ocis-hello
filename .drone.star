@@ -94,7 +94,7 @@ def main(ctx):
         pipelines = test_pipelines + build_release_pipelines + build_release_helpers
 
     pipelineSanityChecks(ctx, pipelines)
-    return pipelines
+    return pipelines + checkStarlark()
 
 def testHello(ctx):
     sonar_env = {
@@ -307,7 +307,7 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
         "PROXY_ENABLE_BASIC_AUTH": True,
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
         "PROXY_CONFIG_FILE": "/drone/src/ui/tests/config/drone/proxy-config.json",
-        "OCIS_LOG_LEVEL": "warn",
+        "OCIS_LOG_LEVEL": "error",
     }
 
     # Pass in "default" accounts_hash_difficulty to not set this environment variable.
@@ -331,8 +331,8 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
                 "ocis kill proxy",
                 "sleep 10",
                 "ocis proxy server&",
-                "wait"
-            ]
+                "wait",
+            ],
         },
         {
             "name": "wait-for-ocis-server",
@@ -397,7 +397,7 @@ def UITests(ctx):
                 },
                 "commands": [
                     ". /drone/src/.drone.env",
-                    "git clone -b master --depth=1 https://github.com/owncloud/testing.git /srv/app/testing",
+                    "git clone -b master --depth=1 https://github.com/owncloud/testing.git /srv/app/testing-app",
                     "git clone -b $WEB_BRANCH --single-branch --no-tags https://github.com/owncloud/web.git /srv/app/web",
                     "cd /srv/app/web",
                     "git checkout $WEB_COMMITID",
@@ -801,6 +801,44 @@ def selenium():
             }],
         },
     ]
+
+def checkStarlark():
+    return [{
+        "kind": "pipeline",
+        "type": "docker",
+        "name": "check-starlark",
+        "steps": [
+            {
+                "name": "format-check-starlark",
+                "image": "owncloudci/bazel-buildifier",
+                "pull": "always",
+                "commands": [
+                    "buildifier --mode=check .drone.star",
+                ],
+            },
+            {
+                "name": "show-diff",
+                "image": "owncloudci/bazel-buildifier",
+                "pull": "always",
+                "commands": [
+                    "buildifier --mode=fix .drone.star",
+                    "git diff",
+                ],
+                "when": {
+                    "status": [
+                        "failure",
+                    ],
+                },
+            },
+        ],
+        "depends_on": [],
+        "trigger": {
+            "ref": [
+                "refs/pull/**",
+            ],
+        },
+    }]
+
 
 def pipelineSanityChecks(ctx, pipelines):
     """pipelineSanityChecks helps the CI developers to find errors before running it
