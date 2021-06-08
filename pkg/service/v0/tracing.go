@@ -3,29 +3,29 @@ package service
 import (
 	"context"
 
-	v0proto "github.com/owncloud/ocis-hello/pkg/proto/v0"
 	"go.opencensus.io/trace"
 )
 
 // NewTracing returns a service that instruments traces.
-func NewTracing(next v0proto.HelloHandler) v0proto.HelloHandler {
+func NewTracing(next Greeter) Greeter {
 	return tracing{
 		next: next,
 	}
 }
 
 type tracing struct {
-	next v0proto.HelloHandler
+	next Greeter
 }
 
-// Greet implements the HelloHandler interface.
-func (t tracing) Greet(ctx context.Context, req *v0proto.GreetRequest, rsp *v0proto.GreetResponse) error {
-	ctx, span := trace.StartSpan(ctx, "Hello.Greet")
+// Greet implements the Greeter interface.
+func (t tracing) Greet(accountID, name string) string {
+	_, span := trace.StartSpan(context.Background(), "Hello.Greet")
 	defer span.End()
 
 	span.Annotate([]trace.Attribute{
-		trace.StringAttribute("name", req.Name),
+		trace.StringAttribute("name", name),
+		trace.StringAttribute("accountID", accountID),
 	}, "Execute Hello.Greet handler")
 
-	return t.next.Greet(ctx, req, rsp)
+	return t.next.Greet(accountID, name)
 }

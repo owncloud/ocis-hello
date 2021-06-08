@@ -77,6 +77,10 @@ func Server(cfg *config.Config) *cli.Command {
 				return err
 			}
 
+			handler = service.NewInstrument(handler, mtrcs)
+			handler = service.NewLogging(handler, logger)
+			handler = service.NewTracing(handler)
+
 			httpServer := http.Server(
 				http.Config(cfg),
 				http.Logger(logger),

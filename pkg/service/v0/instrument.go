@@ -1,15 +1,12 @@
 package service
 
 import (
-	"context"
-
 	"github.com/owncloud/ocis-hello/pkg/metrics"
-	v0proto "github.com/owncloud/ocis-hello/pkg/proto/v0"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 // NewInstrument returns a service that instruments metrics.
-func NewInstrument(next v0proto.HelloHandler, metrics *metrics.Metrics) v0proto.HelloHandler {
+func NewInstrument(next Greeter, metrics *metrics.Metrics) Greeter {
 	return instrument{
 		next:    next,
 		metrics: metrics,
@@ -17,12 +14,12 @@ func NewInstrument(next v0proto.HelloHandler, metrics *metrics.Metrics) v0proto.
 }
 
 type instrument struct {
-	next    v0proto.HelloHandler
+	next    Greeter
 	metrics *metrics.Metrics
 }
 
-// Greet implements the HelloHandler interface.
-func (i instrument) Greet(ctx context.Context, req *v0proto.GreetRequest, rsp *v0proto.GreetResponse) error {
+// Greet implements the Greeter interface.
+func (i instrument) Greet(accountID, name string) string {
 	timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 		us := v * 1000000
 
@@ -32,11 +29,7 @@ func (i instrument) Greet(ctx context.Context, req *v0proto.GreetRequest, rsp *v
 
 	defer timer.ObserveDuration()
 
-	err := i.next.Greet(ctx, req, rsp)
+	i.metrics.Counter.WithLabelValues().Inc()
 
-	if err == nil {
-		i.metrics.Counter.WithLabelValues().Inc()
-	}
-
-	return err
+	return i.next.Greet(accountID, name)
 }

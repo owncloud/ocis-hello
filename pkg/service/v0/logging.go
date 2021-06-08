@@ -1,15 +1,13 @@
 package service
 
 import (
-	"context"
 	"time"
 
-	v0proto "github.com/owncloud/ocis-hello/pkg/proto/v0"
 	"github.com/owncloud/ocis/ocis-pkg/log"
 )
 
 // NewLogging returns a service that logs messages.
-func NewLogging(next v0proto.HelloHandler, logger log.Logger) v0proto.HelloHandler {
+func NewLogging(next Greeter, logger log.Logger) Greeter {
 	return logging{
 		next:   next,
 		logger: logger,
@@ -17,28 +15,20 @@ func NewLogging(next v0proto.HelloHandler, logger log.Logger) v0proto.HelloHandl
 }
 
 type logging struct {
-	next   v0proto.HelloHandler
+	next   Greeter
 	logger log.Logger
 }
 
-// Greet implements the HelloHandler interface.
-func (l logging) Greet(ctx context.Context, req *v0proto.GreetRequest, rsp *v0proto.GreetResponse) error {
+// Greet implements the Greeter interface.
+func (l logging) Greet(accountID, name string) string {
 	start := time.Now()
-	err := l.next.Greet(ctx, req, rsp)
+	greeting := l.next.Greet(accountID, name)
 
-	logger := l.logger.With().
+	l.logger.Debug().
 		Str("method", "Hello.Greet").
 		Dur("duration", time.Since(start)).
-		Logger()
+		Str("greeting", greeting).
+		Msg("")
 
-	if err != nil {
-		logger.Warn().
-			Err(err).
-			Msg("Failed to execute")
-	} else {
-		logger.Debug().
-			Msg("")
-	}
-
-	return err
+	return greeting
 }
