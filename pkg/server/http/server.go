@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/asim/go-micro/v3"
+	"github.com/asim/go-micro/v3/metadata"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/owncloud/ocis-hello/pkg/assets"
@@ -66,6 +67,8 @@ func Server(opts ...Option) ohttp.Service {
 
 	mux.Route(options.Config.HTTP.Root, func(r chi.Router) {
 		r.Post("/api/v0/greet", func(w http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+
 			var req greetRequest
 
 			err := json.NewDecoder(r.Body).Decode(&req)
@@ -80,11 +83,11 @@ func Server(opts ...Option) ohttp.Service {
 				return
 			}
 
-			var accountID string
-			val := r.Context().Value(middleware.AccountID)
-			if val != nil {
-				accountID = val.(string)
+			accountID, ok := metadata.Get(ctx, middleware.AccountID)
+			if !ok {
+				return
 			}
+
 			greeting := handler.Greet(accountID, req.Name)
 
 			rsp := &proto.GreetResponse{

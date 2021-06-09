@@ -121,7 +121,7 @@ In essence, it dismantles the `x-access-token`, extracts the account UUID and ma
 
 It can be subsequently retrieved from the context like this:
 ```go
-ownAccountUUID := ctx.Value(middleware.AccountID).(string)
+accountID, ok := metadata.Get(ctx, middleware.AccountID)
 ```
 
 ### Create request
