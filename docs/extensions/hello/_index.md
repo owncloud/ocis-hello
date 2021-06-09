@@ -6,11 +6,7 @@ geekdocFilePath: _index.md
 geekdocCollapseSection: true
 ---
 
-{{< toc >}}
-
-## Abstract
-
-When getting started with oCIS development developers need to learn about the building blocks of oCIS extensions.
+When getting started with the oCIS development developers need to learn about the building blocks of oCIS extensions.
 Without guidance or orientation of the why and what of an extension they may start feeling lost.
 The `ocis-hello` repository serves as a blueprint for oCIS extensions.
 It allows developers to get started with oCIS extension development by looking at the code, configuration and documentation.
@@ -28,6 +24,7 @@ graph TD
 - a protobuf based greeter API
 - a grpc service implementing the API
 - a vue.js frontend using the API
+- configuration options for admins
 
 It can be integrated into [ownCloud Web](https://github.com/owncloud/web) as documented in the [extensions docs](https://owncloud.github.io/ocis/extensions/#external-web-apps).
 

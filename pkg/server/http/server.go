@@ -81,7 +81,7 @@ func Server(opts ...Option) ohttp.Service {
 			}
 
 			var accountID string
-			val := r.Context().Value(middleware.UUIDKey)
+			val := r.Context().Value(middleware.AccountID)
 			if val != nil {
 				accountID = val.(string)
 			}
