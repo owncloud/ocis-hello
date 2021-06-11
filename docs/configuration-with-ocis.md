@@ -55,7 +55,7 @@ After that we will need to create a config file for phoenix so that we can load 
             "id": "hello",
             "path": "http://localhost:9105/hello.js",
             "config": {
-                "url": "http://localhost:9105"
+                "url": "https://localhost:9200"
             }
         }
     ]   
