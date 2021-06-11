@@ -53,7 +53,7 @@ After that we will need to create a config file for phoenix so that we can load 
     "external_apps": [
         {
             "id": "hello",
-            "path": "http://localhost:9105/hello.js",
+            "path": "https://localhost:9200/hello.js",
             "config": {
                 "url": "https://localhost:9200"
             }
@@ -67,6 +67,10 @@ After that we will need a configuration file for ocis where we can specify the p
 ```json
         {
           "endpoint": "/api/v0/greet",
+          "backend": "http://localhost:9105"
+        },
+        {
+          "endpoint": "/hello.js",
           "backend": "http://localhost:9105"
         }
 ```
