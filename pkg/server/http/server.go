@@ -1,37 +1,39 @@
 package http
 
 import (
+	"encoding/json"
+	"net/http"
+
+	"github.com/asim/go-micro/v3"
+	"github.com/asim/go-micro/v3/metadata"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"github.com/owncloud/ocis-hello/pkg/assets"
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
-	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/version"
 	"github.com/owncloud/ocis/ocis-pkg/account"
 	"github.com/owncloud/ocis/ocis-pkg/middleware"
-	"github.com/owncloud/ocis/ocis-pkg/service/http"
+	ohttp "github.com/owncloud/ocis/ocis-pkg/service/http"
 )
 
+type greetRequest struct {
+	Name string `json:"name"`
+}
+
 // Server initializes the http service and server.
-func Server(opts ...Option) http.Service {
+func Server(opts ...Option) ohttp.Service {
 	options := newOptions(opts...)
+	handler := options.Handler
 
-	service := http.NewService(
-		http.Logger(options.Logger),
-		http.Name(options.Name),
-		http.Version(version.String),
-		http.Address(options.Config.HTTP.Addr),
-		http.Namespace(options.Config.HTTP.Namespace),
-		http.Context(options.Context),
-		http.Flags(options.Flags...),
+	svc := ohttp.NewService(
+		ohttp.Logger(options.Logger),
+		ohttp.Name(options.Name),
+		ohttp.Version(options.Config.Server.Version),
+		ohttp.Address(options.Config.HTTP.Addr),
+		ohttp.Namespace(options.Config.HTTP.Namespace),
+		ohttp.Context(options.Context),
+		ohttp.Flags(options.Flags...),
 	)
-
-	handle := svc.NewService()
-
-	{
-		handle = svc.NewInstrument(handle, options.Metrics)
-		handle = svc.NewLogging(handle, options.Logger)
-		handle = svc.NewTracing(handle)
-	}
 
 	mux := chi.NewMux()
 
@@ -60,22 +62,48 @@ func Server(opts ...Option) http.Service {
 			assets.Logger(options.Logger),
 			assets.Config(options.Config),
 		),
-		// Currently this option does not affect anything but might again in the future
-		// when the static middleware implements caching again.
-		// TTL = 7 days in seconds = 60 * 60 * 24 * 7
-		604800))
+		options.Config.HTTP.CacheTTL,
+	))
 
 	mux.Route(options.Config.HTTP.Root, func(r chi.Router) {
-		proto.RegisterHelloWeb(r, handle)
+		r.Post("/api/v0/greet", func(w http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+
+			var req greetRequest
+
+			err := json.NewDecoder(r.Body).Decode(&req)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+
+			if req.Name == "" {
+				render.Status(r, http.StatusBadRequest)
+				render.PlainText(w, r, "missing a name")
+				return
+			}
+
+			accountID, ok := metadata.Get(ctx, middleware.AccountID)
+			if !ok {
+				return
+			}
+
+			greeting := handler.Greet(accountID, req.Name)
+
+			rsp := &proto.GreetResponse{
+				Message: greeting,
+			}
+
+			render.Status(r, http.StatusCreated)
+			render.JSON(w, r, rsp)
+		})
 	})
 
-	service.Handle(
-		"/",
-		mux,
-	)
-
-	if err := service.Init(); err != nil {
-		panic(err)
+	err := micro.RegisterHandler(svc.Server(), mux)
+	if err != nil {
+		options.Logger.Fatal().Err(err).Msg("failed to register the handler")
 	}
-	return service
+
+	svc.Init()
+	return svc
 }

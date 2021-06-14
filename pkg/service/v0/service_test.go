@@ -1,38 +1,28 @@
-package svc
+package service
 
 import (
-	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	v0proto "github.com/owncloud/ocis-hello/pkg/proto/v0"
 )
 
 func TestHello_Greet(t *testing.T) {
 	tests := []struct {
-		name                 string
-		req                  string
-		expectedErrorMessage interface{}
+		name string
+		req  string
 	}{
-		{"simple", "simple", nil},
-		{"UTF", "मिलन", nil},
-		{"special char", `%&# /\`, nil},
-		{"empty", "", "missing a name"},
+		{"simple", "simple"},
+		{"UTF", "मिलन"},
+		{"special char", `%&# /\`},
+		{"empty", ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := Hello{}
-			req := &v0proto.GreetRequest{Name: tt.req}
-			var rsp = &v0proto.GreetResponse{}
+			s := BasicGreeter{phraseSource: StaticPhraseSource{DefaultPhrase}}
 
-			err := s.Greet(context.Background(), req, rsp)
+			greeting := s.Greet("", tt.req)
 
-			if tt.expectedErrorMessage != nil || err != nil {
-				assert.EqualError(t, err, tt.expectedErrorMessage.(string))
-			} else {
-				assert.Equal(t, "Hello "+tt.req, rsp.Message)
-			}
+			assert.Equal(t, "Hello "+tt.req, greeting)
 		})
 	}
 }

@@ -1,42 +1,11 @@
 syntax = "proto3";
 
-package proto;
-option go_package = "proto";
+package com.owncloud.ocis.hello.v0;
 
-import "google/api/annotations.proto";
-import "protoc-gen-swagger/options/annotations.proto";
-
-option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
-	info: {
-		title: "Hello";
-		version: "1.0";
-		contact: {
-			name: "ownCloud GmbH";
-			url: "https://github.com/owncloud/ocis-hello";
-			email: "support@owncloud.com";
-		};
-		license: {
-			name: "Apache-2.0";
-			url: "https://github.com/owncloud/ocis-hello/blob/master/LICENSE";
-		};
-	};
-	schemes: HTTP;
-	schemes: HTTPS;
-	consumes: "application/json";
-	produces: "application/json";
-	external_docs: {
-		description: "Developer Manual";
-		url: "https://owncloud.github.io/extensions/ocis_hello/";
-	};
-};
+option go_package = "github.com/owncloud/ocis-hello/pkg/proto/v0;proto";
 
 service Hello {
-	rpc Greet(GreetRequest) returns (GreetResponse) {
-		option (google.api.http) = {
-			post: "/api/v0/greet"
-			body: "*"
-		};
-	}
+	rpc Greet(GreetRequest) returns (GreetResponse);
 }
 
 message GreetRequest {
@@ -45,5 +14,4 @@ message GreetRequest {
 
 message GreetResponse {
 	string message = 1;
-	string err = 2;
 }

@@ -34,7 +34,7 @@ module.exports = {
       locateStrategy: 'xpath'
     },
     submitButton: {
-      selector: "//button[contains(@class, 'uk-button-primary')]",
+      selector: "//button[contains(@class, 'oc-button-primary')]",
       locateStrategy: 'xpath'
     },
     helloText: {

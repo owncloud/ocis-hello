@@ -6,16 +6,14 @@ package proto
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/options"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
 	math "math"
 )
 
 import (
 	context "context"
-	api "github.com/micro/go-micro/v2/api"
-	client "github.com/micro/go-micro/v2/client"
-	server "github.com/micro/go-micro/v2/server"
+	api "github.com/asim/go-micro/v3/api"
+	client "github.com/asim/go-micro/v3/client"
+	server "github.com/asim/go-micro/v3/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -38,15 +36,7 @@ var _ server.Option
 // Api Endpoints for Hello service
 
 func NewHelloEndpoints() []*api.Endpoint {
-	return []*api.Endpoint{
-		&api.Endpoint{
-			Name:    "Hello.Greet",
-			Path:    []string{"/api/v0/greet"},
-			Method:  []string{"POST"},
-			Body:    "*",
-			Handler: "rpc",
-		},
-	}
+	return []*api.Endpoint{}
 }
 
 // Client API for Hello service
@@ -91,13 +81,6 @@ func RegisterHelloHandler(s server.Server, hdlr HelloHandler, opts ...server.Han
 		hello
 	}
 	h := &helloHandler{hdlr}
-	opts = append(opts, api.WithEndpoint(&api.Endpoint{
-		Name:    "Hello.Greet",
-		Path:    []string{"/api/v0/greet"},
-		Method:  []string{"POST"},
-		Body:    "*",
-		Handler: "rpc",
-	}))
 	return s.Handle(s.NewHandler(&Hello{h}, opts...))
 }
 

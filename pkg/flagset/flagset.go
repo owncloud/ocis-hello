@@ -3,6 +3,7 @@ package flagset
 import (
 	"github.com/micro/cli/v2"
 	"github.com/owncloud/ocis-hello/pkg/config"
+	"github.com/owncloud/ocis/ocis-pkg/flags"
 )
 
 // RootWithConfig applies cfg to the root flagset
@@ -19,19 +20,19 @@ func RootWithConfig(cfg *config.Config) []cli.Flag {
 			Name:        "log-level",
 			Value:       "info",
 			Usage:       "Set logging level",
-			EnvVars:     []string{"HELLO_LOG_LEVEL"},
+			EnvVars:     []string{"HELLO_LOG_LEVEL", "OCIS_LOG_LEVEL"},
 			Destination: &cfg.Log.Level,
 		},
 		&cli.BoolFlag{
 			Name:        "log-pretty",
 			Usage:       "Enable pretty logging",
-			EnvVars:     []string{"HELLO_LOG_PRETTY"},
+			EnvVars:     []string{"HELLO_LOG_PRETTY", "OCIS_LOG_PRETTY"},
 			Destination: &cfg.Log.Pretty,
 		},
 		&cli.BoolFlag{
 			Name:        "log-color",
 			Usage:       "Enable colored logging",
-			EnvVars:     []string{"HELLO_LOG_COLOR"},
+			EnvVars:     []string{"HELLO_LOG_COLOR", "OCIS_LOG_COLOR"},
 			Destination: &cfg.Log.Color,
 		},
 	}
@@ -53,6 +54,12 @@ func HealthWithConfig(cfg *config.Config) []cli.Flag {
 // ServerWithConfig applies cfg to the root flagset
 func ServerWithConfig(cfg *config.Config) []cli.Flag {
 	return []cli.Flag{
+		&cli.StringFlag{
+			Name:        "log-file",
+			Usage:       "Enable log to file",
+			EnvVars:     []string{"HELLO_LOG_FILE", "OCIS_LOG_FILE"},
+			Destination: &cfg.Log.File,
+		},
 		&cli.BoolFlag{
 			Name:        "tracing-enabled",
 			Usage:       "Enable sending traces",
@@ -134,12 +141,26 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"HELLO_HTTP_ROOT"},
 			Destination: &cfg.HTTP.Root,
 		},
+		&cli.IntFlag{
+			Name:        "http-cache-ttl",
+			Value:       flags.OverrideDefaultInt(cfg.HTTP.CacheTTL, 604800),
+			Usage:       "Set the static assets caching duration in seconds",
+			EnvVars:     []string{"HELLO_CACHE_TTL"},
+			Destination: &cfg.HTTP.CacheTTL,
+		},
 		&cli.StringFlag{
 			Name:        "grpc-namespace",
 			Value:       "com.owncloud.api",
 			Usage:       "Set the base namespace for the grpc namespace",
 			EnvVars:     []string{"HELLO_GRPC_NAMESPACE"},
 			Destination: &cfg.GRPC.Namespace,
+		},
+		&cli.StringFlag{
+			Name:        "name",
+			Value:       flags.OverrideDefaultString(cfg.Server.Name, "hello"),
+			Usage:       "service name",
+			EnvVars:     []string{"HELLO_NAME"},
+			Destination: &cfg.Server.Name,
 		},
 		&cli.StringFlag{
 			Name:        "grpc-addr",
