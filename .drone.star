@@ -234,8 +234,15 @@ def dockerRelease(ctx, arch):
             "os": "linux",
             "arch": arch,
         },
-        "steps": makeGenerate() +
-                 build() + [
+        "steps": makeGenerate() + [
+            {
+                "name": "build",
+                "image": "owncloudci/golang:1.16",
+                "pull": "always",
+                "commands": [
+                    "make release-linux-docker",
+                ],
+            },
             {
                 "name": "dryrun",
                 "image": "plugins/docker:latest",
