@@ -2,9 +2,9 @@ package command
 
 import (
 	"context"
-	"fmt"
-	"strconv"
+	"errors"
 	"strings"
+	"time"
 
 	"github.com/micro/cli/v2"
 	"github.com/oklog/run"
@@ -68,7 +68,23 @@ func Server(cfg *config.Config) *cli.Command {
 
 			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient)
 
-			registerSettingsBundles(bundleService, &logger)
+			for i := 1; i <= maxRetries; i++ {
+				err = registerSettingsBundles(bundleService, &logger)
+				if err != nil {
+					// limited potential backoff: 1s, 4s, 9s, 16s, 25s, ..., but max 30s
+					backoff := time.Duration(i*i) * time.Second
+					if backoff > 30*time.Second {
+						backoff = 30 * time.Second
+					}
+					logger.Logger.Info().Dur("backoff", backoff).Msg("retry to register settings bundle and permission")
+					time.Sleep(backoff)
+				}
+			}
+			if err != nil {
+				logger.Error().Msg("failed to register settings - aborting server initialization")
+				logger.Info().Msg("shutting down server")
+				cancel()
+			}
 
 			ps := settingsPhraseSource{vsClient: settings.NewValueService("com.owncloud.api.settings", ogrpc.DefaultClient)}
 			handler, err := svc.NewGreeter(svc.PhraseSource(ps), svc.Logger(logger))
@@ -130,7 +146,8 @@ func defineContext(cfg *config.Config) (context.Context, context.CancelFunc) {
 }
 
 // registerSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.
-func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger) {
+func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger) (err error) {
+
 	request := &settings.SaveBundleRequest{
 		Bundle: &settings.Bundle{
 			Id:          bundleIDGreeting,
@@ -162,35 +179,13 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 		},
 	}
 
-	response, err := bundleService.SaveBundle(context.Background(), request)
+	_, err = bundleService.SaveBundle(context.Background(), request)
 	if err != nil {
-		l.Warn().Msg("error registering settings bundle at first try. retrying")
-		for i := 1; i <= maxRetries; i++ {
-			if _, err := bundleService.SaveBundle(context.Background(), request); err != nil {
-				l.Warn().
-					Str("bundle_name", request.Bundle.Name).
-					Str("attempt", fmt.Sprintf("%v/%v", strconv.Itoa(i), strconv.Itoa(maxRetries))).
-					Msgf("error creating bundle")
-				continue
-			} else {
-				l.Info().
-					Str("bundle_name", request.Bundle.Name).
-					Str("after", fmt.Sprintf("%v retries", strconv.Itoa(i))).
-					Str("bundleName", request.Bundle.Name).
-					Str("bundleId", request.Bundle.Id).
-					Msg("default settings bundle registered")
-				goto OUT
-			}
-		}
-		l.Err(err).Str("setting_name", request.Bundle.Name).Msg("bundle could not be registered. max number of retries reached")
-	} else {
-		l.Info().
-			Str("bundleName", response.Bundle.Name).
-			Str("bundleId", response.Bundle.Id).
-			Msg("default settings bundle registered")
+		l.With().Err(err).Logger().With().Str("settings bundle ID", request.Bundle.Id).Err(errors.New("could not create / update the settings bundle"))
+		return err
 	}
+	l.Logger.Info().Str("settings bundle ID", request.Bundle.Id).Msg("created / updated the settings bundle")
 
-OUT:
 	permissionRequests := []*settings.AddSettingToBundleRequest{
 		{
 			BundleId: ssvc.BundleUUIDRoleAdmin,
@@ -211,28 +206,16 @@ OUT:
 		},
 	}
 
-	for i := range permissionRequests {
-		l.Debug().Str("setting_name", permissionRequests[i].Setting.Name).Str("bundle_id", permissionRequests[i].BundleId).Msg("registering setting to bundle")
-		if res, err := bundleService.AddSettingToBundle(context.Background(), permissionRequests[i]); err != nil {
-			go retryPermissionRequests(context.Background(), bundleService, permissionRequests[i], maxRetries, l)
-		} else {
-			l.Info().Str("setting_name", res.Setting.Name).Msg("permission registered")
+	for _, permissionRequest := range permissionRequests {
+		_, err := bundleService.AddSettingToBundle(context.Background(), permissionRequest)
+		if err != nil {
+			l.With().Err(err).Logger().With().Str("permission request bundle ID", request.Bundle.Id).Err(errors.New("could not create / update the permissions of the settings bundle"))
+			return err
 		}
-	}
-}
-
-// proposal: the retry logic should live in the settings service.
-func retryPermissionRequests(ctx context.Context, bs settings.BundleService, setting *settings.AddSettingToBundleRequest, maxRetries int, l *log.Logger) {
-	for i := 1; i < maxRetries; i++ {
-		if _, err := bs.AddSettingToBundle(ctx, setting); err != nil {
-			l.Warn().Str("setting_name", setting.Setting.Name).Str("attempt", fmt.Sprintf("%v/%v", strconv.Itoa(i), strconv.Itoa(maxRetries))).Msgf("error on add setting to bundle")
-			continue
-		}
-		l.Info().Str("setting_name", setting.Setting.Name).Str("after", fmt.Sprintf("%v retries", strconv.Itoa(i))).Msg("permission registered")
-		return
+		l.Logger.Info().Str("permission request bundle ID", request.Bundle.Id).Msg("created / updated the permissions of the settings bundle")
 	}
 
-	l.Error().Str("setting_name", setting.Setting.Name).Msg("setting could not be registered. max number of retries reached")
+	return nil
 }
 
 type settingsPhraseSource struct {
