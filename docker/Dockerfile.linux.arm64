@@ -26,4 +26,4 @@ EXPOSE 9105 9106 9109
 ENTRYPOINT ["/usr/bin/hello"]
 CMD ["server"]
 
-COPY bin/hello /usr/bin/hello
+COPY dist/binaries/hello-linux-arm64 /usr/bin/hello
