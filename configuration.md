@@ -1,6 +1,6 @@
 ---
 title: "Configuration"
-date: "2021-06-30T17:15:33+0000"
+date: "2021-07-01T05:50:37+0000"
 weight: 20
 geekdocRepo: https://github.com/owncloud/ocis-hello
 geekdocEditPath: edit/master/templates
@@ -54,15 +54,6 @@ Usage: `hello [global options] command [command options] [arguments...]`
 : Enable colored logging.
 
 ## Sub Commands
-
-### hello health
-
-Check health status
-
-Usage: `hello health [command options] [arguments...]`
-
--debug-addr |  $HELLO_DEBUG_ADDR
-: Address to debug endpoint. Default: `0.0.0.0:9109`.
 
 ### hello server
 
@@ -123,4 +114,13 @@ Usage: `hello server [command options] [arguments...]`
 
 -jwt-secret |  $HELLO_JWT_SECRET
 : Used to create JWT to talk to reva, should equal reva's jwt-secret. Default: `Pive-Fumkiu4`.
+
+### hello health
+
+Check health status
+
+Usage: `hello health [command options] [arguments...]`
+
+-debug-addr |  $HELLO_DEBUG_ADDR
+: Address to debug endpoint. Default: `0.0.0.0:9109`.
 
