@@ -1,6 +1,6 @@
 ---
 title: "Configuration"
-date: "2021-07-01T05:50:37+0000"
+date: "2021-07-02T06:13:24+0000"
 weight: 20
 geekdocRepo: https://github.com/owncloud/ocis-hello
 geekdocEditPath: edit/master/templates
@@ -41,17 +41,41 @@ Hello, an example oCIS extension
 
 Usage: `hello [global options] command [command options] [arguments...]`
 
+
 -config-file |  $HELLO_CONFIG_FILE
 : Path to config file.
+
 
 -log-level |  $HELLO_LOG_LEVEL , $OCIS_LOG_LEVEL
 : Set logging level. Default: `info`.
 
+
 -log-pretty |  $HELLO_LOG_PRETTY , $OCIS_LOG_PRETTY
 : Enable pretty logging.
 
+
 -log-color |  $HELLO_LOG_COLOR , $OCIS_LOG_COLOR
 : Enable colored logging.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Sub Commands
 
@@ -61,56 +85,83 @@ start hello service
 
 Usage: `hello server [command options] [arguments...]`
 
+
+
+
+
+
+
 -log-file |  $HELLO_LOG_FILE , $OCIS_LOG_FILE
 : Enable log to file.
+
 
 -tracing-enabled |  $HELLO_TRACING_ENABLED
 : Enable sending traces.
 
+
 -tracing-type |  $HELLO_TRACING_TYPE
 : Tracing backend type. Default: `jaeger`.
+
 
 -tracing-endpoint |  $HELLO_TRACING_ENDPOINT
 : Endpoint for the agent.
 
+
 -tracing-collector |  $HELLO_TRACING_COLLECTOR
 : Endpoint for the collector.
+
 
 -tracing-service |  $HELLO_TRACING_SERVICE
 : Service name for tracing. Default: `hello`.
 
+
 -debug-addr |  $HELLO_DEBUG_ADDR
 : Address to bind debug server. Default: `0.0.0.0:9109`.
+
 
 -debug-token |  $HELLO_DEBUG_TOKEN
 : Token to grant metrics access.
 
+
 -debug-pprof |  $HELLO_DEBUG_PPROF
 : Enable pprof debugging.
+
 
 -debug-zpages |  $HELLO_DEBUG_ZPAGES
 : Enable zpages debugging.
 
+
 -http-namespace |  $HELLO_HTTP_NAMESPACE
 : Set the base namespace for the http namespace. Default: `com.owncloud.web`.
+
 
 -http-addr |  $HELLO_HTTP_ADDR
 : Address to bind http server. Default: `0.0.0.0:9105`.
 
+
 -http-root |  $HELLO_HTTP_ROOT
 : Root path of http server. Default: `/`.
+
+
+-http-cache-ttl |  $HELLO_CACHE_TTL
+: Set the static assets caching duration in seconds. Default: `604800`.
+
 
 -grpc-namespace |  $HELLO_GRPC_NAMESPACE
 : Set the base namespace for the grpc namespace. Default: `com.owncloud.api`.
 
+
 -name |  $HELLO_NAME
-: service name. Default: `flags.OverrideDefaultString(cfg.Server.Name, "hello")`.
+: service name. Default: `"hello"`.
+
 
 -grpc-addr |  $HELLO_GRPC_ADDR
 : Address to bind grpc server. Default: `0.0.0.0:9106`.
 
+
 -asset-path |  $HELLO_ASSET_PATH
 : Path to custom assets.
+
 
 -jwt-secret |  $HELLO_JWT_SECRET
 : Used to create JWT to talk to reva, should equal reva's jwt-secret. Default: `Pive-Fumkiu4`.
@@ -121,6 +172,30 @@ Check health status
 
 Usage: `hello health [command options] [arguments...]`
 
+
+
+
+
+
 -debug-addr |  $HELLO_DEBUG_ADDR
 : Address to debug endpoint. Default: `0.0.0.0:9109`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
