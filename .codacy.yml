@@ -1,8 +1,13 @@
 ---
 exclude_paths:
-  - CHANGELOG.md
-  - changelog/**
-  - docs/**
-  - pkg/proto/**
+  - '.github/**'
+  - '.bingo/**'
+  - 'CHANGELOG.md'
+  - '**/CHANGELOG.md'
+  - 'changelog/**'
+  - '**/changelog/**'
+  - 'docs/**'
+  - '**/docs/**'
+  - '**/pkg/proto/**'
 
 ...
