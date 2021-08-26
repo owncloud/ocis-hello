@@ -16,7 +16,7 @@ No matter which way you choose, we need to create a configuration file for ownCl
 ```json
 {
   "server": "https://localhost:9200",
-  "theme": "owncloud",
+  "theme": "https://localhost:9200/themes/owncloud/theme.json",
   "version": "0.1.0",
   "openIdConnect": {
     "metadata_url": "https://localhost:9200/.well-known/openid-configuration",
