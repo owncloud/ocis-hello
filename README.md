@@ -10,7 +10,7 @@
 
 ## Run oCIS Hello
 
-Please see [Getting Started](https://owncloud.dev/extensions/hello/running)
+Please see [Getting Started](https://owncloud.dev/extensions/ocis_hello/running)
 
 ## Security
 
