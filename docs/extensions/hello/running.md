@@ -76,7 +76,7 @@ ocis server
 {{< hint warning >}}
 oCIS has currently a bug, that oCIS proxy will not pick up the proxy configuration file if it is started in the supervised mode by `ocis server`. Therefore you will need to apply following workaround:
 
-Run `ocis server` with the environment variables mentioned above. They open a new CLI and run `ocis kill proxy`. Set the same environment variables as above and run `ocis proxy server`. This starts the proxy in a non supervised mode and ensures that it picks up your custom routes in the proxy configuration file.
+Run `ocis server` with the environment variables mentioned above. Then open a new CLI and run `ocis kill proxy`. Set the same environment variables as above and run `ocis proxy server`. This starts the proxy in a non supervised mode and ensures that it picks up your custom routes in the proxy configuration file.
 {{< /hint >}}
 
 ## Start the extension
