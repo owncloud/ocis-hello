@@ -7,6 +7,7 @@ import (
 	"github.com/asim/go-micro/v3"
 	"github.com/asim/go-micro/v3/metadata"
 	"github.com/go-chi/chi"
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 	"github.com/owncloud/ocis-hello/pkg/assets"
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
@@ -37,8 +38,8 @@ func Server(opts ...Option) ohttp.Service {
 
 	mux := chi.NewMux()
 
-	mux.Use(middleware.RealIP)
-	mux.Use(middleware.RequestID)
+	mux.Use(chimiddleware.RealIP)
+	mux.Use(chimiddleware.RequestID)
 	mux.Use(middleware.NoCache)
 	mux.Use(middleware.Cors)
 	mux.Use(middleware.Secure)
