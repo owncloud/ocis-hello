@@ -15,6 +15,7 @@ The following sections list the changes in ocis-hello unreleased.
 * Change - Use server config variable from ocis-web: [#81](https://github.com/owncloud/ocis-hello/pull/81)
 * Enhancement - Streamline project structure: [#79](https://github.com/owncloud/ocis-hello/pull/79)
 * Enhancement - Track tool dependencies: [#51](https://github.com/owncloud/ocis-hello/pull/51)
+* Enhancement - Update JS dependencies: [#120](https://github.com/owncloud/ocis-hello/pull/120)
 
 ## Details
 
@@ -93,6 +94,14 @@ The following sections list the changes in ocis-hello unreleased.
    https://github.com/golang/go/wiki/Modules#how-can-i-track-tool-dependencies-for-a-module
 
    https://github.com/owncloud/ocis-hello/pull/51
+
+
+* Enhancement - Update JS dependencies: [#120](https://github.com/owncloud/ocis-hello/pull/120)
+
+   We've bumped the JS dependencies (including the ownCloud design system) and removed an unused
+   `ldap` package.
+
+   https://github.com/owncloud/ocis-hello/pull/120
 
 # Changelog for [0.1.0] (2020-01-24)
 
