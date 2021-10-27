@@ -291,15 +291,13 @@ def dockerRelease(ctx, arch):
 def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
     environment = {
         "OCIS_URL": "https://ocis-server:9200",
+        "SETTINGS_GRPC_ADDR": "0.0.0.0:9191",  # make settings service available to oCIS Hello
         "STORAGE_HOME_DRIVER": "%s" % (storage),
         "STORAGE_USERS_DRIVER": "%s" % (storage),
-        "STORAGE_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
-        "STORAGE_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
-        "STORAGE_METADATA_ROOT": "/srv/app/tmp/ocis/metadata",
-        "STORAGE_DRIVER_OWNCLOUD_DATADIR": "/srv/app/tmp/ocis/owncloud/data",
-        "STORAGE_DRIVER_OWNCLOUD_REDIS_ADDR": "redis:6379",
-        "STORAGE_HOME_DATA_SERVER_URL": "http://ocis-server:9155/data",
-        "STORAGE_USERS_DATA_SERVER_URL": "http://ocis-server:9158/data",
+        "STORAGE_USERS_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
+        "STORAGE_USERS_DRIVER_OWNCLOUD_DATADIR": "/srv/app/tmp/ocis/owncloud/data",
+        "STORAGE_USERS_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
+        "STORAGE_METADATA_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/metadata",
         "STORAGE_SHARING_USER_JSON_FILE": "/srv/app/tmp/ocis/shares.json",
         "PROXY_ENABLE_BASIC_AUTH": True,
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
