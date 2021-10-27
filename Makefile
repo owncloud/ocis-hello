@@ -48,15 +48,10 @@ node_modules:
 	yarn install --frozen-lockfile
 
 ############ protobuf ############
-PROTO_VERSION := v0
-PROTO_SRC := pkg/proto/$(PROTO_VERSION)
-
 include .make/protobuf.mk
 
 .PHONY: protobuf
-protobuf: $(PROTO_SRC)/${NAME}.pb.go \
-		  $(PROTO_SRC)/${NAME}.pb.micro.go \
-		  docs/extensions/${NAME}/grpc.md
+protobuf: buf-generate
 
 
 .PHONY: bingo-update

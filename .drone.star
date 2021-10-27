@@ -120,7 +120,7 @@ def testHello(ctx):
         "steps": makeGenerate() + [
             {
                 "name": "golangci-lint",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "pull": "always",
                 "commands": [
                     "make ci-golangci-lint",
@@ -129,7 +129,7 @@ def testHello(ctx):
             },
             {
                 "name": "test",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "pull": "always",
                 "commands": [
                     "make test",
@@ -178,7 +178,7 @@ def makeGenerate():
         },
         {
             "name": "generate go",
-            "image": "owncloudci/golang:1.16",
+            "image": "owncloudci/golang:1.17",
             "pull": "always",
             "commands": [
                 "make ci-go-generate",
@@ -191,7 +191,7 @@ def build():
     return [
         {
             "name": "build",
-            "image": "owncloudci/golang:1.16",
+            "image": "owncloudci/golang:1.17",
             "pull": "always",
             "commands": [
                 "make build",
@@ -237,7 +237,7 @@ def dockerRelease(ctx, arch):
         "steps": makeGenerate() + [
             {
                 "name": "build",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "pull": "always",
                 "commands": [
                     "make release-linux-docker",
@@ -488,7 +488,7 @@ def binaryRelease(ctx, name):
         "steps": makeGenerate() + [
             {
                 "name": "build",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "pull": "always",
                 "commands": [
                     "make release-%s" % (name),
@@ -497,7 +497,7 @@ def binaryRelease(ctx, name):
             },
             {
                 "name": "finish",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "pull": "always",
                 "commands": [
                     "make release-finish",
@@ -518,7 +518,7 @@ def binaryRelease(ctx, name):
             },
             {
                 "name": "changelog",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "pull": "always",
                 "commands": [
                     "make changelog CHANGELOG_VERSION=%s" % ctx.build.ref.replace("refs/tags/v", "").split("-")[0],
@@ -610,7 +610,7 @@ def changelog(ctx):
         "steps": [
             {
                 "name": "generate",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "pull": "always",
                 "commands": [
                     "make changelog",
@@ -717,19 +717,19 @@ def docs(ctx):
         "steps": [
             {
                 "name": "docs-generate",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "commands": ["make docs-generate"],
             },
             {
                 "name": "prepare",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "commands": [
                     "make -C docs docs-copy",
                 ],
             },
             {
                 "name": "test",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.17",
                 "commands": [
                     "make -C docs test",
                 ],
