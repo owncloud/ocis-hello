@@ -7,12 +7,12 @@ import (
 
 	"github.com/owncloud/ocis/ocis-pkg/sync"
 
-	"github.com/micro/cli/v2"
 	"github.com/owncloud/ocis-hello/pkg/config"
 	"github.com/owncloud/ocis-hello/pkg/flagset"
 	"github.com/owncloud/ocis-hello/pkg/version"
 	"github.com/owncloud/ocis/ocis-pkg/log"
 	"github.com/spf13/viper"
+	"github.com/urfave/cli/v2"
 )
 
 // Execute is the entry point for the ocis-hello command.

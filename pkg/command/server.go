@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/micro/cli/v2"
 	"github.com/oklog/run"
 	"github.com/owncloud/ocis-hello/pkg/config"
 	"github.com/owncloud/ocis-hello/pkg/flagset"
@@ -21,6 +20,7 @@ import (
 	"github.com/owncloud/ocis/ocis-pkg/sync"
 	settings "github.com/owncloud/ocis/settings/pkg/proto/v0"
 	ssvc "github.com/owncloud/ocis/settings/pkg/service/v0"
+	"github.com/urfave/cli/v2"
 )
 
 const (

@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/asim/go-micro/v3"
-	"github.com/asim/go-micro/v3/metadata"
 	"github.com/go-chi/chi"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
@@ -13,8 +11,11 @@ import (
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
 	"github.com/owncloud/ocis-hello/pkg/version"
 	"github.com/owncloud/ocis/ocis-pkg/account"
+	"github.com/owncloud/ocis/ocis-pkg/cors"
 	"github.com/owncloud/ocis/ocis-pkg/middleware"
 	ohttp "github.com/owncloud/ocis/ocis-pkg/service/http"
+	"go-micro.dev/v4"
+	"go-micro.dev/v4/metadata"
 )
 
 type greetRequest struct {
@@ -41,7 +42,13 @@ func Server(opts ...Option) ohttp.Service {
 	mux.Use(chimiddleware.RealIP)
 	mux.Use(chimiddleware.RequestID)
 	mux.Use(middleware.NoCache)
-	mux.Use(middleware.Cors)
+	mux.Use(middleware.Cors(
+		cors.Logger(options.Logger),
+		cors.AllowedOrigins(options.Config.HTTP.CORS.AllowedOrigins),
+		cors.AllowedMethods(options.Config.HTTP.CORS.AllowedMethods),
+		cors.AllowedHeaders(options.Config.HTTP.CORS.AllowedHeaders),
+		cors.AllowCredentials(options.Config.HTTP.CORS.AllowCredentials),
+	))
 	mux.Use(middleware.Secure)
 	mux.Use(middleware.ExtractAccountUUID(
 		account.Logger(options.Logger),
