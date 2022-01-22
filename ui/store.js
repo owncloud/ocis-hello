@@ -3,22 +3,15 @@ import { Hello_Greet } from './client/hello'
 import axios from 'axios'
 
 const state = {
-  config: null,
   message: ''
 }
 
 const getters = {
-  config: state => state.config,
   message: state => state.message,
   getServerForJsClient: (state, getters, rootState, rootGetters) => rootGetters.configuration.server.replace(/\/$/, '')
 }
 
 const actions = {
-  // Used by ocis-web.
-  loadConfig ({ commit }, config) {
-    commit('LOAD_CONFIG', config)
-  },
-
   submitName ({ commit, dispatch, getters, rootGetters }, value) {
     injectAuthToken(rootGetters)
     Hello_Greet({
@@ -53,10 +46,6 @@ const actions = {
 const mutations = {
   SET_MESSAGE (state, payload) {
     state.message = payload
-  },
-
-  LOAD_CONFIG (state, config) {
-    state.config = config
   }
 }
 
