@@ -309,6 +309,7 @@ def ocisServer(volumes = [stepVolumeOC10Tests, ocisConfigVolume]):
         "PROXY_ENABLE_BASIC_AUTH": True,
         "SETTINGS_GRPC_ADDR": "0.0.0.0:9191",
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
+        "PROXY_LOG_LEVEL": "debug",
     }
 
     return [
