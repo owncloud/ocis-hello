@@ -1,3 +1,10 @@
+OC_CI_ALPINE = "owncloudci/alpine:latest"
+OC_CI_GOLANG = "owncloudci/golang:1.17"
+OC_CI_NODEJS = "owncloudci/nodejs:14"
+OC_CI_WAIT_FOR = "owncloudci/wait-for:latest"
+OC_OCIS = "owncloud/ocis:latest"
+OC_TESTING_MIDDLEWARE = "owncloud/owncloud-test-middleware:1.3.1"
+
 config = {
     "binaryReleases": {
         "os": ["linux", "darwin", "windows"],
@@ -27,6 +34,12 @@ stepVolumeOC10Tests = \
     {
         "name": "oC10Tests",
         "path": "/srv/app",
+    }
+
+ocisConfigVolume = \
+    {
+        "name": "ocisConf",
+        "path": "/etc/ocis",
     }
 
 pipelineVolumeOC10Tests = \
@@ -120,8 +133,7 @@ def testHello(ctx):
         "steps": makeGenerate() + [
             {
                 "name": "golangci-lint",
-                "image": "owncloudci/golang:1.16",
-                "pull": "always",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make ci-golangci-lint",
                 ],
@@ -129,8 +141,7 @@ def testHello(ctx):
             },
             {
                 "name": "test",
-                "image": "owncloudci/golang:1.16",
-                "pull": "always",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make test",
                 ],
@@ -139,7 +150,6 @@ def testHello(ctx):
             {
                 "name": "codacy",
                 "image": "plugins/codacy:1",
-                "pull": "always",
                 "settings": {
                     "token": {
                         "from_secret": "codacy_token",
@@ -150,7 +160,6 @@ def testHello(ctx):
             {
                 "name": "sonarcloud",
                 "image": "sonarsource/sonar-scanner-cli:latest",
-                "pull": "always",
                 "environment": sonar_env,
                 "volumes": [stepVolumeGo],
             },
@@ -169,8 +178,7 @@ def makeGenerate():
     return [
         {
             "name": "generate nodejs",
-            "image": "owncloudci/nodejs:14",
-            "pull": "always",
+            "image": OC_CI_NODEJS,
             "commands": [
                 "make ci-node-generate",
             ],
@@ -178,8 +186,7 @@ def makeGenerate():
         },
         {
             "name": "generate go",
-            "image": "owncloudci/golang:1.16",
-            "pull": "always",
+            "image": OC_CI_GOLANG,
             "commands": [
                 "make ci-go-generate",
             ],
@@ -191,8 +198,7 @@ def build():
     return [
         {
             "name": "build",
-            "image": "owncloudci/golang:1.16",
-            "pull": "always",
+            "image": OC_CI_GOLANG,
             "commands": [
                 "make build",
             ],
@@ -237,8 +243,7 @@ def dockerRelease(ctx, arch):
         "steps": makeGenerate() + [
             {
                 "name": "build",
-                "image": "owncloudci/golang:1.16",
-                "pull": "always",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make release-linux-docker",
                 ],
@@ -246,7 +251,6 @@ def dockerRelease(ctx, arch):
             {
                 "name": "dryrun",
                 "image": "plugins/docker:latest",
-                "pull": "always",
                 "settings": {
                     "dry_run": True,
                     "tags": "linux-%s" % (arch),
@@ -265,7 +269,6 @@ def dockerRelease(ctx, arch):
             {
                 "name": "docker",
                 "image": "plugins/docker:latest",
-                "pull": "always",
                 "settings": {
                     "username": {
                         "from_secret": "docker_username",
@@ -298,53 +301,40 @@ def dockerRelease(ctx, arch):
         },
     }
 
-def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
+def ocisServer(volumes = [stepVolumeOC10Tests, ocisConfigVolume]):
     environment = {
-        "OCIS_URL": "https://ocis-server:9200",
-        "STORAGE_HOME_DRIVER": "%s" % (storage),
-        "STORAGE_USERS_DRIVER": "%s" % (storage),
-        "STORAGE_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
-        "STORAGE_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
-        "STORAGE_METADATA_ROOT": "/srv/app/tmp/ocis/metadata",
-        "STORAGE_DRIVER_OWNCLOUD_DATADIR": "/srv/app/tmp/ocis/owncloud/data",
-        "STORAGE_DRIVER_OWNCLOUD_REDIS_ADDR": "redis:6379",
-        "STORAGE_HOME_DATA_SERVER_URL": "http://ocis-server:9155/data",
-        "STORAGE_USERS_DATA_SERVER_URL": "http://ocis-server:9158/data",
-        "STORAGE_SHARING_USER_JSON_FILE": "/srv/app/tmp/ocis/shares.json",
-        "PROXY_ENABLE_BASIC_AUTH": True,
-        "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
-        "PROXY_CONFIG_FILE": "/drone/src/ui/tests/config/drone/proxy-config.json",
+        "OCIS_INSECURE": "true",
         "OCIS_LOG_LEVEL": "error",
+        "OCIS_URL": "https://ocis-server:9200",
+        "PROXY_ENABLE_BASIC_AUTH": True,
+        "SETTINGS_GRPC_ADDR": "0.0.0.0:9191",
+        "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
     }
-
-    # Pass in "default" accounts_hash_difficulty to not set this environment variable.
-    # That will allow OCIS to use whatever its built-in default is.
-    # Otherwise pass in a value from 4 to about 11 or 12 (default 4, for making regular tests fast)
-    # The high values cause lots of CPU to be used when hashing passwords, and really slow down the tests.
-    if (accounts_hash_difficulty != "default"):
-        environment["ACCOUNTS_HASH_DIFFICULTY"] = accounts_hash_difficulty
 
     return [
         {
+            "name": "prepare-proxy",
+            "image": OC_CI_ALPINE,
+            "volumes": volumes,
+            "commands": [
+                "mkdir -p /etc/ocis/",
+                "chown 1000:1000 -R /etc/ocis/",  # 1000 => equals oCIS user process
+                "cp /drone/src/ui/tests/config/drone/proxy-config.json /etc/ocis/proxy.json",
+            ],
+        },
+        {
             "name": "ocis-server",
-            "image": "owncloud/ocis:1.7.0",
-            "pull": "always",
+            "image": OC_OCIS,
             "detach": True,
             "environment": environment,
             "volumes": volumes,
             "commands": [
-                "ocis server&",
-                "sleep 10",
-                "ocis kill proxy",
-                "sleep 10",
-                "ocis proxy server&",
-                "wait",
+                "ocis server",
             ],
         },
         {
             "name": "wait-for-ocis-server",
-            "image": "owncloudci/wait-for:latest",
-            "pull": "always",
+            "image": OC_CI_WAIT_FOR,
             "commands": [
                 "wait-for -it ocis-server:9200 -t 300",
             ],
@@ -361,11 +351,11 @@ def UITests(ctx):
             "arch": "amd64",
         },
         "steps": makeGenerate() +
-                 build() + ocisServer("ocis", 4, [stepVolumeOC10Tests]) + [
+                 build() +
+                 ocisServer() + [
             {
                 "name": "hello-server",
-                "image": "owncloudci/alpine:latest",
-                "pull": "always",
+                "image": OC_CI_ALPINE,
                 "detach": True,
                 "commands": [
                     "bin/hello server",
@@ -379,21 +369,19 @@ def UITests(ctx):
             },
             {
                 "name": "wait-for-hello-server",
-                "image": "owncloudci/wait-for:latest",
-                "pull": "always",
+                "image": OC_CI_WAIT_FOR,
                 "commands": [
                     "wait-for -it hello-server:9105 -t 300",
                 ],
             },
             {
                 "name": "WebUIAcceptanceTests",
-                "image": "owncloudci/nodejs:14",
-                "pull": "always",
+                "image": OC_CI_NODEJS,
                 "environment": {
                     "SERVER_HOST": "https://ocis-server:9200",
                     "BACKEND_HOST": "https://ocis-server:9200",
                     "RUN_ON_OCIS": "true",
-                    "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/owncloud/data",
+                    "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/storage/owncloud/",
                     "OCIS_SKELETON_DIR": "/srv/app/testing/data/webUISkeleton",
                     "TESTING_DATA_DIR": "/srv/app/testing/data",
                     "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
@@ -409,9 +397,6 @@ def UITests(ctx):
                     "git clone -b $WEB_BRANCH --single-branch --no-tags https://github.com/owncloud/web.git /srv/app/web",
                     "cd /srv/app/web",
                     "git checkout $WEB_COMMITID",
-                    "cp -r tests/acceptance/filesForUpload/* /uploads",
-                    "yarn install --all",
-                    "yarn build",
                     "cd /drone/src/",
                     "yarn install --all",
                     "make test-acceptance-webui",
@@ -425,8 +410,8 @@ def UITests(ctx):
                 ],
             },
         ],
-        "services": redis() +
-                    selenium(),
+        "services": selenium() +
+                    middlewareService(),
         "volumes": [
             pipelineVolumeGo,
             pipelineVolumeOC10Tests,
@@ -443,6 +428,29 @@ def UITests(ctx):
             ],
         },
     }
+
+def middlewareService():
+    environment = {
+        "BACKEND_HOST": "https://ocis:9200",
+        "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/storage/owncloud/",
+        "RUN_ON_OCIS": "true",
+        "REMOTE_UPLOAD_DIR": "/uploads",
+        "NODE_TLS_REJECT_UNAUTHORIZED": "0",
+        "MIDDLEWARE_HOST": "middleware",
+    }
+
+    return [{
+        "name": "middleware",
+        "image": OC_TESTING_MIDDLEWARE,
+        "environment": environment,
+        "volumes": [{
+            "name": "gopath",
+            "path": "/srv/app",
+        }, {
+            "name": "uploads",
+            "path": "/uploads",
+        }],
+    }]
 
 def binaryReleases(ctx):
     pipelines = []
@@ -488,8 +496,7 @@ def binaryRelease(ctx, name):
         "steps": makeGenerate() + [
             {
                 "name": "build",
-                "image": "owncloudci/golang:1.16",
-                "pull": "always",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make release-%s" % (name),
                 ],
@@ -497,8 +504,7 @@ def binaryRelease(ctx, name):
             },
             {
                 "name": "finish",
-                "image": "owncloudci/golang:1.16",
-                "pull": "always",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make release-finish",
                 ],
@@ -507,7 +513,6 @@ def binaryRelease(ctx, name):
             {
                 "name": "upload",
                 "image": "plugins/s3:1",
-                "pull": "always",
                 "settings": settings,
                 "when": {
                     "ref": [
@@ -518,8 +523,7 @@ def binaryRelease(ctx, name):
             },
             {
                 "name": "changelog",
-                "image": "owncloudci/golang:1.16",
-                "pull": "always",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make changelog CHANGELOG_VERSION=%s" % ctx.build.ref.replace("refs/tags/v", "").split("-")[0],
                 ],
@@ -533,7 +537,6 @@ def binaryRelease(ctx, name):
             {
                 "name": "release",
                 "image": "plugins/github-release:1",
-                "pull": "always",
                 "settings": {
                     "api_key": {
                         "from_secret": "github_token",
@@ -576,7 +579,6 @@ def releaseDockerManifest(ctx):
             {
                 "name": "execute",
                 "image": "plugins/manifest:1",
-                "pull": "always",
                 "settings": {
                     "username": {
                         "from_secret": "docker_username",
@@ -610,24 +612,21 @@ def changelog(ctx):
         "steps": [
             {
                 "name": "generate",
-                "image": "owncloudci/golang:1.16",
-                "pull": "always",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make changelog",
                 ],
             },
             {
                 "name": "diff",
-                "image": "owncloudci/alpine:latest",
-                "pull": "always",
+                "image": OC_CI_ALPINE,
                 "commands": [
                     "git diff",
                 ],
             },
             {
                 "name": "output",
-                "image": "owncloudci/alpine:latest",
-                "pull": "always",
+                "image": OC_CI_ALPINE,
                 "commands": [
                     "cat CHANGELOG.md",
                 ],
@@ -635,7 +634,6 @@ def changelog(ctx):
             {
                 "name": "publish",
                 "image": "plugins/git-action:1",
-                "pull": "always",
                 "settings": {
                     "actions": [
                         "commit",
@@ -683,7 +681,6 @@ def releaseDockerReadme(ctx):
             {
                 "name": "execute",
                 "image": "chko/docker-pushrm:1",
-                "pull": "always",
                 "environment": {
                     "DOCKER_USER": {
                         "from_secret": "docker_username",
@@ -717,19 +714,19 @@ def docs(ctx):
         "steps": [
             {
                 "name": "docs-generate",
-                "image": "owncloudci/golang:1.16",
+                "image": OC_CI_GOLANG,
                 "commands": ["make docs-generate"],
             },
             {
                 "name": "prepare",
-                "image": "owncloudci/golang:1.16",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make -C docs docs-copy",
                 ],
             },
             {
                 "name": "test",
-                "image": "owncloudci/golang:1.16",
+                "image": OC_CI_GOLANG,
                 "commands": [
                     "make -C docs test",
                 ],
@@ -737,7 +734,6 @@ def docs(ctx):
             {
                 "name": "publish",
                 "image": "plugins/gh-pages:1",
-                "pull": "always",
                 "settings": {
                     "username": {
                         "from_secret": "github_username",
@@ -785,24 +781,11 @@ def docs(ctx):
         },
     }
 
-def redis():
-    return [
-        {
-            "name": "redis",
-            "image": "webhippie/redis",
-            "pull": "always",
-            "environment": {
-                "REDIS_DATABASES": 1,
-            },
-        },
-    ]
-
 def selenium():
     return [
         {
             "name": "selenium",
             "image": "selenium/standalone-chrome-debug:3.141.59",
-            "pull": "always",
             "volumes": [{
                 "name": "uploads",
                 "path": "/uploads",
@@ -819,7 +802,6 @@ def checkStarlark():
             {
                 "name": "format-check-starlark",
                 "image": "owncloudci/bazel-buildifier",
-                "pull": "always",
                 "commands": [
                     "buildifier --mode=check .drone.star",
                 ],
@@ -827,7 +809,6 @@ def checkStarlark():
             {
                 "name": "show-diff",
                 "image": "owncloudci/bazel-buildifier",
-                "pull": "always",
                 "commands": [
                     "buildifier --mode=fix .drone.star",
                     "git diff",

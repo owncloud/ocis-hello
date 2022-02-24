@@ -9,6 +9,10 @@
     "response_type": "code",
     "scope": "openid profile email"
   },
+  "options": {
+    "disablePreviews": true,
+    "displayResourcesLazy": false
+  },
   "apps": [
     "files",
     "media-viewer"
@@ -16,18 +20,15 @@
   "external_apps": [
     {
       "id": "settings",
-      "path": "/settings.js"
+      "path": "https://ocis-server:9200/settings.js"
     },
     {
       "id": "accounts",
-      "path": "/accounts.js"
+      "path": "https://ocis-server:9200/accounts.js"
     },
     {
       "id": "hello",
-      "path": "/hello.js"
+      "path": "https://ocis-server:9200/hello.js"
     }
-  ],
-  "options": {
-    "hideSearchBar": true
-  }
+  ]
 }
