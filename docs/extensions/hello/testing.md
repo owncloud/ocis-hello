@@ -36,7 +36,6 @@ Now we can run the tests. The tests will take several configuration variables wh
 
 ``` bash
 export WEB_PATH=<path to ownCloud Web directory>
-export OCIS_SKELETON_DIR=<path to the skeleton directory>
 export WEB_UI_CONFIG=<path to the config.json file used by web>
 ```
 

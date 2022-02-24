@@ -6,12 +6,6 @@ then
 	exit 1
 fi
 
-if [ -z "$OCIS_SKELETON_DIR" ]
-then
-	echo "OCIS_SKELETON_DIR env variable is not set, cannot find skeleton directory"
-	exit 1
-fi
-
 if [ -z "$WEB_UI_CONFIG" ]
 then
 	echo "WEB_UI_CONFIG env variable is not set, cannot find web config file"
@@ -29,9 +23,9 @@ trap clean_up SIGHUP SIGINT SIGTERM
 if [ -z "$TEST_INFRA_DIRECTORY" ]
 then
 	cleanup=true
-	testFolder=$(< /dev/urandom LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+	testFolder=$(mktemp -d -p .)
 	printf "creating folder $testFolder for Test infrastructure setup\n\n"
-	export TEST_INFRA_DIRECTORY=$testFolder
+	export TEST_INFRA_DIRECTORY=$(realpath $testFolder)
 fi
 
 clean_up() {
@@ -46,12 +40,11 @@ clean_up() {
 
 trap clean_up SIGHUP SIGINT SIGTERM EXIT
 
-cp -r "$WEB_PATH"/tests ./"$testFolder"
+cp -r $(ls -d "$WEB_PATH"/tests/acceptance/* | grep -v 'node_modules') "$testFolder"
 
 export SERVER_HOST=${SERVER_HOST:-https://localhost:9200}
 export BACKEND_HOST=${BACKEND_HOST:-https://localhost:9200}
 export RUN_ON_OCIS='true'
-export TEST_TAGS=${TEST_TAGS:-"not @skip"}
 
 yarn run acceptance-tests "$1"
 

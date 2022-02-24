@@ -382,23 +382,20 @@ def UITests(ctx):
                     "BACKEND_HOST": "https://ocis-server:9200",
                     "RUN_ON_OCIS": "true",
                     "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/storage/owncloud/",
-                    "OCIS_SKELETON_DIR": "/srv/app/testing/data/webUISkeleton",
-                    "TESTING_DATA_DIR": "/srv/app/testing/data",
                     "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
-                    "TEST_TAGS": "not @skipOnOCIS and not @skip",
                     "LOCAL_UPLOAD_DIR": "/uploads",
                     "NODE_TLS_REJECT_UNAUTHORIZED": 0,
                     "WEB_PATH": "/srv/app/web",
                     "FEATURE_PATH": "/drone/src/ui/tests/acceptance/features",
+                    "MIDDLEWARE_HOST": "http://middleware:3000",
                 },
                 "commands": [
                     ". /drone/src/.drone.env",
-                    "git clone -b master --depth=1 https://github.com/owncloud/testing.git /srv/app/testing",
                     "git clone -b $WEB_BRANCH --single-branch --no-tags https://github.com/owncloud/web.git /srv/app/web",
                     "cd /srv/app/web",
                     "git checkout $WEB_COMMITID",
                     "cd /drone/src/",
-                    "yarn install --all",
+                    "yarn install --frozen-lockfile",
                     "make test-acceptance-webui",
                 ],
                 "volumes": [
@@ -431,9 +428,10 @@ def UITests(ctx):
 
 def middlewareService():
     environment = {
-        "BACKEND_HOST": "https://ocis:9200",
+        "BACKEND_HOST": "https://ocis-server:9200",
         "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/storage/owncloud/",
         "RUN_ON_OCIS": "true",
+        "HOST": "middleware",
         "REMOTE_UPLOAD_DIR": "/uploads",
         "NODE_TLS_REJECT_UNAUTHORIZED": "0",
         "MIDDLEWARE_HOST": "middleware",
