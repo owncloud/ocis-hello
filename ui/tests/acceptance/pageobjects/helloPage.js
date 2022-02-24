@@ -38,7 +38,7 @@ module.exports = {
       locateStrategy: 'xpath'
     },
     helloText: {
-      selector: "//*[@class='uk-text-lead']",
+      selector: "//*[@class='oc-text-lead']",
       locateStrategy: 'xpath'
     }
   }

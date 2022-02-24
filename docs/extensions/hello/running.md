@@ -25,24 +25,25 @@ No matter which way you choose, we need to create a configuration file for ownCl
     "response_type": "code",
     "scope": "openid profile email"
   },
-  "apps": ["files", "media-viewer"],
+  "apps": [
+    "files",
+    "media-viewer",
+    "search"
+  ],
   "external_apps": [
     {
       "id": "settings",
-      "path": "/settings.js"
+      "path": "https://localhost:9200/settings.js"
     },
     {
       "id": "accounts",
-      "path": "/accounts.js"
+      "path": "https://localhost:9200/accounts.js"
     },
     {
       "id": "hello",
-      "path": "/hello.js"
+      "path": "https://localhost:9200/hello.js"
     }
-  ],
-  "options": {
-    "hideSearchBar": true
-  }
+  ]
 }
 
 ```

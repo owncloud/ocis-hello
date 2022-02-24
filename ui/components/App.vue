@@ -1,18 +1,13 @@
 <template>
-  <div class="uk-flex uk-flex-column uk-flex-middle uk-margin-xlarge-top">
-    <h1>
-      Hello, tell us your name
-    </h1>
-
+  <div class="oc-flex oc-flex-column oc-flex-middle oc-p-l">
+    <h1>Hello, tell us your name</h1>
     <form v-on:submit.prevent="submitName(name)" action="#" method="post">
       <oc-text-input v-model="name" placeholder="Your name" />
-
-      <oc-button variation="primary" class="uk-width-1-1 uk-margin-top">
+      <oc-button variation="primary" class="oc-width-1-1 oc-mt-m">
         Submit
       </oc-button>
     </form>
-
-    <p class="uk-text-lead" v-if="message" v-text="message" />
+    <p class="oc-text-lead" v-if="message" v-text="message" />
   </div>
 </template>
 

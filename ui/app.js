@@ -5,25 +5,22 @@ import store from './store'
 const appInfo = {
   name: 'Hello',
   id: 'hello',
-  icon: 'info',
-  isFileEditor: false,
-  extensions: []
+  icon: 'chat-smile',
+  isFileEditor: false
 }
 
 const routes = [
   {
     name: 'hello',
     path: '/',
-    components: {
-      app: App
-    }
+    component: App
   }
 ]
 
 const navItems = [
   {
     name: 'Hello',
-    iconMaterial: appInfo.icon,
+    icon: appInfo.icon,
     route: {
       name: 'hello',
       path: `/${appInfo.id}/`
