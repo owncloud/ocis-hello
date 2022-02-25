@@ -36,15 +36,21 @@ stepVolumeOC10Tests = \
         "path": "/srv/app",
     }
 
-ocisConfigVolume = \
+pipelineVolumeOC10Tests = \
+    {
+        "name": "oC10Tests",
+        "temp": {},
+    }
+
+stepVolumeOcisConfig = \
     {
         "name": "ocisConf",
         "path": "/etc/ocis",
     }
 
-pipelineVolumeOC10Tests = \
+pipelineVolumeOcisConfig = \
     {
-        "name": "oC10Tests",
+        "name": "ocisConf",
         "temp": {},
     }
 
@@ -301,7 +307,7 @@ def dockerRelease(ctx, arch):
         },
     }
 
-def ocisServer(volumes = [stepVolumeOC10Tests, ocisConfigVolume]):
+def ocisServer(volumes = [stepVolumeOC10Tests, stepVolumeOcisConfig]):
     environment = {
         "OCIS_INSECURE": "true",
         "OCIS_LOG_LEVEL": "error",
@@ -309,7 +315,6 @@ def ocisServer(volumes = [stepVolumeOC10Tests, ocisConfigVolume]):
         "PROXY_ENABLE_BASIC_AUTH": True,
         "SETTINGS_GRPC_ADDR": "0.0.0.0:9191",
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
-        "PROXY_LOG_LEVEL": "debug",
     }
 
     return [
@@ -413,6 +418,7 @@ def UITests(ctx):
         "volumes": [
             pipelineVolumeGo,
             pipelineVolumeOC10Tests,
+            pipelineVolumeOcisConfig,
             {
                 "name": "uploads",
                 "temp": {},
