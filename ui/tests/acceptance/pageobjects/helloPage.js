@@ -6,14 +6,14 @@ module.exports = {
   commands: {
     navigateAndWaitTillLoaded: async function () {
       const url = this.url()
-      return this.navigate(url).waitForElementVisible('@accountInput')
+      return this.navigate(url).waitForElementVisible('@helloInput')
     },
 
     inputName: async function (name) {
       await this
-        .waitForElementVisible('@accountInput')
-        .clearValue('@accountInput')
-        .setValue('@accountInput', name)
+        .waitForElementVisible('@helloInput')
+        .clearValue('@helloInput')
+        .setValue('@helloInput', name)
       return this.waitForElementVisible('@submitButton')
         .click('@submitButton')
     },
@@ -29,7 +29,7 @@ module.exports = {
   },
 
   elements: {
-    accountInput: {
+    helloInput: {
       selector: "//input[@placeholder='Your name']",
       locateStrategy: 'xpath'
     },
