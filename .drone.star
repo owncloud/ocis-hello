@@ -325,7 +325,7 @@ def ocisServer(volumes = [stepVolumeOC10Tests, stepVolumeOcisConfig]):
             "commands": [
                 "mkdir -p /etc/ocis/",
                 "chown 1000:1000 -R /etc/ocis/",  # 1000 => equals oCIS user process
-                "cp /drone/src/ui/tests/config/drone/proxy-config.json /etc/ocis/proxy.json",
+                "cp /drone/src/ui/tests/config/drone/proxy-config.yaml /etc/ocis/proxy.yaml",
             ],
         },
         {
