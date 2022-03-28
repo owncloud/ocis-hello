@@ -2,7 +2,7 @@ OC_CI_ALPINE = "owncloudci/alpine:latest"
 OC_CI_GOLANG = "owncloudci/golang:1.17"
 OC_CI_NODEJS = "owncloudci/nodejs:14"
 OC_CI_WAIT_FOR = "owncloudci/wait-for:latest"
-OC_OCIS = "owncloud/ocis:latest"
+OC_OCIS = "owncloud/ocis:1.18"
 OC_TESTING_MIDDLEWARE = "owncloud/owncloud-test-middleware:1.3.1"
 
 config = {
