@@ -1,10 +1,13 @@
 ---
 title: Hello (example extension)
 geekdocRepo: https://github.com/owncloud/ocis-hello
-geekdocEditPath: edit/master/docs
+geekdocEditPath: edit/master/docs/extensions/hello
 geekdocFilePath: _index.md
 geekdocCollapseSection: true
 ---
+
+**IMPORTANT:**
+The `ocis-hello` example is currently under revision and does not work due to latest changes in master.
 
 When getting started with the oCIS development developers need to learn about the building blocks of oCIS extensions.
 Without guidance or orientation of the why and what of an extension they may start feeling lost.
@@ -26,5 +29,6 @@ graph TD
 - a vue.js frontend using the API
 - configuration options for admins
 
-It can be integrated into [ownCloud Web](https://github.com/owncloud/web) as documented in the [extensions docs](https://owncloud.github.io/ocis/extensions/#external-web-apps).
+<!-- The text below contains a broken link (github.io) that redierects to owncloud.dev without any existing target -->
+<!-- It can be integrated into [ownCloud Web](https://github.com/owncloud/web) as documented in the [extensions docs](https://owncloud.github.io/ocis/extensions/#external-web-apps). -->
 
