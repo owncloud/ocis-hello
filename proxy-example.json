@@ -1,0 +1,8 @@
+{
+  "endpoint": "/api/v0/greet",
+  "backend": "http://localhost:9105"
+},
+{
+  "endpoint": "/hello.js",
+  "backend": "http://localhost:9105"
+}

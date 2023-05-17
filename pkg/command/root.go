@@ -5,13 +5,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/owncloud/ocis/ocis-pkg/sync"
+	"github.com/owncloud/ocis/v2/ocis-pkg/sync"
 
 	"github.com/micro/cli/v2"
 	"github.com/owncloud/ocis-hello/pkg/config"
 	"github.com/owncloud/ocis-hello/pkg/flagset"
 	"github.com/owncloud/ocis-hello/pkg/version"
-	"github.com/owncloud/ocis/ocis-pkg/log"
+	"github.com/owncloud/ocis/v2/ocis-pkg/log"
 	"github.com/spf13/viper"
 )
 

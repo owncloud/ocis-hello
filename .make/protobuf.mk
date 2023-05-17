@@ -1,6 +1,6 @@
 .PHONY: protoc-gen-openapiv2
 protoc-gen-openapiv2:
-	GO111MODULE=off go get -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2
+	# GO111MODULE=off go get -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2
 
 
 .PHONY: $(PROTO_SRC)/${NAME}.pb.go
