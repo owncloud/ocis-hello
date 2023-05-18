@@ -14,11 +14,12 @@ import (
 	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/tracing"
 	"github.com/owncloud/ocis/v2/ocis-pkg/log"
+	ogrpc "github.com/owncloud/ocis/v2/ocis-pkg/service/grpc"
+	"github.com/owncloud/ocis/v2/ocis-pkg/shared"
 	"github.com/owncloud/ocis/v2/ocis-pkg/sync"
 	smessages "github.com/owncloud/ocis/v2/protogen/gen/ocis/messages/settings/v0"
 	settings "github.com/owncloud/ocis/v2/protogen/gen/ocis/services/settings/v0"
 	ssvc "github.com/owncloud/ocis/v2/services/settings/pkg/service/v0"
-	client "go-micro.dev/v4/client"
 	"strings"
 	"time"
 )
@@ -49,6 +50,7 @@ func Server(cfg *config.Config) *cli.Command {
 			if !cfg.Supervised {
 				return ParseConfig(ctx, cfg)
 			}
+
 			logger.Debug().Str("service", "hello").Msg("ignoring config file parsing when running supervised")
 			return nil
 		},
@@ -65,8 +67,8 @@ func Server(cfg *config.Config) *cli.Command {
 			defer cancel()
 
 			mtrcs.BuildInfo.WithLabelValues(cfg.Server.Version).Set(1)
-
-			bundleService := settings.NewBundleService("com.owncloud.api.settings", client.DefaultClient)
+			_ = ogrpc.Configure(ogrpc.GetClientOptions(&shared.GRPCClientTLS{})...)
+			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient())
 
 			for i := 1; i <= maxRetries; i++ {
 				err = registerSettingsBundles(bundleService, &logger)
@@ -87,7 +89,7 @@ func Server(cfg *config.Config) *cli.Command {
 				cancel()
 			}
 
-			ps := settingsPhraseSource{vsClient: settings.NewValueService("com.owncloud.api.settings", client.DefaultClient)}
+			ps := settingsPhraseSource{vsClient: settings.NewValueService("com.owncloud.api.settings", ogrpc.DefaultClient())}
 			handler, err := svc.NewGreeter(svc.PhraseSource(ps), svc.Logger(logger))
 			if err != nil {
 				logger.Error().Err(err).Msg("handler init")
@@ -180,9 +182,10 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 		},
 	}
 
-	_, err = bundleService.SaveBundle(context.Background(), request)
+	res, err := bundleService.SaveBundle(context.Background(), request)
+	l.Logger.Info().Msg(res.String())
 	if err != nil {
-		l.Logger.Info().Msg("11111-------" + err.Error())
+		l.Logger.Info().Msg("Error while saving the bundle: " + err.Error())
 		l.With().Err(err).Logger().With().Str("settings bundle ID", request.Bundle.Id).Err(errors.New("could not create / update the settings bundle"))
 		return err
 	}
