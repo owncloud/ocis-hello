@@ -3,6 +3,8 @@ package command
 import (
 	"context"
 	"errors"
+	user "github.com/cs3org/go-cs3apis/cs3/identity/user/v1beta1"
+	ctxpkg "github.com/cs3org/reva/v2/pkg/ctx"
 	"github.com/micro/cli/v2"
 	"github.com/oklog/run"
 	"github.com/owncloud/ocis-hello/pkg/config"
@@ -14,12 +16,15 @@ import (
 	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/tracing"
 	"github.com/owncloud/ocis/v2/ocis-pkg/log"
+	"github.com/owncloud/ocis/v2/ocis-pkg/middleware"
 	ogrpc "github.com/owncloud/ocis/v2/ocis-pkg/service/grpc"
 	"github.com/owncloud/ocis/v2/ocis-pkg/shared"
 	"github.com/owncloud/ocis/v2/ocis-pkg/sync"
 	smessages "github.com/owncloud/ocis/v2/protogen/gen/ocis/messages/settings/v0"
 	settings "github.com/owncloud/ocis/v2/protogen/gen/ocis/services/settings/v0"
 	ssvc "github.com/owncloud/ocis/v2/services/settings/pkg/service/v0"
+	"go-micro.dev/v4/client"
+	"go-micro.dev/v4/metadata"
 	"strings"
 	"time"
 )
@@ -61,17 +66,25 @@ func Server(cfg *config.Config) *cli.Command {
 				return err
 			}
 			gr := run.Group{}
-			ctx, cancel := defineContext(cfg)
+			_, cancel := defineContext(cfg)
+			ctx2 := ctxpkg.ContextSetUser(context.Background(), &user.User{
+				Id: &user.UserId{
+					OpaqueId: "7f704785-3955-4f40-ae61-2efd8b15eeef", // admin_user_id
+					Type:     user.UserType_USER_TYPE_PRIMARY,
+				},
+			})
+			ctx2 = metadata.Set(ctx2, middleware.AccountID, "7f704785-3955-4f40-ae61-2efd8b15eeef")
+			ctx2 = metadata.Set(ctx2, ctxpkg.TokenHeader, "xFGSKMfC.0JxvOk+yf*hTdSIS9K%1.$T") // machine_auth_api_key
 			mtrcs := metrics.New()
 
 			defer cancel()
 
 			mtrcs.BuildInfo.WithLabelValues(cfg.Server.Version).Set(1)
 			_ = ogrpc.Configure(ogrpc.GetClientOptions(&shared.GRPCClientTLS{})...)
-			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient())
 
+			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient())
 			for i := 1; i <= maxRetries; i++ {
-				err = registerSettingsBundles(bundleService, &logger)
+				err = registerSettingsBundles(bundleService, ctx2, &logger)
 				if err != nil {
 					logger.Logger.Info().Msg(err.Error())
 					// limited potential backoff: 1s, 4s, 9s, 16s, 25s, ..., but max 30s
@@ -104,7 +117,7 @@ func Server(cfg *config.Config) *cli.Command {
 				http.Config(cfg),
 				http.Logger(logger),
 				http.Name(cfg.Server.Name),
-				http.Context(ctx),
+				http.Context(ctx2),
 				http.Metrics(mtrcs),
 				http.Handler(handler),
 			)
@@ -118,7 +131,7 @@ func Server(cfg *config.Config) *cli.Command {
 				grpc.Config(cfg),
 				grpc.Logger(logger),
 				grpc.Name(cfg.Server.Name),
-				grpc.Context(ctx),
+				grpc.Context(ctx2),
 				grpc.Metrics(mtrcs),
 				grpc.Handler(handler),
 			)
@@ -149,7 +162,7 @@ func defineContext(cfg *config.Config) (context.Context, context.CancelFunc) {
 }
 
 // registerSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.
-func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger) (err error) {
+func registerSettingsBundles(bundleService settings.BundleService, ctx context.Context, l *log.Logger) (err error) {
 
 	request := &settings.SaveBundleRequest{
 		Bundle: &smessages.Bundle{
@@ -182,7 +195,9 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 		},
 	}
 
-	res, err := bundleService.SaveBundle(context.Background(), request)
+	res, err := bundleService.SaveBundle(
+		ctx, request,
+	)
 	l.Logger.Info().Msg(res.String())
 	if err != nil {
 		l.Logger.Info().Msg("Error while saving the bundle: " + err.Error())
@@ -212,7 +227,7 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 	}
 
 	for _, permissionRequest := range permissionRequests {
-		_, err := bundleService.AddSettingToBundle(context.Background(), permissionRequest)
+		_, err := bundleService.AddSettingToBundle(ctx, permissionRequest)
 		if err != nil {
 			l.Logger.Info().Msg(err.Error())
 			l.With().Err(err).Logger().With().Str("permission request bundle ID", request.Bundle.Id).Err(errors.New("could not create / update the permissions of the settings bundle"))
@@ -223,6 +238,33 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 
 	return nil
 }
+
+func WithServiceToken() client.CallOption {
+	// this is the ClientOption function type
+	return func(c *client.CallOptions) {
+		c.ServiceToken = true
+	}
+}
+
+//func getAuthContext(owner *user.User, gw gateway.GatewayAPIClient, secret string, logger log.Logger) (context.Context, error) {
+//	ownerCtx := ctxpkg.ContextSetUser(context.Background(), owner)
+//	authRes, err := gw.Authenticate(ownerCtx, &gateway.AuthenticateRequest{
+//		Type:         "machine",
+//		ClientId:     "userid:" + owner.GetId().GetOpaqueId(),
+//		ClientSecret: secret,
+//	})
+//
+//	if err == nil && authRes.GetStatus().GetCode() != rpc.Code_CODE_OK {
+//		err = errtypes.NewErrtypeFromStatus(authRes.Status)
+//	}
+//
+//	if err != nil {
+//		logger.Error().Err(err).Interface("owner", owner).Interface("authRes", authRes).Msg("error using machine auth")
+//		return nil, err
+//	}
+//
+//	return metadata.AppendToOutgoingContext(ownerCtx, ctxpkg.TokenHeader, authRes.Token), nil
+//}
 
 type settingsPhraseSource struct {
 	vsClient settings.ValueService
