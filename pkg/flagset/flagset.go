@@ -183,5 +183,12 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"HELLO_JWT_SECRET"},
 			Destination: &cfg.TokenManager.JWTSecret,
 		},
+		&cli.StringFlag{
+			Name:        "admin-user-id",
+			Usage:       "Used to create JWT to talk to reva, should equal reva's jwt-secret",
+			EnvVars:     []string{"HELLO_ADMIN_USER_ID"},
+			Required:    true,
+			Destination: &cfg.AdminUserID,
+		},
 	}
 }

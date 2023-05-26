@@ -70,6 +70,7 @@ type Config struct {
 	TokenManager TokenManager
 	Context      context.Context
 	Supervised   bool
+	AdminUserID  string
 }
 
 // New initializes a new configuration with or without defaults.
