@@ -76,11 +76,9 @@
     "> 1%",
     "not dead"
   ],
-  "peerDependencies": {
-    "owncloud-design-system": "^9.3.0"
-  },
   "dependencies": {
     "eslint-plugin-n": "^16.0.0",
-    "install": "^0.13.0"
+    "install": "^0.13.0",
+    "owncloud-design-system": "^14.0.1"
   }
 }

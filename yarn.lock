@@ -5966,6 +5966,11 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==
 
+owncloud-design-system@^14.0.1:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/owncloud-design-system/-/owncloud-design-system-14.0.1.tgz#525af5a41d821c5cc647582fda34fc5bc4cf15fd"
+  integrity sha512-3KnShcluYMuyRCJ3r3SWq/BYUN1v0OJHwWdfx0zCR3McY0hTZDiyR3OzR9saVnxN2y0srYM17rsYwRZBBKFU7A==
+
 p-limit@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-2.3.0.tgz#3dd33c647a214fdfffd835933eb086da0dc21db1"
