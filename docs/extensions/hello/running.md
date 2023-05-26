@@ -17,7 +17,6 @@ No matter which way you choose, we need to create a configuration file for ownCl
 {
   "server": "https://localhost:9200",
   "theme": "https://localhost:9200/themes/owncloud/theme.json",
-  "version": "0.1.0",
   "openIdConnect": {
     "metadata_url": "https://localhost:9200/.well-known/openid-configuration",
     "authority": "https://localhost:9200",
@@ -25,26 +24,40 @@ No matter which way you choose, we need to create a configuration file for ownCl
     "response_type": "code",
     "scope": "openid profile email"
   },
-  "apps": ["files", "media-viewer"],
+  "apps": [
+    "files",
+    "preview",
+    "pdf-viewer",
+    "search",
+    "text-editor",
+    "draw-io",
+    "external",
+    "admin-settings"
+  ],
   "external_apps": [
-    {
-      "id": "settings",
-      "path": "/settings.js"
-    },
-    {
-      "id": "accounts",
-      "path": "/accounts.js"
-    },
     {
       "id": "hello",
       "path": "/hello.js"
     }
   ],
   "options": {
-    "hideSearchBar": true
+    "previewFileMimeTypes": [
+      "image/gif",
+      "image/png",
+      "image/jpeg",
+      "text/plain",
+      "image/tiff",
+      "image/bmp",
+      "image/x-ms-bmp"
+    ],
+    "upload": {
+      "xhr": {
+        "timeout": 60000
+      }
+    },
+    "contextHelpersReadMore": true
   }
 }
-
 ```
 
 Please note the the regististration of our Hello extension in the `external_apps` section. It will trigger ownCloud Web to load `hello.js`, the frontend bundle generated in the [frontend build step]({{< ref "./building#frontend">}}).
