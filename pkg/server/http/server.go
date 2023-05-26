@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"github.com/owncloud/ocis/v2/ocis-pkg/cors"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -41,7 +42,9 @@ func Server(opts ...Option) ohttp.Service {
 	mux.Use(chimiddleware.RealIP)
 	mux.Use(chimiddleware.RequestID)
 	mux.Use(middleware.NoCache)
-	//mux.Use(middleware.Cors)
+	mux.Use(middleware.Cors(
+		cors.Logger(options.Logger),
+	))
 	mux.Use(middleware.Secure)
 	mux.Use(middleware.ExtractAccountUUID(
 		account.Logger(options.Logger),
