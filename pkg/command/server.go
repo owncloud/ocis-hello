@@ -69,11 +69,11 @@ func Server(cfg *config.Config) *cli.Command {
 			_, cancel := defineContext(cfg)
 			ctx2 := ctxpkg.ContextSetUser(context.Background(), &user.User{
 				Id: &user.UserId{
-					OpaqueId: "7f704785-3955-4f40-ae61-2efd8b15eeef", // admin_user_id
+					OpaqueId: cfg.AdminUserID,
 					Type:     user.UserType_USER_TYPE_PRIMARY,
 				},
 			})
-			ctx2 = metadata.Set(ctx2, middleware.AccountID, "7f704785-3955-4f40-ae61-2efd8b15eeef")
+			ctx2 = metadata.Set(ctx2, middleware.AccountID, cfg.AdminUserID)
 			mtrcs := metrics.New()
 
 			defer cancel()
