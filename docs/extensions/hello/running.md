@@ -63,34 +63,109 @@ No matter which way you choose, we need to create a configuration file for ownCl
 Please note the the regististration of our Hello extension in the `external_apps` section. It will trigger ownCloud Web to load `hello.js`, the frontend bundle generated in the [frontend build step]({{< ref "./building#frontend">}}).
 
 The frontend bundle will be requested from the oCIS proxy and requests to our Hello extension's API will also be passed to the oCIS proxy first. Therefore the oCIS proxy needs to be configured to forward these requests to our Hello extension.
-We do this by using the existing `proxy-example.json` file from the [oCIS proxy](https://github.com/owncloud/ocis/blob/master/proxy/config/proxy-example.json). Just add an extra endpoint at the end for the Hello extension.
+In the ocis config folder create a file called `proxy.yaml` with this content:
 
-```json
-{
-  "endpoint": "/api/v0/greet",
-  "backend": "http://localhost:9105"
-},
-{
-  "endpoint": "/hello.js",
-  "backend": "http://localhost:9105"
-}
+```yaml
+policies:
+- name: ocis
+  routes:
+    - endpoint: /
+      service: com.owncloud.web.web
+      unprotected: true
+    - endpoint: /.well-known/webfinger
+      service: com.owncloud.web.webfinger
+      unprotected: true
+    - endpoint: /.well-known/openid-configuration
+      service: com.owncloud.web.idp
+      unprotected: true
+    - endpoint: /branding/logo
+      service: com.owncloud.web.web
+    - endpoint: /konnect/
+      service: com.owncloud.web.idp
+      unprotected: true
+    - endpoint: /signin/
+      service: com.owncloud.web.idp
+      unprotected: true
+    - endpoint: /archiver
+      service: com.owncloud.web.frontend
+    - endpoint: /ocs/v2.php/apps/notifications/api/v1/notifications
+      service: com.owncloud.userlog.userlog
+    - type: regex
+      endpoint: /ocs/v[12].php/cloud/user/signing-key
+      service: com.owncloud.web.ocs
+    - type: regex
+      endpoint: /ocs/v[12].php/config
+      service: com.owncloud.web.frontend
+      unprotected: true
+    - endpoint: /ocs/
+      service: com.owncloud.web.frontend
+    - type: query
+      endpoint: /remote.php/?preview=1
+      service: com.owncloud.web.webdav
+    - method: REPORT
+      endpoint: /remote.php/dav/
+      service: com.owncloud.web.webdav
+    - method: REPORT
+      endpoint: /remote.php/webdav
+      service: com.owncloud.web.webdav
+    - method: REPORT
+      endpoint: /dav/spaces
+      service: com.owncloud.web.webdav
+    - type: query
+      endpoint: /dav/?preview=1
+      service: com.owncloud.web.webdav
+    - type: query
+      endpoint: /webdav/?preview=1
+      service: com.owncloud.web.webdav
+    - endpoint: /remote.php/
+      service: com.owncloud.web.ocdav
+    - endpoint: /dav/
+      service: com.owncloud.web.ocdav
+    - endpoint: /webdav/
+      service: com.owncloud.web.ocdav
+    - endpoint: /status
+      service: com.owncloud.web.ocdav
+      unprotected: true
+    - endpoint: /status.php
+      service: com.owncloud.web.ocdav
+      unprotected: true
+    - endpoint: /index.php/
+      service: com.owncloud.web.ocdav
+    - endpoint: /apps/
+      service: com.owncloud.web.ocdav
+    - endpoint: /data
+      service: com.owncloud.web.frontend
+      unprotected: true
+    - endpoint: /app/list
+      service: com.owncloud.web.frontend
+      unprotected: true
+    - endpoint: /app/
+      service: com.owncloud.web.frontend
+    - endpoint: /graph/v1.0/invitations
+      service: com.owncloud.graph.invitations
+    - endpoint: /graph/
+      service: com.owncloud.graph.graph
+    - endpoint: /api/v0/settings
+      service: com.owncloud.web.settings
+    - endpoint: /api/v0/greet
+      backend: "http://localhost:9105"
+    - endpoint: /hello.js
+      backend: "http://localhost:9105"
+      unprotected: true
 ```
+{{< hint warning >}}
+These routes are the default routes of the proxy plus extra routes for the hello extension.
+For details see the [proxy documentation](https://owncloud.dev/services/proxy).
+{{< /hint >}}
 
 In addition to all these we will also need to activate the config files we just created. Therefore set these two variables with the path to the respective config file.
 ```
 export WEB_UI_CONFIG=<path to web-config.json>
-export PROXY_CONFIG_FILE=<path to ocis proxy config file>
 ```
 And finally start the oCIS server:
 ```
 ocis server
 ```
-
-{{< hint warning >}}
-oCIS currently has a bug. oCIS proxy will not pick up the proxy configuration file if it is started in the supervised mode by `ocis server`. Therefore you will need to apply the following workaround:
-
-Run `ocis server` with the environment variables mentioned above. Then open a new CLI and run `ocis kill proxy`. Set the same environment variables as above and run `ocis proxy server`. This starts the proxy in a non supervised mode and ensures that it picks up your custom routes in the proxy configuration file.
-{{< /hint >}}
 
 ## Start the extension
 
