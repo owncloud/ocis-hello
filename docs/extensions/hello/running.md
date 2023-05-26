@@ -62,6 +62,11 @@ No matter which way you choose, we need to create a configuration file for ownCl
 
 Please note the the regististration of our Hello extension in the `external_apps` section. It will trigger ownCloud Web to load `hello.js`, the frontend bundle generated in the [frontend build step]({{< ref "./building#frontend">}}).
 
+To activate the config file we just created we need to set this variable with the path to it.
+```
+export WEB_UI_CONFIG=<path to web-config.json>
+```
+
 The frontend bundle will be requested from the oCIS proxy and requests to our Hello extension's API will also be passed to the oCIS proxy first. Therefore the oCIS proxy needs to be configured to forward these requests to our Hello extension.
 In the ocis config folder create a file called `proxy.yaml` with this content:
 
@@ -158,9 +163,9 @@ These routes are the default routes of the proxy plus extra routes for the hello
 For details see the [proxy documentation](https://owncloud.dev/services/proxy).
 {{< /hint >}}
 
-In addition to all these we will also need to activate the config files we just created. Therefore set these two variables with the path to the respective config file.
+In addition to all these we need to make sure the hello service can be registered to oCIS, for that set this variable.
 ```
-export WEB_UI_CONFIG=<path to web-config.json>
+export MICRO_REGISTRY=mdns
 ```
 And finally start the oCIS server:
 ```
