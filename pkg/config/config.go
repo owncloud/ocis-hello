@@ -59,18 +59,17 @@ type TokenManager struct {
 
 // Config combines all available configuration parts.
 type Config struct {
-	File              string
-	Log               Log
-	Debug             Debug
-	HTTP              HTTP
-	GRPC              GRPC
-	Server            Server
-	Tracing           Tracing
-	Asset             Asset
-	TokenManager      TokenManager
-	MachineAuthAPIKey string `yaml:"machine_auth_api_key" env:"OCIS_MACHINE_AUTH_API_KEY" desc:"Machine auth API key used to validate internal requests necessary to access resources from other services."`
-	Context           context.Context
-	Supervised        bool
+	File         string
+	Log          Log
+	Debug        Debug
+	HTTP         HTTP
+	GRPC         GRPC
+	Server       Server
+	Tracing      Tracing
+	Asset        Asset
+	TokenManager TokenManager
+	Context      context.Context
+	Supervised   bool
 }
 
 // New initializes a new configuration with or without defaults.

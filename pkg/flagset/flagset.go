@@ -183,12 +183,5 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"HELLO_JWT_SECRET"},
 			Destination: &cfg.TokenManager.JWTSecret,
 		},
-		&cli.StringFlag{
-			Name:        "api-key",
-			Value:       "xFGSKMfC.0JxvOk+yf*hTdSIS9K%1.$T",
-			Usage:       "Machine auth API key used to validate internal requests necessary to access resources from other services.",
-			EnvVars:     []string{"OCIS_MACHINE_AUTH_API_KEY"},
-			Destination: &cfg.MachineAuthAPIKey,
-		},
 	}
 }

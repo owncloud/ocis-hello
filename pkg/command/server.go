@@ -74,7 +74,6 @@ func Server(cfg *config.Config) *cli.Command {
 				},
 			})
 			ctx2 = metadata.Set(ctx2, middleware.AccountID, "7f704785-3955-4f40-ae61-2efd8b15eeef")
-			ctx2 = metadata.Set(ctx2, ctxpkg.TokenHeader, "xFGSKMfC.0JxvOk+yf*hTdSIS9K%1.$T") // machine_auth_api_key
 			mtrcs := metrics.New()
 
 			defer cancel()
