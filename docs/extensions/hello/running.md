@@ -181,7 +181,24 @@ For that just build ocis-hello binary.
 cd ocis-hello
 make build
 ```
-And Run the service
+
+Then set the variables, so that the Hello extension can contact and authenticate to ocis.
+First we need the user id of the admin user, that id can be found in the `ocis.yaml` file (e.g `admin_user_id: a92daa31-bddf-4dfd-9a3f-6b3289309107`)
+```
+export HELLO_ADMIN_USER_ID='<id of the admin user of ocis>'
+```
+
+Second we need to set the same JWT secret as is used by ocis. If oCIS was started without any special configurations this value will be also found in the `ocis.yaml` file (e.g. `  jwt_secret: hlFNZU=r!FRduN5hVh$d32SKakf9P3j1`)
+```
+export HELLO_JWT_SECRET='<jwt secret>'
+```
+
+Third the Hello extension needs to be configured to use the same registry as oCIS:
+```
+export MICRO_REGISTRY=mdns
+```
+
+Finally we can run the service
 ```
 ./bin/hello server
 ```
