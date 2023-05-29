@@ -367,6 +367,10 @@ def UITests(ctx):
                 "image": "owncloudci/alpine:latest",
                 "pull": "always",
                 "detach": True,
+                "environment": {
+                    "HELLO_JWT_SECRET": "aaaa",
+                    "MICRO_REGISTRY": "mdns",
+                },
                 "commands": [
                     "bin/hello server",
                 ],
