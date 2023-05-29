@@ -11,23 +11,35 @@
   },
   "apps": [
     "files",
-    "media-viewer"
+    "preview",
+    "pdf-viewer",
+    "search",
+    "text-editor",
+    "draw-io",
+    "external",
+    "admin-settings"
   ],
   "external_apps": [
-    {
-      "id": "settings",
-      "path": "/settings.js"
-    },
-    {
-      "id": "accounts",
-      "path": "/accounts.js"
-    },
     {
       "id": "hello",
       "path": "/hello.js"
     }
   ],
   "options": {
-    "hideSearchBar": true
+    "previewFileMimeTypes": [
+      "image/gif",
+      "image/png",
+      "image/jpeg",
+      "text/plain",
+      "image/tiff",
+      "image/bmp",
+      "image/x-ms-bmp"
+    ],
+    "upload": {
+      "xhr": {
+        "timeout": 60000
+      }
+    },
+    "contextHelpersReadMore": true
   }
 }
