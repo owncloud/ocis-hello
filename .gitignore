@@ -10,3 +10,6 @@ checkstyle.xml
 /assets
 /.idea
 /vendor
+/test-results/
+/playwright-report/
+/playwright/.cache/

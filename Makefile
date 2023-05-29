@@ -3,7 +3,7 @@ NAME := hello
 
 .PHONY: test-acceptance-webui
 test-acceptance-webui:
-	./ui/tests/run-acceptance-test.sh $(FEATURE_PATH)
+	yarn run test:e2e $(FEATURE_PATH)
 
 
 ############ tooling ############

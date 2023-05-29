@@ -1,45 +1,27 @@
-module.exports = {
-  url: function () {
-    return this.api.launchUrl + '/#/hello'
-  },
+const appSwitcherButtonSelector = '#_appSwitcherButton'
+const appSwitcherDropdownSelector = '#app-switcher-dropdown'
+const appName = 'Hello'
+const accountInputSelector = "//input[@placeholder='Your name']"
+const submitButtonSelector = "//button[@type='submit']"
+const helloTextSelector = "//*[@class='uk-text-lead']"
 
-  commands: {
-    navigateAndWaitTillLoaded: async function () {
-      const url = this.url()
-      return this.navigate(url).waitForElementVisible('@accountInput')
-    },
+exports.HelloPage = class HelloPage {
+  constructor (page) {
+    this.page = page
+  }
 
-    inputName: async function (name) {
-      await this
-        .waitForElementVisible('@accountInput')
-        .clearValue('@accountInput')
-        .setValue('@accountInput', name)
-      return this.waitForElementVisible('@submitButton')
-        .click('@submitButton')
-    },
+  async goto () {
+    await this.page.goto('/')
+    await this.page.locator(appSwitcherButtonSelector).click()
+    await this.page.locator(appSwitcherDropdownSelector).getByText(appName).click()
+  }
 
-    getHelloOutput: async function () {
-      let output
-      await this.waitForElementVisible('@helloText')
-        .getText('@helloText', (result) => {
-          output = result
-        })
-      return output.value
-    }
-  },
+  async inputName (name) {
+    await this.page.locator(accountInputSelector).fill(name)
+    await this.page.locator(submitButtonSelector).click()
+  }
 
-  elements: {
-    accountInput: {
-      selector: "//input[@placeholder='Your name']",
-      locateStrategy: 'xpath'
-    },
-    submitButton: {
-      selector: "//button[contains(@class, 'oc-button-primary')]",
-      locateStrategy: 'xpath'
-    },
-    helloText: {
-      selector: "//*[@class='uk-text-lead']",
-      locateStrategy: 'xpath'
-    }
+  async getHelloOutput () {
+    return await this.page.locator(helloTextSelector).innerText()
   }
 }
