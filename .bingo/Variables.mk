@@ -29,6 +29,12 @@ $(FILEB0X): $(BINGO_DIR)/fileb0x.mod
 	@echo "(re)installing $(GOBIN)/fileb0x-v1.1.4"
 	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=fileb0x.mod -o=$(GOBIN)/fileb0x-v1.1.4 "github.com/UnnoTed/fileb0x"
 
+GOLANGCI_LINT := $(GOBIN)/golangci-lint-v1.52.2
+$(GOLANGCI_LINT): $(BINGO_DIR)/golangci-lint.mod
+	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
+	@echo "(re)installing $(GOBIN)/golangci-lint-v1.52.2"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=golangci-lint.mod -o=$(GOBIN)/golangci-lint-v1.52.2 "github.com/golangci/golangci-lint/cmd/golangci-lint"
+
 PROTOC_GEN_DOC := $(GOBIN)/protoc-gen-doc-v1.5.1
 $(PROTOC_GEN_DOC): $(BINGO_DIR)/protoc-gen-doc.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
