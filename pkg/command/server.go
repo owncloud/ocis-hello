@@ -245,26 +245,6 @@ func WithServiceToken() client.CallOption {
 	}
 }
 
-//func getAuthContext(owner *user.User, gw gateway.GatewayAPIClient, secret string, logger log.Logger) (context.Context, error) {
-//	ownerCtx := ctxpkg.ContextSetUser(context.Background(), owner)
-//	authRes, err := gw.Authenticate(ownerCtx, &gateway.AuthenticateRequest{
-//		Type:         "machine",
-//		ClientId:     "userid:" + owner.GetId().GetOpaqueId(),
-//		ClientSecret: secret,
-//	})
-//
-//	if err == nil && authRes.GetStatus().GetCode() != rpc.Code_CODE_OK {
-//		err = errtypes.NewErrtypeFromStatus(authRes.Status)
-//	}
-//
-//	if err != nil {
-//		logger.Error().Err(err).Interface("owner", owner).Interface("authRes", authRes).Msg("error using machine auth")
-//		return nil, err
-//	}
-//
-//	return metadata.AppendToOutgoingContext(ownerCtx, ctxpkg.TokenHeader, authRes.Token), nil
-//}
-
 type settingsPhraseSource struct {
 	vsClient settings.ValueService
 }
