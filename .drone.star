@@ -314,18 +314,9 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
         "OCIS_INSECURE": "true",
         "STORAGE_HOME_DRIVER": "%s" % (storage),
         "STORAGE_USERS_DRIVER": "%s" % (storage),
-        "STORAGE_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
-        "STORAGE_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
-        "STORAGE_METADATA_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/metadata",
-        "STORAGE_SHARING_USER_JSON_FILE": "/srv/app/tmp/ocis/shares.json",
-        "STORAGE_USERS_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
-        "STORAGE_USERS_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
-        "STORAGE_USERS_DRIVER_OWNCLOUD_DATADIR": "/srv/app/tmp/ocis/owncloud/data",
         "PROXY_ENABLE_BASIC_AUTH": True,
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
-        "PROXY_CONFIG_FILE": "/drone/src/ui/tests/config/drone/proxy-config.json",
         "OCIS_LOG_LEVEL": "error",
-        "OCIS_CONFIG_DIR": "/srv/config",
         "OCIS_JWT_SECRET": "aaaa",
         "MICRO_REGISTRY": "mdns"
     }
@@ -346,16 +337,9 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
             "environment": environment,
             "volumes": volumes,
             "commands": [
-                "init",
+                "/usr/bin/ocis init",
+                "/usr/bin/ocis server",
             ],
-        },
-        {
-            "name": "ocis-server",
-            "image": "owncloud/ocis:3.0.0-rc.4",
-            "pull": "always",
-            "detach": True,
-            "environment": environment,
-            "volumes": volumes,
         },
         {
             "name": "wait-for-ocis-server",
