@@ -9,3 +9,4 @@ checkstyle.xml
 /node_modules
 /assets
 /.idea
+/vendor
