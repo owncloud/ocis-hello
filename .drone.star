@@ -318,6 +318,7 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
         "OCIS_LOG_LEVEL": "error",
         "OCIS_JWT_SECRET": "aaaa",
+        "OCIS_ADMIN_USER_ID": "c59a6ae9-5f5e-4eef-b82e-0e5c34f93e52",
         "MICRO_REGISTRY": "mdns"
     }
 
@@ -368,6 +369,7 @@ def UITests(ctx):
                 "pull": "always",
                 "detach": True,
                 "environment": {
+                    "HELLO_ADMIN_USER_ID": "c59a6ae9-5f5e-4eef-b82e-0e5c34f93e52",
                     "HELLO_JWT_SECRET": "aaaa",
                     "MICRO_REGISTRY": "mdns",
                 },
