@@ -83,7 +83,7 @@ func Server(cfg *config.Config) *cli.Command {
 
 			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient())
 			for i := 1; i <= maxRetries; i++ {
-				err = registerSettingsBundles(bundleService, ctx2, &logger)
+				err = registerSettingsBundles(ctx2, bundleService, &logger)
 				if err != nil {
 					logger.Logger.Info().Msg(err.Error())
 					// limited potential backoff: 1s, 4s, 9s, 16s, 25s, ..., but max 30s
@@ -161,7 +161,7 @@ func defineContext(cfg *config.Config) (context.Context, context.CancelFunc) {
 }
 
 // registerSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.
-func registerSettingsBundles(bundleService settings.BundleService, ctx context.Context, l *log.Logger) (err error) {
+func registerSettingsBundles(ctx context.Context, bundleService settings.BundleService, l *log.Logger) (err error) {
 
 	request := &settings.SaveBundleRequest{
 		Bundle: &smessages.Bundle{
