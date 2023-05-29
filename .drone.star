@@ -195,6 +195,7 @@ def build():
             "image": "owncloudci/golang:1.20",
             "pull": "always",
             "commands": [
+                "apk add protoc",
                 "make build",
             ],
             "volumes": [stepVolumeGo],
