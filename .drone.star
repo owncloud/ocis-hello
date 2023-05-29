@@ -330,7 +330,7 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
 
     return [
         {
-            "name": "ocis-server init",
+            "name": "ocis-server",
             "image": "owncloud/ocis:3.0.0-rc.4",
             "pull": "always",
             "detach": True,
