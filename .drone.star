@@ -181,6 +181,7 @@ def makeGenerate():
             "image": "owncloudci/golang:1.20",
             "pull": "always",
             "commands": [
+                "apk add protoc",
                 "make ci-go-generate",
             ],
             "volumes": [stepVolumeGo],
