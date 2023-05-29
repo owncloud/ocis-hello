@@ -156,7 +156,7 @@ def testHello(ctx):
             },
             {
                 "name": "sonarcloud",
-                "image": "sonarsource/sonar-scanner-cli:latest",
+                "image": "sonarsource/sonar-scanner-cli:4.7.0",
                 "pull": "always",
                 "environment": sonar_env,
                 "volumes": [stepVolumeGo],
