@@ -15,6 +15,13 @@ stepVolumeGo = \
         "path": "/go",
     }
 
+stepVolumeOcisConfigs = \
+    {
+        "name": "configs",
+        "path": "/srv/config",
+    }
+
+
 # volume for pipeline to cache Go dependencies between steps of a pipeline
 # to be used in combination with stepVolumeGo
 pipelineVolumeGo = \
@@ -302,21 +309,25 @@ def dockerRelease(ctx, arch):
 
 def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
     environment = {
+        "IDM_ADMIN_PASSWORD": "admin",  # override the random admin password from `ocis init`
         "OCIS_URL": "https://ocis-server:9200",
+        "OCIS_INSECURE": "true",
         "STORAGE_HOME_DRIVER": "%s" % (storage),
         "STORAGE_USERS_DRIVER": "%s" % (storage),
         "STORAGE_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
         "STORAGE_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
-        "STORAGE_METADATA_ROOT": "/srv/app/tmp/ocis/metadata",
-        "STORAGE_DRIVER_OWNCLOUD_DATADIR": "/srv/app/tmp/ocis/owncloud/data",
-        "STORAGE_DRIVER_OWNCLOUD_REDIS_ADDR": "redis:6379",
-        "STORAGE_HOME_DATA_SERVER_URL": "http://ocis-server:9155/data",
-        "STORAGE_USERS_DATA_SERVER_URL": "http://ocis-server:9158/data",
+        "STORAGE_METADATA_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/metadata",
         "STORAGE_SHARING_USER_JSON_FILE": "/srv/app/tmp/ocis/shares.json",
+        "STORAGE_USERS_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
+        "STORAGE_USERS_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
+        "STORAGE_USERS_DRIVER_OWNCLOUD_DATADIR": "/srv/app/tmp/ocis/owncloud/data",
         "PROXY_ENABLE_BASIC_AUTH": True,
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
         "PROXY_CONFIG_FILE": "/drone/src/ui/tests/config/drone/proxy-config.json",
         "OCIS_LOG_LEVEL": "error",
+        "OCIS_CONFIG_DIR": "/srv/config",
+        "OCIS_JWT_SECRET": "aaaa",
+        "MICRO_REGISTRY": "mdns"
     }
 
     # Pass in "default" accounts_hash_difficulty to not set this environment variable.
@@ -328,20 +339,23 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
 
     return [
         {
-            "name": "ocis-server",
+            "name": "ocis-server init",
             "image": "owncloud/ocis:3.0.0-rc.4",
             "pull": "always",
             "detach": True,
             "environment": environment,
             "volumes": volumes,
             "commands": [
-                "ocis server&",
-                "sleep 10",
-                "ocis kill proxy",
-                "sleep 10",
-                "ocis proxy server&",
-                "wait",
+                "init",
             ],
+        },
+        {
+            "name": "ocis-server",
+            "image": "owncloud/ocis:3.0.0-rc.4",
+            "pull": "always",
+            "detach": True,
+            "environment": environment,
+            "volumes": volumes,
         },
         {
             "name": "wait-for-ocis-server",
@@ -363,7 +377,7 @@ def UITests(ctx):
             "arch": "amd64",
         },
         "steps": makeGenerate() +
-                 build() + ocisServer("ocis", 4, [stepVolumeOC10Tests]) + [
+                 build() + ocisServer("ocis", 4, [stepVolumeOC10Tests, stepVolumeOcisConfigs]) + [
             {
                 "name": "hello-server",
                 "image": "owncloudci/alpine:latest",
@@ -427,8 +441,7 @@ def UITests(ctx):
                 ],
             },
         ],
-        "services": redis() +
-                    selenium(),
+        "services": selenium(),
         "volumes": [
             pipelineVolumeGo,
             pipelineVolumeOC10Tests,
@@ -786,18 +799,6 @@ def docs(ctx):
             ],
         },
     }
-
-def redis():
-    return [
-        {
-            "name": "redis",
-            "image": "webhippie/redis",
-            "pull": "always",
-            "environment": {
-                "REDIS_DATABASES": 1,
-            },
-        },
-    ]
 
 def selenium():
     return [
