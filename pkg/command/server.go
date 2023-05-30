@@ -66,14 +66,8 @@ func Server(cfg *config.Config) *cli.Command {
 				return err
 			}
 			gr := run.Group{}
-			_, cancel := defineContext(cfg)
-			ctx2 := ctxpkg.ContextSetUser(context.Background(), &user.User{
-				Id: &user.UserId{
-					OpaqueId: cfg.AdminUserID,
-					Type:     user.UserType_USER_TYPE_PRIMARY,
-				},
-			})
-			ctx2 = metadata.Set(ctx2, middleware.AccountID, cfg.AdminUserID)
+			ctx, cancel := defineContext(cfg)
+
 			mtrcs := metrics.New()
 
 			defer cancel()
@@ -83,7 +77,7 @@ func Server(cfg *config.Config) *cli.Command {
 
 			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient())
 			for i := 1; i <= maxRetries; i++ {
-				err = registerSettingsBundles(ctx2, bundleService, &logger)
+				err = registerSettingsBundles(ctx, bundleService, &logger)
 				if err != nil {
 					logger.Logger.Info().Msg(err.Error())
 					// limited potential backoff: 1s, 4s, 9s, 16s, 25s, ..., but max 30s
@@ -116,7 +110,7 @@ func Server(cfg *config.Config) *cli.Command {
 				http.Config(cfg),
 				http.Logger(logger),
 				http.Name(cfg.Server.Name),
-				http.Context(ctx2),
+				http.Context(ctx),
 				http.Metrics(mtrcs),
 				http.Handler(handler),
 			)
@@ -130,7 +124,7 @@ func Server(cfg *config.Config) *cli.Command {
 				grpc.Config(cfg),
 				grpc.Logger(logger),
 				grpc.Name(cfg.Server.Name),
-				grpc.Context(ctx2),
+				grpc.Context(ctx),
 				grpc.Metrics(mtrcs),
 				grpc.Handler(handler),
 			)
@@ -153,10 +147,23 @@ func Server(cfg *config.Config) *cli.Command {
 // if not, it will create a root context that can be cancelled.
 func defineContext(cfg *config.Config) (context.Context, context.CancelFunc) {
 	return func() (context.Context, context.CancelFunc) {
+		var ctx context.Context
+		var cancel context.CancelFunc
 		if cfg.Context == nil {
-			return context.WithCancel(context.Background())
+			ctx, cancel = context.WithCancel(context.Background())
+		} else {
+			ctx, cancel = context.WithCancel(cfg.Context)
 		}
-		return context.WithCancel(cfg.Context)
+
+		ctx = ctxpkg.ContextSetUser(ctx, &user.User{
+			Id: &user.UserId{
+				OpaqueId: cfg.AdminUserID,
+				Type:     user.UserType_USER_TYPE_PRIMARY,
+			},
+		})
+		ctx = metadata.Set(ctx, middleware.AccountID, cfg.AdminUserID)
+
+		return ctx, cancel
 	}()
 }
 
