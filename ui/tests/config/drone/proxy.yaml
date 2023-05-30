@@ -80,7 +80,7 @@ policies:
           - endpoint: /api/v0/settings
             service: com.owncloud.web.settings
           - endpoint: /api/v0/greet
-            backend: "http://ocis-server:9105"
+            backend: "http://hello-server:9105"
           - endpoint: /hello.js
-            backend: "http://ocis-server:9105"
+            backend: "http://hello-server:9105"
             unprotected: true
