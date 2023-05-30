@@ -21,7 +21,7 @@ Before(async function () {
   global.context = await global.browser.newContext(
     {
       ignoreHTTPSErrors: true,
-      baseURL: 'https://host.docker.internal:9200' // TODO make flexible
+      baseURL: process.env.SERVER_HOST ?? 'https://localhost:9200'
     }
   )
   global.page = await global.context.newPage()
