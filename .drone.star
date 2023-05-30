@@ -21,7 +21,6 @@ stepVolumeOcisConfigs = \
         "path": "/srv/config",
     }
 
-
 # volume for pipeline to cache Go dependencies between steps of a pipeline
 # to be used in combination with stepVolumeGo
 pipelineVolumeGo = \
@@ -320,7 +319,7 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
         "OCIS_JWT_SECRET": "aaaa",
         "OCIS_ADMIN_USER_ID": "c59a6ae9-5f5e-4eef-b82e-0e5c34f93e52",
         "MICRO_REGISTRY": "mdns",
-        "SETTINGS_GRPC_ADDR": "ocis-server:9191"
+        "SETTINGS_GRPC_ADDR": "ocis-server:9191",
     }
 
     # Pass in "default" accounts_hash_difficulty to not set this environment variable.
