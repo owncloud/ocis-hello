@@ -1,4 +1,4 @@
-const { Given, When, Then} = require('@cucumber/cucumber')
+const { Given, When, Then } = require('@cucumber/cucumber')
 // import expect for assertion
 const { expect } = require('@playwright/test')
 const { LoginPage } = require('../pageobjects/loginPage')
