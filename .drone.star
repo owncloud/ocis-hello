@@ -400,16 +400,6 @@ def UITests(ctx):
                 "pull": "always",
                 "environment": {
                     "SERVER_HOST": "https://ocis-server:9200",
-                    "BACKEND_HOST": "https://ocis-server:9200",
-                    "RUN_ON_OCIS": "true",
-                    "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/owncloud/data",
-                    "OCIS_SKELETON_DIR": "/srv/app/testing/data/webUISkeleton",
-                    "TESTING_DATA_DIR": "/srv/app/testing/data",
-                    "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
-                    "TEST_TAGS": "not @skipOnOCIS and not @skip",
-                    "LOCAL_UPLOAD_DIR": "/uploads",
-                    "NODE_TLS_REJECT_UNAUTHORIZED": 0,
-                    "WEB_PATH": "/srv/app/web",
                     "FEATURE_PATH": "/drone/src/ui/tests/acceptance/features",
                 },
                 "commands": [
