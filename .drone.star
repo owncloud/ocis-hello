@@ -341,7 +341,6 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
             "commands": [
                 "/usr/bin/ocis init",
                 "cp /drone/src/ui/tests/config/drone/proxy.yaml /etc/ocis/",
-                "ls -l /etc/ocis",
                 "/usr/bin/ocis server",
             ],
         },
