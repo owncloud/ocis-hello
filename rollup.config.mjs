@@ -1,7 +1,6 @@
 import vue from 'rollup-plugin-vue'
 import { terser } from 'rollup-plugin-terser'
 import replace from '@rollup/plugin-replace'
-import filesize from 'rollup-plugin-filesize'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from 'rollup-plugin-babel'
@@ -46,7 +45,6 @@ export default {
     json(),
     globals(),
     builtins(),
-    production && terser(),
-    production && filesize()
+    production && terser()
   ]
 }
