@@ -77,7 +77,7 @@
   "dependencies": {
     "eslint-plugin-n": "^16.0.0",
     "install": "^0.13.0",
-    "owncloud-design-system": "^14.0.1",
+    "owncloud-design-system": "^14.0.1"
   },
   "main": "index.js"
 }
