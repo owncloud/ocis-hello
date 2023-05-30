@@ -17,7 +17,7 @@
     "watch": "rollup -c -w",
     "test": "echo 'Not implemented'",
     "generate-api": "node node_modules/swagger-vue-generator/bin/generate-api.js --package-version v0 --source pkg/proto/v0/hello.swagger.json --moduleName hello --destination ui/client/hello/index.js",
-    "test:e2e": "cucumber-js --require cucumber.conf.js --require ui/tests/acceptance/stepDefinitions/**/*.js --format @cucumber/pretty-formatter"
+    "test:e2e": "cucumber-js --import cucumber.conf.cjs --import ui/tests/acceptance/stepDefinitions/**/*.cjs --format @cucumber/pretty-formatter"
   },
   "type": "module",
   "devDependencies": {

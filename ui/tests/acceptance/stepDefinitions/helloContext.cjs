@@ -1,8 +1,8 @@
 const { Given, When, Then } = require('@cucumber/cucumber')
 // import expect for assertion
 const { expect } = require('@playwright/test')
-const { LoginPage } = require('../pageobjects/loginPage')
-const { HelloPage } = require('../pageobjects/helloPage')
+const { LoginPage } = require('../pageobjects/loginPage.cjs')
+const { HelloPage } = require('../pageobjects/helloPage.cjs')
 
 Given('user {string} has logged in using the webUI', async function (username) {
   const loginPage = new LoginPage(global.page)
