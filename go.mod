@@ -6,13 +6,11 @@ require (
 	contrib.go.opencensus.io/exporter/jaeger v0.2.1
 	contrib.go.opencensus.io/exporter/ocagent v0.7.0
 	contrib.go.opencensus.io/exporter/zipkin v0.1.2
-	github.com/asim/go-micro/v3 v3.7.1
 	github.com/cs3org/go-cs3apis v0.0.0-20230516150832-730ac860c71d
 	github.com/cs3org/reva/v2 v2.13.4-0.20230526111208-d62d1497abb9
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/render v1.0.2
-	github.com/golang/protobuf v1.5.3
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2
 	github.com/micro/cli/v2 v2.1.2
 	github.com/oklog/run v1.1.0
@@ -35,15 +33,14 @@ require (
 	github.com/MicahParks/keyfunc v1.5.1 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20220930113650-c6815a8c17ad // indirect
-	github.com/ReneKroon/ttlcache/v2 v2.11.0 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
+	github.com/benbjohnson/clock v1.3.3 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
-	github.com/bufbuild/buf v1.18.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
@@ -86,7 +83,6 @@ require (
 	github.com/go-micro/plugins/v4/store/redis v1.2.1-0.20230510195111-07cd57e1bc9d // indirect
 	github.com/go-micro/plugins/v4/wrapper/breaker/gobreaker v1.2.0 // indirect
 	github.com/go-micro/plugins/v4/wrapper/monitoring/prometheus v1.2.0 // indirect
-	github.com/go-micro/plugins/v4/wrapper/trace/opencensus v1.1.0 // indirect
 	github.com/go-micro/plugins/v4/wrapper/trace/opentelemetry v1.2.0 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
@@ -100,6 +96,8 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/google/pprof v0.0.0-20230502171905-255e3b9b56de // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/hashicorp/consul/api v1.15.2 // indirect
