@@ -185,7 +185,7 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "admin-user-id",
-			Usage:       "Used to create JWT to talk to reva, should equal reva's jwt-secret",
+			Usage:       "User to authenticate to ocis, should equal ocis's admin_user_id",
 			EnvVars:     []string{"HELLO_ADMIN_USER_ID"},
 			Required:    true,
 			Destination: &cfg.AdminUserID,
