@@ -435,7 +435,6 @@ def UITests(ctx):
                 ],
             },
         ],
-        "services": selenium(),
         "volumes": [
             pipelineVolumeGo,
             pipelineVolumeOC10Tests,
@@ -793,19 +792,6 @@ def docs(ctx):
             ],
         },
     }
-
-def selenium():
-    return [
-        {
-            "name": "selenium",
-            "image": "selenium/standalone-chrome-debug:3.141.59",
-            "pull": "always",
-            "volumes": [{
-                "name": "uploads",
-                "path": "/uploads",
-            }],
-        },
-    ]
 
 def checkStarlark():
     return [{
