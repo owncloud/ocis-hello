@@ -736,7 +736,10 @@ def docs(ctx):
                         "from_secret": "drone_http_proxy",
                     },
                 },
-                "commands": ["make docs-generate"],
+                "commands": [
+                    "apk add protoc",
+                    "make docs-generate",
+                ],
             },
             {
                 "name": "prepare",
