@@ -193,6 +193,7 @@ def makeGenerate():
                 "HTTPS_PROXY": {
                     "from_secret": "drone_http_proxy",
                 },
+            },
             "commands": [
                 "apk add protoc",
                 "make ci-go-generate",
@@ -214,6 +215,7 @@ def build():
                 "HTTPS_PROXY": {
                     "from_secret": "drone_http_proxy",
                 },
+            },
             "commands": [
                 "apk add protoc",
                 "make build",
@@ -268,6 +270,7 @@ def dockerRelease(ctx, arch):
                     "HTTPS_PROXY": {
                         "from_secret": "drone_http_proxy",
                     },
+                },
                 "commands": [
                     "make release-linux-docker",
                 ],
@@ -725,6 +728,14 @@ def docs(ctx):
             {
                 "name": "docs-generate",
                 "image": "owncloudci/golang:1.20",
+                "environment": {
+                    "HTTP_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                    "HTTPS_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                },
                 "commands": ["make docs-generate"],
             },
             {
