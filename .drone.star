@@ -413,16 +413,6 @@ def UITests(ctx):
                     "FEATURE_PATH": "/drone/src/ui/tests/acceptance/features",
                 },
                 "commands": [
-                    ". /drone/src/.drone.env",
-                    "git clone -b master --depth=1 https://github.com/owncloud/testing.git /srv/app/testing",
-                    "git clone -b $WEB_BRANCH --single-branch --no-tags https://github.com/owncloud/web.git /srv/app/web",
-                    "cd /srv/app/web",
-                    "git checkout $WEB_COMMITID",
-                    "cp -r tests/acceptance/filesForUpload/* /uploads",
-                    "yarn install --all",
-                    "yarn build",
-                    "cd /drone/src/",
-                    "yarn install --all",
                     "make test-acceptance-webui",
                 ],
                 "volumes": [
