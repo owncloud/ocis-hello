@@ -53,11 +53,11 @@ $(GOX): $(BINGO_DIR)/gox.mod
 	@echo "(re)installing $(GOBIN)/gox-v1.0.1"
 	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=gox.mod -o=$(GOBIN)/gox-v1.0.1 "github.com/mitchellh/gox"
 
-MUTAGEN := $(GOBIN)/mutagen-v0.17.1
+MUTAGEN := $(GOBIN)/mutagen-v0.11.8
 $(MUTAGEN): $(BINGO_DIR)/mutagen.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
-	@echo "(re)installing $(GOBIN)/mutagen-v0.17.1"
-	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=mutagen.mod -o=$(GOBIN)/mutagen-v0.17.1 "github.com/mutagen-io/mutagen/cmd/mutagen"
+	@echo "(re)installing $(GOBIN)/mutagen-v0.11.8"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=mutagen.mod -o=$(GOBIN)/mutagen-v0.11.8 "github.com/mutagen-io/mutagen/cmd/mutagen"
 
 PROTOC_GEN_DOC := $(GOBIN)/protoc-gen-doc-v1.5.1
 $(PROTOC_GEN_DOC): $(BINGO_DIR)/protoc-gen-doc.mod

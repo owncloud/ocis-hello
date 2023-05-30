@@ -4,4 +4,4 @@ go 1.20
 
 replace k8s.io/apimachinery v0.21.3 => github.com/mutagen-io/apimachinery v0.21.3-mutagen1
 
-require github.com/mutagen-io/mutagen v0.17.1 // cmd/mutagen
+require github.com/mutagen-io/mutagen v0.11.8 // cmd/mutagen
