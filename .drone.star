@@ -3,7 +3,7 @@ config = {
         "os": ["linux", "darwin", "windows"],
     },
     "dockerReleases": {
-        "architectures": ["arm", "arm64", "amd64"],
+        "architectures": ["arm64", "amd64"],
     },
 }
 
