@@ -7,7 +7,7 @@ setDefaultTimeout(60000)
 BeforeAll(async function () {
   global.browser = await chromium.launch({
     headless: process.env.CI === 'true',
-    slowMo: 1000 // TODO set to 0 in CI
+    slowMo: process.env.CI === 'true' ? 0 : 1000
   })
 })
 
