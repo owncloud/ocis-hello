@@ -744,6 +744,14 @@ def docs(ctx):
             {
                 "name": "prepare",
                 "image": "owncloudci/golang:1.20",
+                "environment": {
+                    "HTTP_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                    "HTTPS_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                },
                 "commands": [
                     "make -C docs docs-copy",
                 ],
@@ -751,6 +759,14 @@ def docs(ctx):
             {
                 "name": "test",
                 "image": "owncloudci/golang:1.20",
+                "environment": {
+                    "HTTP_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                    "HTTPS_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                },
                 "commands": [
                     "make -C docs test",
                 ],
