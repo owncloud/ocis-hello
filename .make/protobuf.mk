@@ -1,10 +1,5 @@
-.PHONY: protoc-gen-openapiv2
-protoc-gen-openapiv2:
-	# GO111MODULE=off go get -v github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2
-
-
 .PHONY: $(PROTO_SRC)/${NAME}.pb.go
-$(PROTO_SRC)/${NAME}.pb.go: $(BUF) protoc-gen-openapiv2 $(PROTOC_GEN_GO)
+$(PROTO_SRC)/${NAME}.pb.go: $(BUF) $(PROTOC_GEN_GO)
 	@echo "$(NAME): generating $(PROTO_SRC)/${NAME}.pb.go"
 	@$(BUF) protoc \
 		-I=$(PROTO_SRC)/ \
@@ -15,7 +10,7 @@ $(PROTO_SRC)/${NAME}.pb.go: $(BUF) protoc-gen-openapiv2 $(PROTOC_GEN_GO)
 		$(PROTO_SRC)/${NAME}.proto
 
 .PHONY: $(PROTO_SRC)/${NAME}.pb.micro.go
-$(PROTO_SRC)/${NAME}.pb.micro.go: $(BUF) protoc-gen-openapiv2 $(PROTOC_GEN_MICRO)
+$(PROTO_SRC)/${NAME}.pb.micro.go: $(BUF) $(PROTOC_GEN_MICRO)
 	@echo "$(NAME): generating $(PROTO_SRC)/${NAME}.pb.micro.go"
 	@$(BUF) protoc \
 		-I=$(PROTO_SRC)/ \
@@ -26,7 +21,7 @@ $(PROTO_SRC)/${NAME}.pb.micro.go: $(BUF) protoc-gen-openapiv2 $(PROTOC_GEN_MICRO
 		$(PROTO_SRC)/${NAME}.proto
 
 .PHONY: ./docs/extensions/$(NAME)/grpc.md
-./docs/extensions/$(NAME)/grpc.md: $(BUF) protoc-gen-openapiv2 $(PROTOC_GEN_DOC)
+./docs/extensions/$(NAME)/grpc.md: $(BUF) $(PROTOC_GEN_DOC)
 	@echo "$(NAME): ./docs/extensions/$(NAME)/grpc.md"
 	@$(BUF) protoc \
 		-I=$(PROTO_SRC)/ \
