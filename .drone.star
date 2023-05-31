@@ -15,12 +15,6 @@ stepVolumeGo = \
         "path": "/go",
     }
 
-stepVolumeOcisConfigs = \
-    {
-        "name": "configs",
-        "path": "/srv/config",
-    }
-
 # volume for pipeline to cache Go dependencies between steps of a pipeline
 # to be used in combination with stepVolumeGo
 pipelineVolumeGo = \
@@ -387,7 +381,7 @@ def UITests(ctx):
             "arch": "amd64",
         },
         "steps": makeGenerate() +
-                 build() + ocisServer("ocis", 4, [stepVolumeOC10Tests, stepVolumeOcisConfigs]) + [
+                 build() + ocisServer("ocis", 4, [stepVolumeOC10Tests]) + [
             {
                 "name": "hello-server",
                 "image": "owncloudci/alpine:latest",
