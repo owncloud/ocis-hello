@@ -425,7 +425,7 @@ def UITests(ctx):
                     "FEATURE_PATH": "/drone/src/ui/tests/acceptance/features",
                 },
                 "commands": [
-                    "npx playwright install",
+                    "npx playwright install chrome",
                     "make test-acceptance-webui",
                 ],
                 "volumes": [
