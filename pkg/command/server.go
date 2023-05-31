@@ -23,7 +23,6 @@ import (
 	smessages "github.com/owncloud/ocis/v2/protogen/gen/ocis/messages/settings/v0"
 	settings "github.com/owncloud/ocis/v2/protogen/gen/ocis/services/settings/v0"
 	ssvc "github.com/owncloud/ocis/v2/services/settings/pkg/service/v0"
-	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/metadata"
 	"strings"
 	"time"
@@ -243,13 +242,6 @@ func registerSettingsBundles(ctx context.Context, bundleService settings.BundleS
 	}
 
 	return nil
-}
-
-func WithServiceToken() client.CallOption {
-	// this is the ClientOption function type
-	return func(c *client.CallOptions) {
-		c.ServiceToken = true
-	}
 }
 
 type settingsPhraseSource struct {
