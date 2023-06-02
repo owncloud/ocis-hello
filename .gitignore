@@ -8,3 +8,8 @@ checkstyle.xml
 
 /node_modules
 /assets
+/.idea
+/vendor
+/test-results/
+/playwright-report/
+/playwright/.cache/

@@ -5,7 +5,8 @@ import (
 
 	"github.com/owncloud/ocis-hello/pkg/proto/v0"
 	"github.com/owncloud/ocis-hello/pkg/service/v0"
-	"github.com/owncloud/ocis/ocis-pkg/service/grpc"
+	"github.com/owncloud/ocis/v2/ocis-pkg/service/grpc"
+	ogrpc "github.com/owncloud/ocis/v2/ocis-pkg/service/grpc"
 )
 
 // Server initializes a new go-micro service ready to run
@@ -13,7 +14,7 @@ func Server(opts ...Option) grpc.Service {
 	options := newOptions(opts...)
 	greeter := options.Handler
 
-	service := grpc.NewService(
+	service, _ := ogrpc.NewService(
 		grpc.Name(options.Config.Server.Name),
 		grpc.Context(options.Context),
 		grpc.Address(options.Config.GRPC.Addr),

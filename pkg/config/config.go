@@ -68,9 +68,9 @@ type Config struct {
 	Tracing      Tracing
 	Asset        Asset
 	TokenManager TokenManager
-
-	Context    context.Context
-	Supervised bool
+	Context      context.Context
+	Supervised   bool
+	AdminUserID  string
 }
 
 // New initializes a new configuration with or without defaults.

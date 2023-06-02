@@ -3,9 +3,8 @@ package command
 import (
 	"context"
 	"errors"
-	"strings"
-	"time"
-
+	user "github.com/cs3org/go-cs3apis/cs3/identity/user/v1beta1"
+	ctxpkg "github.com/cs3org/reva/v2/pkg/ctx"
 	"github.com/micro/cli/v2"
 	"github.com/oklog/run"
 	"github.com/owncloud/ocis-hello/pkg/config"
@@ -16,11 +15,17 @@ import (
 	"github.com/owncloud/ocis-hello/pkg/service/v0"
 	svc "github.com/owncloud/ocis-hello/pkg/service/v0"
 	"github.com/owncloud/ocis-hello/pkg/tracing"
-	"github.com/owncloud/ocis/ocis-pkg/log"
-	ogrpc "github.com/owncloud/ocis/ocis-pkg/service/grpc"
-	"github.com/owncloud/ocis/ocis-pkg/sync"
-	settings "github.com/owncloud/ocis/settings/pkg/proto/v0"
-	ssvc "github.com/owncloud/ocis/settings/pkg/service/v0"
+	"github.com/owncloud/ocis/v2/ocis-pkg/log"
+	"github.com/owncloud/ocis/v2/ocis-pkg/middleware"
+	ogrpc "github.com/owncloud/ocis/v2/ocis-pkg/service/grpc"
+	"github.com/owncloud/ocis/v2/ocis-pkg/shared"
+	"github.com/owncloud/ocis/v2/ocis-pkg/sync"
+	smessages "github.com/owncloud/ocis/v2/protogen/gen/ocis/messages/settings/v0"
+	settings "github.com/owncloud/ocis/v2/protogen/gen/ocis/services/settings/v0"
+	ssvc "github.com/owncloud/ocis/v2/services/settings/pkg/service/v0"
+	"go-micro.dev/v4/metadata"
+	"strings"
+	"time"
 )
 
 const (
@@ -49,6 +54,7 @@ func Server(cfg *config.Config) *cli.Command {
 			if !cfg.Supervised {
 				return ParseConfig(ctx, cfg)
 			}
+
 			logger.Debug().Str("service", "hello").Msg("ignoring config file parsing when running supervised")
 			return nil
 		},
@@ -60,17 +66,19 @@ func Server(cfg *config.Config) *cli.Command {
 			}
 			gr := run.Group{}
 			ctx, cancel := defineContext(cfg)
+
 			mtrcs := metrics.New()
 
 			defer cancel()
 
 			mtrcs.BuildInfo.WithLabelValues(cfg.Server.Version).Set(1)
+			_ = ogrpc.Configure(ogrpc.GetClientOptions(&shared.GRPCClientTLS{})...)
 
-			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient)
-
+			bundleService := settings.NewBundleService("com.owncloud.api.settings", ogrpc.DefaultClient())
 			for i := 1; i <= maxRetries; i++ {
-				err = registerSettingsBundles(bundleService, &logger)
+				err = registerSettingsBundles(ctx, bundleService, &logger)
 				if err != nil {
+					logger.Logger.Info().Msg(err.Error())
 					// limited potential backoff: 1s, 4s, 9s, 16s, 25s, ..., but max 30s
 					backoff := time.Duration(i*i) * time.Second
 					if backoff > 30*time.Second {
@@ -86,7 +94,7 @@ func Server(cfg *config.Config) *cli.Command {
 				cancel()
 			}
 
-			ps := settingsPhraseSource{vsClient: settings.NewValueService("com.owncloud.api.settings", ogrpc.DefaultClient)}
+			ps := settingsPhraseSource{vsClient: settings.NewValueService("com.owncloud.api.settings", ogrpc.DefaultClient())}
 			handler, err := svc.NewGreeter(svc.PhraseSource(ps), svc.Logger(logger))
 			if err != nil {
 				logger.Error().Err(err).Msg("handler init")
@@ -138,37 +146,50 @@ func Server(cfg *config.Config) *cli.Command {
 // if not, it will create a root context that can be cancelled.
 func defineContext(cfg *config.Config) (context.Context, context.CancelFunc) {
 	return func() (context.Context, context.CancelFunc) {
+		var ctx context.Context
+		var cancel context.CancelFunc
 		if cfg.Context == nil {
-			return context.WithCancel(context.Background())
+			ctx, cancel = context.WithCancel(context.Background())
+		} else {
+			ctx, cancel = context.WithCancel(cfg.Context)
 		}
-		return context.WithCancel(cfg.Context)
+
+		ctx = ctxpkg.ContextSetUser(ctx, &user.User{
+			Id: &user.UserId{
+				OpaqueId: cfg.AdminUserID,
+				Type:     user.UserType_USER_TYPE_PRIMARY,
+			},
+		})
+		ctx = metadata.Set(ctx, middleware.AccountID, cfg.AdminUserID)
+
+		return ctx, cancel
 	}()
 }
 
 // registerSettingsBundles pushes the settings bundle definitions for this extension to the ocis-settings service.
-func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger) (err error) {
+func registerSettingsBundles(ctx context.Context, bundleService settings.BundleService, l *log.Logger) (err error) {
 
 	request := &settings.SaveBundleRequest{
-		Bundle: &settings.Bundle{
+		Bundle: &smessages.Bundle{
 			Id:          bundleIDGreeting,
 			Name:        "greeting",
 			DisplayName: "Greeting",
 			Extension:   "ocis-hello",
-			Type:        settings.Bundle_TYPE_DEFAULT,
-			Resource: &settings.Resource{
-				Type: settings.Resource_TYPE_SYSTEM,
+			Type:        smessages.Bundle_TYPE_DEFAULT,
+			Resource: &smessages.Resource{
+				Type: smessages.Resource_TYPE_SYSTEM,
 			},
-			Settings: []*settings.Setting{
+			Settings: []*smessages.Setting{
 				{
 					Id:          settingIDGreeterPhrase,
 					Name:        "phrase",
 					DisplayName: "Phrase",
 					Description: "Phrase for replies on the greet request",
-					Resource: &settings.Resource{
-						Type: settings.Resource_TYPE_SYSTEM,
+					Resource: &smessages.Resource{
+						Type: smessages.Resource_TYPE_SYSTEM,
 					},
-					Value: &settings.Setting_StringValue{
-						StringValue: &settings.String{
+					Value: &smessages.Setting_StringValue{
+						StringValue: &smessages.String{
 							Required:  true,
 							Default:   "Hello",
 							MaxLength: 15,
@@ -179,8 +200,12 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 		},
 	}
 
-	_, err = bundleService.SaveBundle(context.Background(), request)
+	res, err := bundleService.SaveBundle(
+		ctx, request,
+	)
+	l.Logger.Info().Msg(res.String())
 	if err != nil {
+		l.Logger.Info().Msg("Error while saving the bundle: " + err.Error())
 		l.With().Err(err).Logger().With().Str("settings bundle ID", request.Bundle.Id).Err(errors.New("could not create / update the settings bundle"))
 		return err
 	}
@@ -189,17 +214,17 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 	permissionRequests := []*settings.AddSettingToBundleRequest{
 		{
 			BundleId: ssvc.BundleUUIDRoleAdmin,
-			Setting: &settings.Setting{
+			Setting: &smessages.Setting{
 				Id: "d5f42c4b-e1b6-4b59-8eca-fc4b9e9f2320",
-				Resource: &settings.Resource{
-					Type: settings.Resource_TYPE_SETTING,
+				Resource: &smessages.Resource{
+					Type: smessages.Resource_TYPE_SETTING,
 					Id:   settingIDGreeterPhrase,
 				},
 				Name: "phrase-admin-read",
-				Value: &settings.Setting_PermissionValue{
-					PermissionValue: &settings.Permission{
-						Operation:  settings.Permission_OPERATION_READWRITE,
-						Constraint: settings.Permission_CONSTRAINT_OWN,
+				Value: &smessages.Setting_PermissionValue{
+					PermissionValue: &smessages.Permission{
+						Operation:  smessages.Permission_OPERATION_READWRITE,
+						Constraint: smessages.Permission_CONSTRAINT_OWN,
 					},
 				},
 			},
@@ -207,8 +232,9 @@ func registerSettingsBundles(bundleService settings.BundleService, l *log.Logger
 	}
 
 	for _, permissionRequest := range permissionRequests {
-		_, err := bundleService.AddSettingToBundle(context.Background(), permissionRequest)
+		_, err := bundleService.AddSettingToBundle(ctx, permissionRequest)
 		if err != nil {
+			l.Logger.Info().Msg(err.Error())
 			l.With().Err(err).Logger().With().Str("permission request bundle ID", request.Bundle.Id).Err(errors.New("could not create / update the permissions of the settings bundle"))
 			return err
 		}
@@ -231,7 +257,7 @@ func (s settingsPhraseSource) GetPhrase(accountID string) string {
 
 	response, err := s.vsClient.GetValueByUniqueIdentifiers(context.Background(), &rq)
 	if err == nil {
-		value, ok := response.Value.Value.Value.(*settings.Value_StringValue)
+		value, ok := response.Value.Value.Value.(*smessages.Value_StringValue)
 		if ok {
 			trimmedPhrase := strings.Trim(
 				value.StringValue,

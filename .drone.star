@@ -3,7 +3,7 @@ config = {
         "os": ["linux", "darwin", "windows"],
     },
     "dockerReleases": {
-        "architectures": ["arm", "arm64", "amd64"],
+        "architectures": ["arm64", "amd64"],
     },
 }
 
@@ -120,7 +120,7 @@ def testHello(ctx):
         "steps": makeGenerate() + [
             {
                 "name": "golangci-lint",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
                 "pull": "always",
                 "commands": [
                     "make ci-golangci-lint",
@@ -129,7 +129,7 @@ def testHello(ctx):
             },
             {
                 "name": "test",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
                 "pull": "always",
                 "commands": [
                     "make test",
@@ -149,7 +149,7 @@ def testHello(ctx):
             },
             {
                 "name": "sonarcloud",
-                "image": "sonarsource/sonar-scanner-cli:latest",
+                "image": "sonarsource/sonar-scanner-cli:4.7.0",
                 "pull": "always",
                 "environment": sonar_env,
                 "volumes": [stepVolumeGo],
@@ -169,7 +169,7 @@ def makeGenerate():
     return [
         {
             "name": "generate nodejs",
-            "image": "owncloudci/nodejs:14",
+            "image": "owncloudci/nodejs:16",
             "pull": "always",
             "commands": [
                 "make ci-node-generate",
@@ -178,9 +178,18 @@ def makeGenerate():
         },
         {
             "name": "generate go",
-            "image": "owncloudci/golang:1.16",
+            "image": "owncloudci/golang:1.20",
             "pull": "always",
+            "environment": {
+                "HTTP_PROXY": {
+                    "from_secret": "drone_http_proxy",
+                },
+                "HTTPS_PROXY": {
+                    "from_secret": "drone_http_proxy",
+                },
+            },
             "commands": [
+                "apk add protoc",
                 "make ci-go-generate",
             ],
             "volumes": [stepVolumeGo],
@@ -191,9 +200,18 @@ def build():
     return [
         {
             "name": "build",
-            "image": "owncloudci/golang:1.16",
+            "image": "owncloudci/golang:1.20",
             "pull": "always",
+            "environment": {
+                "HTTP_PROXY": {
+                    "from_secret": "drone_http_proxy",
+                },
+                "HTTPS_PROXY": {
+                    "from_secret": "drone_http_proxy",
+                },
+            },
             "commands": [
+                "apk add protoc",
                 "make build",
             ],
             "volumes": [stepVolumeGo],
@@ -237,8 +255,16 @@ def dockerRelease(ctx, arch):
         "steps": makeGenerate() + [
             {
                 "name": "build",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
                 "pull": "always",
+                "environment": {
+                    "HTTP_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                    "HTTPS_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                },
                 "commands": [
                     "make release-linux-docker",
                 ],
@@ -300,21 +326,18 @@ def dockerRelease(ctx, arch):
 
 def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
     environment = {
+        "IDM_ADMIN_PASSWORD": "admin",  # override the random admin password from `ocis init`
         "OCIS_URL": "https://ocis-server:9200",
+        "OCIS_INSECURE": "true",
         "STORAGE_HOME_DRIVER": "%s" % (storage),
         "STORAGE_USERS_DRIVER": "%s" % (storage),
-        "STORAGE_DRIVER_OCIS_ROOT": "/srv/app/tmp/ocis/storage/users",
-        "STORAGE_DRIVER_LOCAL_ROOT": "/srv/app/tmp/ocis/local/root",
-        "STORAGE_METADATA_ROOT": "/srv/app/tmp/ocis/metadata",
-        "STORAGE_DRIVER_OWNCLOUD_DATADIR": "/srv/app/tmp/ocis/owncloud/data",
-        "STORAGE_DRIVER_OWNCLOUD_REDIS_ADDR": "redis:6379",
-        "STORAGE_HOME_DATA_SERVER_URL": "http://ocis-server:9155/data",
-        "STORAGE_USERS_DATA_SERVER_URL": "http://ocis-server:9158/data",
-        "STORAGE_SHARING_USER_JSON_FILE": "/srv/app/tmp/ocis/shares.json",
         "PROXY_ENABLE_BASIC_AUTH": True,
         "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
-        "PROXY_CONFIG_FILE": "/drone/src/ui/tests/config/drone/proxy-config.json",
         "OCIS_LOG_LEVEL": "error",
+        "OCIS_JWT_SECRET": "aaaa",
+        "OCIS_ADMIN_USER_ID": "c59a6ae9-5f5e-4eef-b82e-0e5c34f93e52",
+        "MICRO_REGISTRY": "mdns",
+        "SETTINGS_GRPC_ADDR": "ocis-server:9191",
     }
 
     # Pass in "default" accounts_hash_difficulty to not set this environment variable.
@@ -327,18 +350,15 @@ def ocisServer(storage, accounts_hash_difficulty = 4, volumes = []):
     return [
         {
             "name": "ocis-server",
-            "image": "owncloud/ocis:1.7.0",
+            "image": "owncloud/ocis:3.0.0-rc.4",
             "pull": "always",
             "detach": True,
             "environment": environment,
             "volumes": volumes,
             "commands": [
-                "ocis server&",
-                "sleep 10",
-                "ocis kill proxy",
-                "sleep 10",
-                "ocis proxy server&",
-                "wait",
+                "/usr/bin/ocis init",
+                "cp /drone/src/ui/tests/config/drone/proxy.yaml /etc/ocis/",
+                "/usr/bin/ocis server",
             ],
         },
         {
@@ -367,6 +387,11 @@ def UITests(ctx):
                 "image": "owncloudci/alpine:latest",
                 "pull": "always",
                 "detach": True,
+                "environment": {
+                    "HELLO_ADMIN_USER_ID": "c59a6ae9-5f5e-4eef-b82e-0e5c34f93e52",
+                    "HELLO_JWT_SECRET": "aaaa",
+                    "MICRO_REGISTRY": "mdns",
+                },
                 "commands": [
                     "bin/hello server",
                 ],
@@ -387,33 +412,14 @@ def UITests(ctx):
             },
             {
                 "name": "WebUIAcceptanceTests",
-                "image": "owncloudci/nodejs:14",
+                "image": "owncloudci/nodejs:16",
                 "pull": "always",
                 "environment": {
                     "SERVER_HOST": "https://ocis-server:9200",
-                    "BACKEND_HOST": "https://ocis-server:9200",
-                    "RUN_ON_OCIS": "true",
-                    "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/owncloud/data",
-                    "OCIS_SKELETON_DIR": "/srv/app/testing/data/webUISkeleton",
-                    "TESTING_DATA_DIR": "/srv/app/testing/data",
-                    "WEB_UI_CONFIG": "/drone/src/ui/tests/config/drone/web-config.json",
-                    "TEST_TAGS": "not @skipOnOCIS and not @skip",
-                    "LOCAL_UPLOAD_DIR": "/uploads",
-                    "NODE_TLS_REJECT_UNAUTHORIZED": 0,
-                    "WEB_PATH": "/srv/app/web",
                     "FEATURE_PATH": "/drone/src/ui/tests/acceptance/features",
                 },
                 "commands": [
-                    ". /drone/src/.drone.env",
-                    "git clone -b master --depth=1 https://github.com/owncloud/testing.git /srv/app/testing",
-                    "git clone -b $WEB_BRANCH --single-branch --no-tags https://github.com/owncloud/web.git /srv/app/web",
-                    "cd /srv/app/web",
-                    "git checkout $WEB_COMMITID",
-                    "cp -r tests/acceptance/filesForUpload/* /uploads",
-                    "yarn install --all",
-                    "yarn build",
-                    "cd /drone/src/",
-                    "yarn install --all",
+                    "npx playwright install",
                     "make test-acceptance-webui",
                 ],
                 "volumes": [
@@ -425,8 +431,6 @@ def UITests(ctx):
                 ],
             },
         ],
-        "services": redis() +
-                    selenium(),
         "volumes": [
             pipelineVolumeGo,
             pipelineVolumeOC10Tests,
@@ -488,7 +492,7 @@ def binaryRelease(ctx, name):
         "steps": makeGenerate() + [
             {
                 "name": "build",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
                 "pull": "always",
                 "commands": [
                     "make release-%s" % (name),
@@ -497,7 +501,7 @@ def binaryRelease(ctx, name):
             },
             {
                 "name": "finish",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
                 "pull": "always",
                 "commands": [
                     "make release-finish",
@@ -518,7 +522,7 @@ def binaryRelease(ctx, name):
             },
             {
                 "name": "changelog",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
                 "pull": "always",
                 "commands": [
                     "make changelog CHANGELOG_VERSION=%s" % ctx.build.ref.replace("refs/tags/v", "").split("-")[0],
@@ -610,7 +614,7 @@ def changelog(ctx):
         "steps": [
             {
                 "name": "generate",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
                 "pull": "always",
                 "commands": [
                     "make changelog",
@@ -717,19 +721,46 @@ def docs(ctx):
         "steps": [
             {
                 "name": "docs-generate",
-                "image": "owncloudci/golang:1.16",
-                "commands": ["make docs-generate"],
+                "image": "owncloudci/golang:1.20",
+                "environment": {
+                    "HTTP_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                    "HTTPS_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                },
+                "commands": [
+                    "apk add protoc",
+                    "make docs-generate",
+                ],
             },
             {
                 "name": "prepare",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
+                "environment": {
+                    "HTTP_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                    "HTTPS_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                },
                 "commands": [
                     "make -C docs docs-copy",
                 ],
             },
             {
                 "name": "test",
-                "image": "owncloudci/golang:1.16",
+                "image": "owncloudci/golang:1.20",
+                "environment": {
+                    "HTTP_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                    "HTTPS_PROXY": {
+                        "from_secret": "drone_http_proxy",
+                    },
+                },
                 "commands": [
                     "make -C docs test",
                 ],
@@ -784,31 +815,6 @@ def docs(ctx):
             ],
         },
     }
-
-def redis():
-    return [
-        {
-            "name": "redis",
-            "image": "webhippie/redis",
-            "pull": "always",
-            "environment": {
-                "REDIS_DATABASES": 1,
-            },
-        },
-    ]
-
-def selenium():
-    return [
-        {
-            "name": "selenium",
-            "image": "selenium/standalone-chrome-debug:3.141.59",
-            "pull": "always",
-            "volumes": [{
-                "name": "uploads",
-                "path": "/uploads",
-            }],
-        },
-    ]
 
 def checkStarlark():
     return [{

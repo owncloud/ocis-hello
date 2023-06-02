@@ -3,7 +3,7 @@ package flagset
 import (
 	"github.com/micro/cli/v2"
 	"github.com/owncloud/ocis-hello/pkg/config"
-	"github.com/owncloud/ocis/ocis-pkg/flags"
+	"github.com/owncloud/ocis/v2/ocis-pkg/flags"
 )
 
 // RootWithConfig applies cfg to the root flagset
@@ -182,6 +182,13 @@ func ServerWithConfig(cfg *config.Config) []cli.Flag {
 			Usage:       "Used to create JWT to talk to reva, should equal reva's jwt-secret",
 			EnvVars:     []string{"HELLO_JWT_SECRET"},
 			Destination: &cfg.TokenManager.JWTSecret,
+		},
+		&cli.StringFlag{
+			Name:        "admin-user-id",
+			Usage:       "User to authenticate to ocis, should equal ocis's admin_user_id",
+			EnvVars:     []string{"HELLO_ADMIN_USER_ID"},
+			Required:    true,
+			Destination: &cfg.AdminUserID,
 		},
 	}
 }

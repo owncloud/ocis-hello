@@ -7,7 +7,7 @@
     <form v-on:submit.prevent="submitName(name)" action="#" method="post">
       <oc-text-input v-model="name" placeholder="Your name" />
 
-      <oc-button variation="primary" class="uk-width-1-1 uk-margin-top">
+      <oc-button variation="primary" submit="submit" class="uk-width-1-1 uk-margin-top">
         Submit
       </oc-button>
     </form>
