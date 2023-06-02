@@ -184,6 +184,8 @@ github.com/cs3org/go-cs3apis v0.0.0-20230516150832-730ac860c71d h1:oXbB0ksMaMxHX
 github.com/cs3org/go-cs3apis v0.0.0-20230516150832-730ac860c71d/go.mod h1:UXha4TguuB52H14EMoSsCqDj7k8a/t7g4gVP+bgY5LY=
 github.com/cs3org/reva/v2 v2.13.4-0.20230526111208-d62d1497abb9 h1:JuZPMzFl6Yr2PIlT7mIYJ+S++AS3PQoRcYyA1tsH2DI=
 github.com/cs3org/reva/v2 v2.13.4-0.20230526111208-d62d1497abb9/go.mod h1:vMQqSn30fEPHO/GKC2WmGimlOPqvfSy4gdhRSpbvrWc=
+github.com/cs3org/reva/v2 v2.13.4-0.20230531122629-be4a2122a96c h1:gv0m1qVAkUtF/9PAP9xwp+jkjtajCAeGEhiO6dDOMcI=
+github.com/cs3org/reva/v2 v2.13.4-0.20230531122629-be4a2122a96c/go.mod h1:vMQqSn30fEPHO/GKC2WmGimlOPqvfSy4gdhRSpbvrWc=
 github.com/cyberdelia/templates v0.0.0-20141128023046-ca7fffd4298c/go.mod h1:GyV+0YP4qX0UQ7r2MoYZ+AvYDp12OF5yg4q8rGnyNh4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
@@ -674,6 +676,8 @@ github.com/owncloud/libre-graph-api-go v1.0.5-0.20230512172639-d458ad6b300b h1:6
 github.com/owncloud/libre-graph-api-go v1.0.5-0.20230512172639-d458ad6b300b/go.mod h1:iKdVH6nYpI8RBeK9sjeLfzrPByST6r9d+NG2IJHoJmU=
 github.com/owncloud/ocis/v2 v2.0.1-0.20230529065344-fd4301b0d71e h1:F++mEc2W0ZfvrtX1a98eJ2N0t9lTd2/xHXXRYyTmiyg=
 github.com/owncloud/ocis/v2 v2.0.1-0.20230529065344-fd4301b0d71e/go.mod h1:KaXeKvyNq7VcjzmVx49f7HhOmJQi3AddmHYz/NdwTbw=
+github.com/owncloud/ocis/v2 v2.0.1-0.20230602064401-8f02d26da8c7 h1:hGlUI5v68G72eMFMVJOMJpBhE0C6RC2QLZKAbWjtCkY=
+github.com/owncloud/ocis/v2 v2.0.1-0.20230602064401-8f02d26da8c7/go.mod h1:Mvq6slFCU6db89BAh1fZT6xjq+v5/FJB8m5gq2VRnKs=
 github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c h1:rp5dCmg/yLR3mgFuSOe4oEnDDmGLROTvMragMUXpTQw=
 github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c/go.mod h1:X07ZCGwUbLaax7L0S3Tw4hpejzu63ZrrQiUe6W0hcy0=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=

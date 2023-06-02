@@ -7,7 +7,7 @@ require (
 	contrib.go.opencensus.io/exporter/ocagent v0.7.0
 	contrib.go.opencensus.io/exporter/zipkin v0.1.2
 	github.com/cs3org/go-cs3apis v0.0.0-20230516150832-730ac860c71d
-	github.com/cs3org/reva/v2 v2.13.4-0.20230526111208-d62d1497abb9
+	github.com/cs3org/reva/v2 v2.13.4-0.20230531122629-be4a2122a96c
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/render v1.0.2
@@ -15,7 +15,7 @@ require (
 	github.com/micro/cli/v2 v2.1.2
 	github.com/oklog/run v1.1.0
 	github.com/openzipkin/zipkin-go v0.2.5
-	github.com/owncloud/ocis/v2 v2.0.1-0.20230529065344-fd4301b0d71e
+	github.com/owncloud/ocis/v2 v2.0.1-0.20230602064401-8f02d26da8c7
 	github.com/prometheus/client_golang v1.15.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.8.2
