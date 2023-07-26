@@ -137,17 +137,6 @@ def testHello(ctx):
                 "volumes": [stepVolumeGo],
             },
             {
-                "name": "codacy",
-                "image": "plugins/codacy:1",
-                "pull": "always",
-                "settings": {
-                    "token": {
-                        "from_secret": "codacy_token",
-                    },
-                },
-                "volumes": [stepVolumeGo],
-            },
-            {
                 "name": "sonarcloud",
                 "image": "sonarsource/sonar-scanner-cli:4.7.0",
                 "pull": "always",
@@ -464,16 +453,16 @@ def binaryRelease(ctx, name):
 
     settings = {
         "endpoint": {
-            "from_secret": "s3_endpoint",
+            "from_secret": "upload_s3_endpoint",
         },
         "access_key": {
-            "from_secret": "aws_access_key_id",
+            "from_secret": "upload_s3_access_key",
         },
         "secret_key": {
-            "from_secret": "aws_secret_access_key",
+            "from_secret": "upload_s3_secret_key",
         },
         "bucket": {
-            "from_secret": "s3_bucket",
+            "from_secret": "upload_s3_bucket",
         },
         "path_style": True,
         "strip_prefix": "dist/release/",
