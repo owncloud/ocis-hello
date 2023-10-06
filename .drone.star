@@ -767,6 +767,7 @@ def docs(ctx):
                     },
                     "pages_directory": "docs/extensions/hello",
                     "target_branch": "docs",
+                    "delete": "true",
                 },
                 "when": {
                     "ref": {
