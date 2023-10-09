@@ -766,6 +766,7 @@ def docs(ctx):
                         "from_secret": "github_token",
                     },
                     "pages_directory": "docs/extensions/hello/",
+                    "copy_contents": "true",
                     "target_branch": "docs",
                     "delete": "true",
                 },
