@@ -765,7 +765,7 @@ def docs(ctx):
                     "password": {
                         "from_secret": "github_token",
                     },
-                    "pages_directory": "docs/extensions/hello",
+                    "pages_directory": "docs/extensions/hello/",
                     "target_branch": "docs",
                     "delete": "true",
                 },
