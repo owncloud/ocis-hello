@@ -778,26 +778,6 @@ def docs(ctx):
                     },
                 },
             },
-            {
-                "name": "downstream",
-                "image": "plugins/downstream:latest",
-                "settings": {
-                    "server": "https://drone.owncloud.com/",
-                    "token": {
-                        "from_secret": "drone_token",
-                    },
-                    "repositories": [
-                        "owncloud/owncloud.github.io@main",
-                    ],
-                },
-                "when": {
-                    "ref": {
-                        "exclude": [
-                            "refs/pull/**",
-                        ],
-                    },
-                },
-            },
         ],
         "trigger": {
             "ref": [
