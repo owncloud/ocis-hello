@@ -1,7 +1,7 @@
 ---
 title: Hello (example extension)
 geekdocRepo: https://github.com/owncloud/ocis-hello
-geekdocEditPath: edit/master/docs
+geekdocEditPath: edit/master/docs/extensions/hello
 geekdocFilePath: _index.md
 geekdocCollapseSection: true
 ---
@@ -26,5 +26,5 @@ graph TD
 - a vue.js frontend using the API
 - configuration options for admins
 
-It can be integrated into [ownCloud Web](https://github.com/owncloud/web) as documented in the [extensions docs](https://owncloud.github.io/ocis/extensions/#external-web-apps).
+It can be integrated into [ownCloud Web](https://github.com/owncloud/web) as documented in the [custom apps docs](https://owncloud.dev/clients/web/custom-apps/).
 
