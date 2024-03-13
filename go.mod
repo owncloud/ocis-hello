@@ -24,7 +24,7 @@ require (
 	go.opencensus.io v0.24.0
 	golang.org/x/net v0.19.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
