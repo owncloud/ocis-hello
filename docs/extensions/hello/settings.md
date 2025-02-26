@@ -12,7 +12,7 @@ oCIS provides an settings extension that other extensions can use to make settin
 In case of the Hello extension administrator users are able to change the greeter message.
 
 Settings are stored and presented to the user by the oCIS settings extension. It also exposes endpoints for registering and manipulating so called
-[settings bundles](https://owncloud.dev/extensions/settings/bundles/).
+[settings bundles](https://owncloud.dev/services/settings/bundles/).
 
 The settings defined through settings bundles can be changed by authenticated users in ownCloud Web, if they have enough permissions to edit them. As a result, your service only has to register a settings bundle and permissions for it and oCIS settings takes care of everything else. Your service can simply use the settings values that were set by users.
 
